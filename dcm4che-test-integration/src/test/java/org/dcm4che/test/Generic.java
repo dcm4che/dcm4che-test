@@ -36,36 +36,49 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test.tool;
+package org.dcm4che.test;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.Socket;
-import java.security.GeneralSecurityException;
-
-import org.dcm4che3.net.Connection;
-import org.dcm4che3.net.IncompatibleConnectionException;
+import java.net.URL;
+import java.util.Properties;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  *
  */
-public class TestConnection {
+public class Generic {
 
-    public static boolean isAlive(Connection conn)
+    private static Properties props = null;
+    
+    protected Properties loadConfig() throws IOException
     {
-        boolean alive = false;
-        
-        try {
-            alive = (new Connection().connect(conn) != null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (IncompatibleConnectionException e) {
-            e.printStackTrace();
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
+        if (props == null)
+        {
+            props = new Properties();
+            String fileURL = System.getProperty("configFileURL");
+            
+            if (fileURL != null && fileURL.length()>0)
+            {
+                //load passed file
+                props.load(new FileInputStream(new URL(fileURL).getFile()));
+            }
+            else
+            {
+                //load defaults
+                URL defaultConfig = getClass().getResource("/defaultConfig.properties");
+                System.out.println("defaultConfig:"+defaultConfig);
+                props.load(new FileInputStream(new File(defaultConfig.getFile())));
+            }
         }
         
-        return alive;
+        return props;
     }
     
+    protected void connect()
+    {
+        
+    }
+
 }
