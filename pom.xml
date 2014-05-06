@@ -50,6 +50,7 @@
   </organization>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <dcm4che.version>3.3.3-SNAPSHOT</dcm4che.version>
   </properties>
   <build>
     <extensions>
@@ -71,6 +72,7 @@
     </plugins>
   </build>
   <modules>
+    <module>dcm4che-test-tools</module>
   </modules>
   <distributionManagement>
     <repository>
@@ -97,6 +99,12 @@
         <artifactId>junit</artifactId>
         <version>4.11</version>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.dcm4che</groupId>
+        <artifactId>dcm4che-net</artifactId>
+        <version>${dcm4che.version}</version>
+        <scope>provided</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
