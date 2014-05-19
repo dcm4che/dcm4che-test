@@ -36,34 +36,32 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test;
+package org.dcm4che.test.integration;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.Properties;
-
-import org.dcm4che.test.tool.ConnectionUtil;
-import org.dcm4che3.net.Connection;
-import org.dcm4che3.net.Device;
-import org.junit.BeforeClass;
+import org.dcm4che.test.StoreTest;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  *
  */
-public class ConnectTest extends Generic {
-    
-    public void test() throws IOException {
-        
-        Properties config = loadConfig();
-        
-        String host = config.getProperty("remoteConn.hostname");
-        int port = new Integer(config.getProperty("remoteConn.port"));
-        Connection conn = new Connection("remoteConn",host,port);
-        
-        assertTrue("Connection Not Alive:"+host,ConnectionUtil.isAlive(conn));
+public class Store_MESA_CT {
+
+    @Test
+    public void Store_MESA_CT_CT1_CTS1() throws Exception
+    {
+        new StoreTest("modality/CT/CT1/CT1S1").store();
     }
 
+    @Test
+    public void Store_MESA_CT_CT1_CTS2() throws Exception
+    {
+        new StoreTest("modality/CT/CT1/CT1S2").store();
+    }
+
+    @Test
+    public void Store_MESA_CT_CT2_CTS1() throws Exception
+    {
+        new StoreTest("modality/CT/CT2/CT2S1").store();
+    }
 }

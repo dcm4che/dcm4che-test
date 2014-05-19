@@ -59,12 +59,15 @@ public class ConnectionUtil {
         try {
 
             Device device = new Device("scu");
+            
             Connection local = new Connection();
             device.addConnection(local);
             device.setInstalled(true);
 
+            local.setAcceptTimeout(5000);
             
             alive = (local.connect(conn) != null);
+            
         } catch (IOException e) {
             e.printStackTrace();
         } catch (IncompatibleConnectionException e) {

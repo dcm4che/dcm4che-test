@@ -36,34 +36,20 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test;
-
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.Properties;
-
-import org.dcm4che.test.tool.ConnectionUtil;
-import org.dcm4che3.net.Connection;
-import org.dcm4che3.net.Device;
-import org.junit.BeforeClass;
-import org.junit.Test;
+package org.dcm4che.test.tool;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  *
  */
-public class ConnectTest extends Generic {
-    
-    public void test() throws IOException {
-        
-        Properties config = loadConfig();
-        
-        String host = config.getProperty("remoteConn.hostname");
-        int port = new Integer(config.getProperty("remoteConn.port"));
-        Connection conn = new Connection("remoteConn",host,port);
-        
-        assertTrue("Connection Not Alive:"+host,ConnectionUtil.isAlive(conn));
+public class FileUtil {
+
+    public static String humanreadable(long bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
 }

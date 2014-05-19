@@ -36,34 +36,29 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test;
-
-import static org.junit.Assert.*;
+package org.dcm4che.test.integration;
 
 import java.io.IOException;
-import java.util.Properties;
 
-import org.dcm4che.test.tool.ConnectionUtil;
-import org.dcm4che3.net.Connection;
-import org.dcm4che3.net.Device;
+import org.dcm4che.test.ConnectTest;
 import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  *
  */
-public class ConnectTest extends Generic {
+@RunWith(Suite.class)
+@SuiteClasses({Store_MESA_CT.class})
+public class StoreTests {
     
-    public void test() throws IOException {
+    @BeforeClass
+    public static void testConnection() throws IOException {
         
-        Properties config = loadConfig();
-        
-        String host = config.getProperty("remoteConn.hostname");
-        int port = new Integer(config.getProperty("remoteConn.port"));
-        Connection conn = new Connection("remoteConn",host,port);
-        
-        assertTrue("Connection Not Alive:"+host,ConnectionUtil.isAlive(conn));
+        //test if connection is alive
+        new ConnectTest().test();
     }
 
 }
