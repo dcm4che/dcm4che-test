@@ -54,7 +54,9 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
     Store_MESA_CT.class, 
-    Store_MESA_CR.class})
+    Store_MESA_CR.class,
+    Store_MESA_MG.class,
+    Store_MESA_MR.class})
 
 public class StoreTestSuite {
    
