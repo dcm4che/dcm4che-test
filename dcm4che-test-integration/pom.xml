@@ -22,7 +22,7 @@
             </property>
           </systemProperties>
           <includes>
-            <include>**/StoreTests.java</include>
+            <include>**/StoreTestSuite.java</include>
           </includes>
         </configuration>
       </plugin>

@@ -39,29 +39,48 @@
 package org.dcm4che.test.integration;
 
 import org.dcm4che.test.StoreTest;
+import org.dcm4che.test.tool.ReflectionUtil;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- *
+ * 
  */
 public class Store_MESA_CT {
 
     @Test
-    public void Store_MESA_CT_CT1_CTS1() throws Exception
-    {
-        new StoreTest("modality/CT/CT1/CT1S1").store();
+    public void Store_MESA_CT_CT1_CTS1() throws Exception {
+        new StoreTest("MESA_12_5,CT1,S1", "modality/CT/CT1/CT1S1")
+                .store();
     }
 
     @Test
-    public void Store_MESA_CT_CT1_CTS2() throws Exception
-    {
-        new StoreTest("modality/CT/CT1/CT1S2").store();
+    public void Store_MESA_CT_CT1_CTS2() throws Exception {
+        new StoreTest("MESA_12_5,CT1,S2", "modality/CT/CT1/CT1S2")
+                .store();
     }
 
     @Test
-    public void Store_MESA_CT_CT2_CTS1() throws Exception
-    {
-        new StoreTest("modality/CT/CT2/CT2S1").store();
+    public void Store_MESA_CT_CT2_CTS1() throws Exception {
+        new StoreTest("MESA_12_5,CT2,S1", "modality/CT/CT2/CT2S1")
+                .store();
+    }
+
+    @Test
+    public void Store_MESA_CT_CT3_CTS1() throws Exception {
+        new StoreTest("MESA_12_5,CT3,S1", "modality/CT/CT3/CT3S1")
+                .store();
+    }
+    
+    @Test
+    public void Store_MESA_CT_CT4_CTS1() throws Exception {
+        new StoreTest("MESA_12_5,CT4,S1", "modality/CT/CT4/CT4S1")
+                .store();
+    }
+    
+    @Test
+    public void Store_MESA_CT_CT5_CTS1() throws Exception {
+        new StoreTest("MESA_12_5,CT5,S1", "modality/CT/CT5/CT5S1")
+                .store();
     }
 }

@@ -46,11 +46,13 @@ import java.security.GeneralSecurityException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import org.dcm4che.test.integration.StoreTestSuite;
 import org.dcm4che.test.tool.ConnectionUtil;
 import org.dcm4che.test.tool.FileUtil;
 import org.dcm4che3.data.Attributes;
@@ -65,6 +67,7 @@ import org.dcm4che3.net.Status;
 import org.dcm4che3.tool.common.CLIUtils;
 import org.dcm4che3.tool.storescu.StoreSCU;
 import org.dcm4che3.tool.storescu.StoreSCU.RSPHandlerFactory;
+import org.dcm4che3.util.StringUtils;
 import org.dcm4che3.util.TagUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -75,19 +78,25 @@ import org.junit.Test;
  */
 public class StoreTest extends Generic {
 
+    private String testDescription;
     private String fileName;
 
     private long totalSize;
     private int filesSent;
+    private int warnings;    
+    private int failures;
 
     /**
+     * @param testName
+     * @param testDescription
      * @param fileName
      */
-    public StoreTest(String fileName) {
+    public StoreTest(String testDescription, String fileName) {
         super();
+        this.testDescription = testDescription;
         this.fileName = fileName;
     }
-
+    
     public void store() throws IOException, InterruptedException,
             IncompatibleConnectionException, GeneralSecurityException {
 
@@ -150,7 +159,7 @@ public class StoreTest extends Generic {
 
         // scan
         t1 = System.currentTimeMillis();
-        main.scanFiles(Arrays.asList(file.getAbsolutePath()));
+        main.scanFiles(Arrays.asList(file.getAbsolutePath()), false); //do not printout
         t2 = System.currentTimeMillis();
 
         // create executor
@@ -173,9 +182,14 @@ public class StoreTest extends Generic {
             scheduledExecutorService.shutdown();
         }
 
-        System.out.println("sent " + filesSent + " files (total size: "
-                + FileUtil.humanreadable(totalSize, true) + ") in " + (t2 - t1)
-                + " ms");
+        System.out.format(StoreTestSuite.RESULT_FORMAT,
+                ++StoreTestSuite.testNumber,
+                StringUtils.truncate(testDescription, 20), 
+                filesSent, 
+                failures,
+                warnings,
+                FileUtil.humanreadable(totalSize, true),
+                (t2 - t1) + " ms");
     }
 
     private void onCStoreRSP(Attributes cmd, File f) {
@@ -190,12 +204,13 @@ public class StoreTest extends Generic {
         case Status.DataSetDoesNotMatchSOPClassWarning:
             totalSize += f.length();
             ++filesSent;
-            System.err.println(MessageFormat.format("warning",
-                    TagUtils.shortToHexString(status), f));
-            System.err.println(cmd);
+            ++warnings;
+//            System.err.println(MessageFormat.format("warning",
+//                    TagUtils.shortToHexString(status), f));
+//            System.err.println(cmd);
             break;
         default:
-            System.out.print('E');
+            ++failures;
             System.err.println(MessageFormat.format("error",
                     TagUtils.shortToHexString(status), f));
             System.err.println(cmd);
