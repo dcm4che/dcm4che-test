@@ -36,7 +36,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test.integration;
+package org.dcm4che.test.integration.store;
 
 import java.io.IOException;
 
@@ -62,7 +62,7 @@ public class StoreTestSuite {
    
     public static final String RESULT_FORMAT = "%n| %-2s | %-20s | %-4d | %-4d | %-4d | %-8s | %-8s |";
     public static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
-    public static final String RESULT_HEADER2 = "%n+                         Store Tests Suite                            +";
+    public static final String RESULT_HEADER2 = "%n+                           Store Tests Suite                          +";
     public static final String RESULT_HEADER3 = "%n+----+----------------------+------+------+------+----------+----------+";
     public static final String RESULT_COLUMNS = "%n| #  | Description          | sent | fail | warn | size     | time     |";
     public static final String RESULT_FOOTER1 = "%n+----+----------------------+------+------+------+----------+----------+";  
