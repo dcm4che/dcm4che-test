@@ -68,7 +68,6 @@ public class Generic {
             {
                 //load defaults
                 URL defaultConfig = getClass().getResource("/defaultConfig.properties");
-                System.out.println("defaultConfig:"+defaultConfig);
                 props.load(new FileInputStream(new File(defaultConfig.getFile())));
             }
         }

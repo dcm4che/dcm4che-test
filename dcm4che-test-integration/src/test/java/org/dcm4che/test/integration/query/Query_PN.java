@@ -38,8 +38,8 @@
 
 package org.dcm4che.test.integration.query;
 
+import static org.junit.Assert.*;
 import org.dcm4che.test.QueryTest;
-import org.dcm4che.test.StoreTest;
 import org.junit.Test;
 
 /**
@@ -49,8 +49,16 @@ import org.junit.Test;
 public class Query_PN {
 
     @Test
-    public void Query_PN_Cotta() throws Exception {
-        new QueryTest("Query For Cotta", "ahaha")
-                .query();
+    public void Query_PN_1() throws Exception {
+        
+        int results = new QueryTest("Query For PN")
+                .patienName("B*",2);
+    }
+    
+    @Test
+    public void Query_PN_2() throws Exception {
+        
+        int results = new QueryTest("Query For PN")
+                .patienName("COTTA",1);
     }
 }

@@ -41,6 +41,7 @@ package org.dcm4che.test.integration.query;
 import java.io.IOException;
 
 import org.dcm4che.test.ConnectTest;
+import org.dcm4che.test.StoreTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -57,27 +58,34 @@ import org.junit.runners.Suite.SuiteClasses;
 
 public class QueryTestSuite {
    
-    public static final String RESULT_FORMAT = "%n| %-2s | %-20s | %-4d | %-4d | %-4d | %-8s | %-8s |";
+    public static final String RESULT_FORMAT = "%n| %-2s | %-20s | %-15s | %-4d | %-4d | %-8s |";
     public static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
     public static final String RESULT_HEADER2 = "%n+                           Query Tests Suite                          +";
-    public static final String RESULT_HEADER3 = "%n+----+----------------------+------+------+------+----------+----------+";
-    public static final String RESULT_COLUMNS = "%n| #  | Description          | sent | fail | warn | size     | time     |";
-    public static final String RESULT_FOOTER1 = "%n+----+----------------------+------+------+------+----------+----------+";  
+    public static final String RESULT_HEADER3 = "%n+----+----------------------+-----------------+------+------+----------+";
+    public static final String RESULT_COLUMNS = "%n| #  | Description          | Parameter       | exp. | ret. | time     |";
+    public static final String RESULT_FOOTER1 = "%n+----+----------------------+-----------------+------+------+----------+";  
     
     public static int testNumber;
     
     @BeforeClass
-    public static void testConnection() throws IOException {
-        
+    public static void preload() throws Exception {
+
+        //preload images to query
+        System.out.printf(RESULT_HEADER1);
+        new StoreTest("Query Preload", "modality/CR").store();
+
         testNumber=0;
         
         //test if connection is alive
         new ConnectTest().test();
+        
+        //printout results header
         System.out.printf(RESULT_HEADER1);
         System.out.printf(RESULT_HEADER2);
         System.out.printf(RESULT_HEADER3);
         System.out.printf(RESULT_COLUMNS);
         System.out.printf(RESULT_FOOTER1);
+
     }
     
     @AfterClass
@@ -85,6 +93,7 @@ public class QueryTestSuite {
         
         testNumber=0;
         
+        //printout results footer
         System.out.printf(RESULT_FOOTER1);
         System.out.println();
     }

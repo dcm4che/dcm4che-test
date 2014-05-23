@@ -40,7 +40,9 @@ package org.dcm4che.test;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.text.MessageFormat;
@@ -53,6 +55,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import org.dcm4che.test.integration.query.QueryTestSuite;
 import org.dcm4che.test.integration.store.StoreTestSuite;
 import org.dcm4che.test.tool.ConnectionUtil;
 import org.dcm4che.test.tool.FileUtil;
@@ -61,6 +64,7 @@ import org.dcm4che3.data.ElementDictionary;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.UID;
 import org.dcm4che3.data.VR;
+import org.dcm4che3.io.DicomOutputStream;
 import org.dcm4che3.net.ApplicationEntity;
 import org.dcm4che3.net.Association;
 import org.dcm4che3.net.Connection;
@@ -74,6 +78,7 @@ import org.dcm4che3.tool.findscu.FindSCU;
 import org.dcm4che3.tool.findscu.FindSCU.InformationModel;
 import org.dcm4che3.tool.storescu.StoreSCU;
 import org.dcm4che3.tool.storescu.StoreSCU.RSPHandlerFactory;
+import org.dcm4che3.util.SafeClose;
 import org.dcm4che3.util.StringUtils;
 import org.dcm4che3.util.TagUtils;
 import org.junit.BeforeClass;
@@ -86,30 +91,23 @@ import org.junit.Test;
 public class QueryTest extends Generic {
 
     private String testDescription;
-    private String query;
+    private int numMatches;
 
-    
-    private static String[] IVR_LE_FIRST = {
-        UID.ImplicitVRLittleEndian,
-        UID.ExplicitVRLittleEndian,
-        UID.ExplicitVRBigEndianRetired
-    };
+    private static String[] IVR_LE_FIRST = { UID.ImplicitVRLittleEndian,
+            UID.ExplicitVRLittleEndian, UID.ExplicitVRBigEndianRetired };
 
     /**
      * @param testName
      * @param testDescription
      * @param fileName
      */
-    public QueryTest(String testDescription, String query) {
+    public QueryTest(String testDescription) {
         super();
         this.testDescription = testDescription;
-        this.query = query;
     }
-    
-    public void query() throws IOException, InterruptedException,
-            IncompatibleConnectionException, GeneralSecurityException {
 
-        long t1, t2;
+    private int query(Attributes queryParams) throws IOException, InterruptedException,
+            IncompatibleConnectionException, GeneralSecurityException {
 
         Properties config = loadConfig();
         String host = config.getProperty("remoteConn.hostname");
@@ -120,34 +118,73 @@ public class QueryTest extends Generic {
         main.getAAssociateRQ().setCalledAET(aeTitle);
         main.getRemoteConnection().setHostname(host);
         main.getRemoteConnection().setPort(port);
-        
-        ExecutorService executorService =
-                Executors.newSingleThreadExecutor();
-        ScheduledExecutorService scheduledExecutorService =
-                Executors.newSingleThreadScheduledExecutor();
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        ScheduledExecutorService scheduledExecutorService = Executors
+                .newSingleThreadScheduledExecutor();
         main.getDevice().setExecutor(executorService);
         main.getDevice().setScheduledExecutor(scheduledExecutorService);
-        
-        main.setInformationModel(InformationModel.StudyRoot, IVR_LE_FIRST, EnumSet.noneOf(QueryOption.class));
-        
-        //int tag = ElementDictionary.tagForKeyword("PatientName", null);
-        int tag = Tag.PatientName;
-        VR vr = ElementDictionary.vrOf(tag,null);
-        main.getKeys().setString(tag, vr, "COTTA*");
+
+        main.setInformationModel(InformationModel.StudyRoot, IVR_LE_FIRST,
+                EnumSet.noneOf(QueryOption.class));
+
+        main.getKeys().addAll(queryParams);
         
         try {
-              main.open();
+            main.open();
+            main.query(getDimseRSPHandler(main.getAssociation().nextMessageID()));
             
-              main.query();
-              
-              System.out.println("done");
         } finally {
-            main.close();
+            main.close(); //is waiting for all the responsens to be complete
             executorService.shutdown();
             scheduledExecutorService.shutdown();
+            
         }
+
+        return numMatches;
+    }
+    
+    public int patienName (String name, int expResults) throws Exception
+    {
+        Attributes queryatts = new Attributes();
         
+        // int tag = ElementDictionary.tagForKeyword("PatientName", null);
+        int tag = Tag.PatientName;
+        VR vr = ElementDictionary.vrOf(tag, null);
+        queryatts.setString(tag, vr, name);
+        
+        long t1 = System.currentTimeMillis();
+        int results = query (queryatts);
+        long t2 = System.currentTimeMillis();
+        
+        System.out.format(QueryTestSuite.RESULT_FORMAT,
+                ++QueryTestSuite.testNumber,
+                StringUtils.truncate(testDescription, 20),  
+                name,
+                expResults,
+                results,
+                (t2 - t1) + " ms");
+        
+        assertTrue(results == expResults);
+        
+        return results;
     }
 
+    private DimseRSPHandler getDimseRSPHandler(int messageID) {
+        
+        DimseRSPHandler rspHandler = new DimseRSPHandler(messageID) {
 
+            @Override
+            public void onDimseRSP(Association as, Attributes cmd,
+                    Attributes data) {
+                super.onDimseRSP(as, cmd, data);
+                int status = cmd.getInt(Tag.Status, -1);
+                if (Status.isPending(status)) {
+                    ++numMatches;
+                }
+            }
+        };
+
+        return rspHandler;
+    }
 }
