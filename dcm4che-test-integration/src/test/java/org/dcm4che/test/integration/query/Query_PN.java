@@ -39,7 +39,9 @@
 package org.dcm4che.test.integration.query;
 
 import static org.junit.Assert.*;
+
 import org.dcm4che.test.QueryTest;
+import org.dcm4che3.data.Tag;
 import org.junit.Test;
 
 /**
@@ -51,14 +53,14 @@ public class Query_PN {
     @Test
     public void Query_PN_1() throws Exception {
         
-        int results = new QueryTest("Query For PN")
-                .patienName("B*",2);
+        int results = new QueryTest("Patient Name")
+                .queryforTag(Tag.PatientName, "B*",2);
     }
     
     @Test
     public void Query_PN_2() throws Exception {
         
-        int results = new QueryTest("Query For PN")
-                .patienName("COTTA",1);
+        int results = new QueryTest("Patient Name")
+                .queryforTag(Tag.PatientName, "COTTA",1);
     }
 }

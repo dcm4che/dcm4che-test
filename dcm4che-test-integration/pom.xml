@@ -23,6 +23,7 @@
           </systemProperties>
           <includes>
             <include>**/StoreTestSuite.java</include>
+            <include>**/QueryTestSuite.java</include>
           </includes>
         </configuration>
       </plugin>

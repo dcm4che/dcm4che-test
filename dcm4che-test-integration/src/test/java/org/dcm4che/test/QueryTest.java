@@ -144,14 +144,12 @@ public class QueryTest extends Generic {
         return numMatches;
     }
     
-    public int patienName (String name, int expResults) throws Exception
+    public int queryforTag(int tag, String value, int expResults) throws Exception
     {
         Attributes queryatts = new Attributes();
         
-        // int tag = ElementDictionary.tagForKeyword("PatientName", null);
-        int tag = Tag.PatientName;
         VR vr = ElementDictionary.vrOf(tag, null);
-        queryatts.setString(tag, vr, name);
+        queryatts.setString(tag, vr, value);
         
         long t1 = System.currentTimeMillis();
         int results = query (queryatts);
@@ -160,7 +158,7 @@ public class QueryTest extends Generic {
         System.out.format(QueryTestSuite.RESULT_FORMAT,
                 ++QueryTestSuite.testNumber,
                 StringUtils.truncate(testDescription, 20),  
-                name,
+                value,
                 expResults,
                 results,
                 (t2 - t1) + " ms");

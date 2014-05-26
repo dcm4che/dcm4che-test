@@ -54,7 +54,8 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-    Query_PN.class})
+    Query_PN.class,
+    Query_Modalities_In_Study.class})
 
 public class QueryTestSuite {
    
