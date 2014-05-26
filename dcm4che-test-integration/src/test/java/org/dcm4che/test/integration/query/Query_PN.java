@@ -54,7 +54,7 @@ public class Query_PN {
     public void Query_PN_1() throws Exception {
         
         int results = new QueryTest("Patient Name")
-                .queryforTag(Tag.PatientName, "B*",2);
+                .queryforTag(Tag.PatientName, "B*",1);
     }
     
     @Test

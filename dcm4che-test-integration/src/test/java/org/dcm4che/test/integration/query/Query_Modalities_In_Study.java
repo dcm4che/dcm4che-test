@@ -54,7 +54,7 @@ public class Query_Modalities_In_Study {
     public void Query_Modalities_In_Study_1() throws Exception {
         
         int results = new QueryTest("Modalities In Study")
-                .queryforTag(Tag.ModalitiesInStudy, "CT", 10); //expected: 10
+                .queryforTag(Tag.ModalitiesInStudy, "CT", 5); //expected: 5
     }
     
 }
