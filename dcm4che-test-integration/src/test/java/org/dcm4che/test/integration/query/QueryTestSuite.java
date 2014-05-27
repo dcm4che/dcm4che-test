@@ -55,16 +55,18 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
     Query_PN.class,
-    Query_Modalities_In_Study.class})
+    Query_Modalities_In_Study.class,
+    Query_Mesa_IM_404a.class,
+    Query_Mesa_IM_404b.class})
 
 public class QueryTestSuite {
    
-    public static final String RESULT_FORMAT = "%n| %-2s | %-20s | %-15s | %-4d | %-4d | %-8s |";
+    public static final String RESULT_FORMAT = "%n| %-2s | %-38s | %-4d | %-4d | %-8s |";
     public static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
     public static final String RESULT_HEADER2 = "%n+                           Query Tests Suite                          +";
-    public static final String RESULT_HEADER3 = "%n+----+----------------------+-----------------+------+------+----------+";
-    public static final String RESULT_COLUMNS = "%n| #  | Description          | Parameter       | exp. | ret. | time     |";
-    public static final String RESULT_FOOTER1 = "%n+----+----------------------+-----------------+------+------+----------+";  
+    public static final String RESULT_HEADER3 = "%n+----+----------------------------------------+------+------+----------+";
+    public static final String RESULT_COLUMNS = "%n| #  | Description                            | exp. | ret. | time     |";
+    public static final String RESULT_FOOTER1 = "%n+----+----------------------------------------+------+------+----------+";  
     
     public static int testNumber;
     
@@ -73,7 +75,9 @@ public class QueryTestSuite {
 
         //preload images to query
         System.out.printf(RESULT_HEADER1);
-        new StoreTest("Query Preload", "modality/CR").store();
+        new StoreTest("Query Preload: CT", "modality/CT").store();
+        //new StoreTest("Query Preload: MR", "modality/MR").store();
+        new StoreTest("Query Preload: CR", "modality/CR").store();
 
         testNumber=0;
         

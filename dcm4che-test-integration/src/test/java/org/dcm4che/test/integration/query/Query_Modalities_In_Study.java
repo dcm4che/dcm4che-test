@@ -53,8 +53,10 @@ public class Query_Modalities_In_Study {
     @Test
     public void Query_Modalities_In_Study_1() throws Exception {
         
-        int results = new QueryTest("Modalities In Study")
-                .queryforTag(Tag.ModalitiesInStudy, "CT", 5); //expected: 5
+        QueryTest test = new QueryTest("Modalities In Study:CT");
+        test.addTag(Tag.ModalitiesInStudy, "CT");
+        test.setExpectedResultsNumeber(5);
+        test.query();
     }
     
 }

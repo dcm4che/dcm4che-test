@@ -53,14 +53,17 @@ public class Query_PN {
     @Test
     public void Query_PN_1() throws Exception {
         
-        int results = new QueryTest("Patient Name")
-                .queryforTag(Tag.PatientName, "B*",1);
+        QueryTest test = new QueryTest("Patient Name:B*");
+        test.addTag(Tag.PatientName, "P*");
+        test.setExpectedResultsNumeber(2);
+        test.query();
     }
     
     @Test
     public void Query_PN_2() throws Exception {
-        
-        int results = new QueryTest("Patient Name")
-                .queryforTag(Tag.PatientName, "COTTA",1);
+        QueryTest test = new QueryTest("Patient Name:COTTA");
+        test.addTag(Tag.PatientName, "COTTA");
+        test.setExpectedResultsNumeber(1);
+        test.query();
     }
 }

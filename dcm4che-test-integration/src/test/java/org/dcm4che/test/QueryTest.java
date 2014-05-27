@@ -49,6 +49,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -92,9 +93,15 @@ public class QueryTest extends Generic {
 
     private String testDescription;
     private int numMatches;
+    private ArrayList<String> returnedValues = new ArrayList<String>(); 
+    private Integer returnTag = null;
 
     private static String[] IVR_LE_FIRST = { UID.ImplicitVRLittleEndian,
             UID.ExplicitVRLittleEndian, UID.ExplicitVRBigEndianRetired };
+    
+    private Attributes queryatts = new Attributes();
+    private int expectedResult = Integer.MIN_VALUE;
+    private List<String> expectedValues = null;
 
     /**
      * @param testName
@@ -106,9 +113,10 @@ public class QueryTest extends Generic {
         this.testDescription = testDescription;
     }
 
-    private int query(Attributes queryParams) throws IOException, InterruptedException,
+    public int query() throws IOException, InterruptedException,
             IncompatibleConnectionException, GeneralSecurityException {
 
+        
         Properties config = loadConfig();
         String host = config.getProperty("remoteConn.hostname");
         int port = new Integer(config.getProperty("remoteConn.port"));
@@ -128,9 +136,12 @@ public class QueryTest extends Generic {
         main.setInformationModel(InformationModel.StudyRoot, IVR_LE_FIRST,
                 EnumSet.noneOf(QueryOption.class));
 
-        main.getKeys().addAll(queryParams);
+        main.getKeys().addAll(queryatts);
+        
+        long t1 = System.currentTimeMillis();
         
         try {
+            
             main.open();
             main.query(getDimseRSPHandler(main.getAssociation().nextMessageID()));
             
@@ -140,32 +151,52 @@ public class QueryTest extends Generic {
             scheduledExecutorService.shutdown();
             
         }
+        
+        long t2 = System.currentTimeMillis();
+        
+        
+        //format printout
+        System.out.format(QueryTestSuite.RESULT_FORMAT,
+                ++QueryTestSuite.testNumber,
+                StringUtils.truncate(testDescription, 38),  
+                this.expectedResult,
+                numMatches,
+                (t2 - t1) + " ms");
+        
+        if (this.expectedResult >= 0)
+            assertTrue(numMatches == this.expectedResult);
+        
+        if (this.expectedValues!=null)
+            for (String expectedValue : expectedValues)
+                assertTrue("tag["+ ElementDictionary.keywordOf(returnTag,null) +"] not returned expected value:" + expectedValue,
+                        returnedValues.contains(expectedValue));
 
         return numMatches;
     }
     
-    public int queryforTag(int tag, String value, int expResults) throws Exception
+    public void addTag(int tag, String value) throws Exception
     {
-        Attributes queryatts = new Attributes();
-        
         VR vr = ElementDictionary.vrOf(tag, null);
         queryatts.setString(tag, vr, value);
+    }   
+    
+    public void setReturnTag(int tag) throws Exception
+    {
+        VR vr = ElementDictionary.vrOf(tag, null);
+        queryatts.setNull(tag, vr);
+        returnTag = tag;
+    } 
+
+    public void setExpectedResultsNumeber(int expectedResult) {
+        this.expectedResult = expectedResult;
+    }
+    
+    public void addExpectedResult(String value) {
         
-        long t1 = System.currentTimeMillis();
-        int results = query (queryatts);
-        long t2 = System.currentTimeMillis();
+        if (this.expectedValues == null)
+            this.expectedValues = new ArrayList<String>();
         
-        System.out.format(QueryTestSuite.RESULT_FORMAT,
-                ++QueryTestSuite.testNumber,
-                StringUtils.truncate(testDescription, 20),  
-                value,
-                expResults,
-                results,
-                (t2 - t1) + " ms");
-        
-        assertTrue(results == expResults);
-        
-        return results;
+        this.expectedValues.add(value);
     }
 
     private DimseRSPHandler getDimseRSPHandler(int messageID) {
@@ -178,6 +209,14 @@ public class QueryTest extends Generic {
                 super.onDimseRSP(as, cmd, data);
                 int status = cmd.getInt(Tag.Status, -1);
                 if (Status.isPending(status)) {
+                    if (returnTag!=null) {
+                        
+                        String returnedValue = data.getString(returnTag);
+                        if (!returnedValues.contains(returnedValue))
+                            returnedValues.add(returnedValue);
+                        
+                        //System.out.println(returnedValue);
+                    }
                     ++numMatches;
                 }
             }
