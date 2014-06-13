@@ -39,9 +39,16 @@
 package org.dcm4che.test.integration.query;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 import org.dcm4che.test.ConnectTest;
+import org.dcm4che.test.QueryResult;
+import org.dcm4che.test.StoreResult;
 import org.dcm4che.test.StoreTest;
+import org.dcm4che.test.integration.store.StoreTestSuite;
+import org.dcm4che.test.tool.FileUtil;
+import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -61,12 +68,13 @@ import org.junit.runners.Suite.SuiteClasses;
 
 public class QueryTestSuite {
    
-    public static final String RESULT_FORMAT = "%n| %-2s | %-38s | %-4d | %-4d | %-8s |";
-    public static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
-    public static final String RESULT_HEADER2 = "%n+                           Query Tests Suite                          +";
-    public static final String RESULT_HEADER3 = "%n+----+----------------------------------------+------+------+----------+";
-    public static final String RESULT_COLUMNS = "%n| #  | Description                            | exp. | ret. | time     |";
-    public static final String RESULT_FOOTER1 = "%n+----+----------------------------------------+------+------+----------+";  
+    private static final String RESULT_FORMAT = "%n| %-2s | %-38s | %-4d | %-4d | %-8s |";
+    private static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
+    private static final String RESULT_HEADER2 = "%n+                           Query Tests Suite                          +";
+    private static final String RESULT_HEADER3 = "%n+----+----------------------------------------+------+------+----------+";
+    private static final String RESULT_COLUMNS = "%n| #  | Description                            | exp. | ret. | time     |";
+    private static final String RESULT_FOOTER1 = "%n+----+----------------------------------------+------+------+----------+";  
+    private static final String RESULT_HEADERP = "%n+                          Query Tests Preload                         +";
     
     public static int testNumber;
     
@@ -75,9 +83,10 @@ public class QueryTestSuite {
 
         //preload images to query
         System.out.printf(RESULT_HEADER1);
-        new StoreTest("Query Preload: CT", "modality/CT").store();
-        //new StoreTest("Query Preload: MR", "modality/MR").store();
-        new StoreTest("Query Preload: CR", "modality/CR").store();
+        System.out.printf(RESULT_HEADERP);
+        System.out.printf(RESULT_HEADER1);
+        StoreTestSuite.printResults(new StoreTest("Query Preload: CT", "modality/CT").store());
+        StoreTestSuite.printResults(new StoreTest("Query Preload: CR", "modality/CR").store());
 
         testNumber=0;
         
@@ -102,4 +111,16 @@ public class QueryTestSuite {
         System.out.printf(RESULT_FOOTER1);
         System.out.println();
     }
+    
+    public static void printResults(QueryResult result) {
+
+        //format printout
+        System.out.format(RESULT_FORMAT,
+                ++QueryTestSuite.testNumber,
+                StringUtils.truncate(result.getTestDescription(), 38),  
+                result.getExpectedResult(),
+                result.getNumMatches(),
+                result.getTime() + " ms");
+    }
+            
 }

@@ -40,46 +40,36 @@ package org.dcm4che.test;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.dcm4che.test.integration.query.QueryTestSuite;
 import org.dcm4che.test.integration.store.StoreTestSuite;
 import org.dcm4che.test.tool.ConnectionUtil;
 import org.dcm4che.test.tool.FileUtil;
 import org.dcm4che3.data.Attributes;
-import org.dcm4che3.data.ElementDictionary;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.UID;
-import org.dcm4che3.data.VR;
-import org.dcm4che3.io.DicomOutputStream;
 import org.dcm4che3.net.ApplicationEntity;
 import org.dcm4che3.net.Association;
 import org.dcm4che3.net.Connection;
 import org.dcm4che3.net.Device;
 import org.dcm4che3.net.DimseRSPHandler;
 import org.dcm4che3.net.IncompatibleConnectionException;
-import org.dcm4che3.net.QueryOption;
 import org.dcm4che3.net.Status;
 import org.dcm4che3.tool.common.CLIUtils;
-import org.dcm4che3.tool.findscu.FindSCU;
-import org.dcm4che3.tool.findscu.FindSCU.InformationModel;
+import org.dcm4che3.tool.mppsscu.MppsSCU;
+import org.dcm4che3.tool.mppsscu.MppsSCU.MppsWithIUID;
 import org.dcm4che3.tool.storescu.StoreSCU;
 import org.dcm4che3.tool.storescu.StoreSCU.RSPHandlerFactory;
-import org.dcm4che3.util.SafeClose;
 import org.dcm4che3.util.StringUtils;
 import org.dcm4che3.util.TagUtils;
 import org.junit.BeforeClass;
@@ -89,130 +79,144 @@ import org.junit.Test;
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  * 
  */
-public class QueryTest extends Generic {
+public class MppsTest extends Generic {
 
     private String testDescription;
-    private int numMatches;
-    private ArrayList<String> returnedValues = new ArrayList<String>(); 
-    private Integer returnTag = null;
+    private String fileName;
 
-    private static String[] IVR_LE_FIRST = { UID.ImplicitVRLittleEndian,
-            UID.ExplicitVRLittleEndian, UID.ExplicitVRBigEndianRetired };
-    
-    private Attributes queryatts = new Attributes();
-    private int expectedResult = Integer.MIN_VALUE;
-    private List<String> expectedValues = null;
+    private long totalSize;
+    private int filesSent;
+    private int warnings;    
+    private int failures;
 
     /**
      * @param testName
      * @param testDescription
      * @param fileName
      */
-    public QueryTest(String testDescription) {
+    public MppsTest(String testDescription, String fileName) {
         super();
         this.testDescription = testDescription;
+        this.fileName = fileName;
     }
-
-    public QueryResult query() throws IOException, InterruptedException,
+    
+    public void mppsscu() throws IOException, InterruptedException,
             IncompatibleConnectionException, GeneralSecurityException {
-        
+
+        long t1, t2;
+
         Properties config = loadConfig();
         String host = config.getProperty("remoteConn.hostname");
         int port = new Integer(config.getProperty("remoteConn.port"));
-        String aeTitle = config.getProperty("query.aetitle");
+        String aeTitle = config.getProperty("mpps.aetitle");
+        String directory = config.getProperty("mpps.directory");
 
-        FindSCU main = new FindSCU();
+        File file = new File(directory, fileName);
+
+        assertTrue(
+                "file or directory does not exists: " + file.getAbsolutePath(),
+                file.exists());
+
+        Device device = new Device("mppsscu");
+        Connection conn = new Connection();
+        device.addConnection(conn);
+        ApplicationEntity ae = new ApplicationEntity("MPPSSCU");
+        device.addApplicationEntity(ae);
+        ae.addConnection(conn);
+
+        final MppsSCU main = new MppsSCU(ae);
+        
+        main.setRspHandlerFactory(new MppsSCU.RSPHandlerFactory() {
+
+            @Override
+            public DimseRSPHandler createDimseRSPHandlerForNCreate(final MppsSCU.MppsWithIUID mppsWithUID) {
+
+                return new DimseRSPHandler(0) {
+
+                    @Override
+                    public void onDimseRSP(Association as, Attributes cmd,
+                            Attributes data) {
+                        
+                        switch(cmd.getInt(Tag.Status, -1)) {
+                        case Status.Success:
+                        case Status.AttributeListError:
+                        case Status.AttributeValueOutOfRange:
+                            mppsWithUID.iuid = cmd.getString(
+                                    Tag.AffectedSOPInstanceUID, mppsWithUID.iuid);
+                            main.addCreatedMpps(mppsWithUID);
+                        }
+                        
+                        super.onDimseRSP(as, cmd, data);
+                        MppsTest.this.onNCreateRSP(cmd);
+                    }
+                };
+            }
+            
+            @Override
+            public DimseRSPHandler createDimseRSPHandlerForNSet() {
+                
+                return new DimseRSPHandler(0) {
+                    
+                    @Override
+                    public void onDimseRSP(Association as, Attributes cmd, Attributes data) {
+                        super.onDimseRSP(as, cmd, data);
+                        MppsTest.this.onNSetRSP(cmd);
+                    }
+                };
+            }
+
+        });
+
+        // configure
         main.getAAssociateRQ().setCalledAET(aeTitle);
         main.getRemoteConnection().setHostname(host);
         main.getRemoteConnection().setPort(port);
+        main.setTransferSyntaxes(new String[]{UID.ImplicitVRLittleEndian, UID.ExplicitVRLittleEndian, UID.ExplicitVRBigEndianRetired});
+        main.setAttributes(new Attributes());
 
+        // scan
+        t1 = System.currentTimeMillis();
+        main.scanFiles(Arrays.asList(file.getAbsolutePath()), false); //do not printout
+        t2 = System.currentTimeMillis();
+
+        // create executor
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         ScheduledExecutorService scheduledExecutorService = Executors
                 .newSingleThreadScheduledExecutor();
-        main.getDevice().setExecutor(executorService);
-        main.getDevice().setScheduledExecutor(scheduledExecutorService);
+        device.setExecutor(executorService);
+        device.setScheduledExecutor(scheduledExecutorService);
 
-        main.setInformationModel(InformationModel.StudyRoot, IVR_LE_FIRST,
-                EnumSet.noneOf(QueryOption.class));
-
-        main.getKeys().addAll(queryatts);
-        
-        long t1 = System.currentTimeMillis();
-        
+        // open and send
         try {
-            
             main.open();
-            main.query(getDimseRSPHandler(main.getAssociation().nextMessageID()));
-            
+
+            t1 = System.currentTimeMillis();
+            main.createMpps();
+            main.updateMpps();
+            t2 = System.currentTimeMillis();
         } finally {
-            main.close(); //is waiting for all the responsens to be complete
+            main.close();
             executorService.shutdown();
             scheduledExecutorService.shutdown();
-            
         }
-        
-        long t2 = System.currentTimeMillis();
-        
-        
-        if (this.expectedResult >= 0)
-            assertTrue(numMatches == this.expectedResult);
-        
-        if (this.expectedValues!=null)
-            for (String expectedValue : expectedValues)
-                assertTrue("tag["+ ElementDictionary.keywordOf(returnTag,null) +"] not returned expected value:" + expectedValue,
-                        returnedValues.contains(expectedValue));
 
-        return new QueryResult(testDescription, expectedResult, numMatches,(t2-t1));
-    }
-    
-    public void addTag(int tag, String value) throws Exception
-    {
-        VR vr = ElementDictionary.vrOf(tag, null);
-        queryatts.setString(tag, vr, value);
-    }   
-    
-    public void setReturnTag(int tag) throws Exception
-    {
-        VR vr = ElementDictionary.vrOf(tag, null);
-        queryatts.setNull(tag, vr);
-        returnTag = tag;
-    } 
-
-    public void setExpectedResultsNumeber(int expectedResult) {
-        this.expectedResult = expectedResult;
-    }
-    
-    public void addExpectedResult(String value) {
-        
-        if (this.expectedValues == null)
-            this.expectedValues = new ArrayList<String>();
-        
-        this.expectedValues.add(value);
+//        System.out.format(StoreTestSuite.RESULT_FORMAT,
+//                ++StoreTestSuite.testNumber,
+//                StringUtils.truncate(testDescription, 20), 
+//                filesSent, 
+//                failures,
+//                warnings,
+//                FileUtil.humanreadable(totalSize, true),
+//                (t2 - t1) + " ms");
     }
 
-    private DimseRSPHandler getDimseRSPHandler(int messageID) {
-        
-        DimseRSPHandler rspHandler = new DimseRSPHandler(messageID) {
+    private void onNCreateRSP(Attributes cmd) {
+        int status = cmd.getInt(Tag.Status, -1);
+        System.out.println("onNCreateRSP:"+status);
+    }
 
-            @Override
-            public void onDimseRSP(Association as, Attributes cmd,
-                    Attributes data) {
-                super.onDimseRSP(as, cmd, data);
-                int status = cmd.getInt(Tag.Status, -1);
-                if (Status.isPending(status)) {
-                    if (returnTag!=null) {
-                        
-                        String returnedValue = data.getString(returnTag);
-                        if (!returnedValues.contains(returnedValue))
-                            returnedValues.add(returnedValue);
-                        
-                        //System.out.println(returnedValue);
-                    }
-                    ++numMatches;
-                }
-            }
-        };
-
-        return rspHandler;
+    private void onNSetRSP(Attributes cmd) {
+        int status = cmd.getInt(Tag.Status, -1);
+        System.out.println("onNSetRSP:"+status);
     }
 }

@@ -39,8 +39,13 @@
 package org.dcm4che.test.integration.store;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 import org.dcm4che.test.ConnectTest;
+import org.dcm4che.test.StoreResult;
+import org.dcm4che.test.tool.FileUtil;
+import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -49,32 +54,28 @@ import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- *
+ * 
  */
 @RunWith(Suite.class)
-@SuiteClasses({
-    Store_MESA_CT.class, 
-    Store_MESA_CR.class,
-    Store_MESA_MG.class,
-    Store_MESA_MR.class})
-
+@SuiteClasses({ Store_MESA_CT.class, Store_MESA_CR.class, Store_MESA_MG.class,
+        Store_MESA_MR.class })
 public class StoreTestSuite {
-   
-    public static final String RESULT_FORMAT = "%n| %-2s | %-20s | %-4d | %-4d | %-4d | %-8s | %-8s |";
-    public static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
-    public static final String RESULT_HEADER2 = "%n+                           Store Tests Suite                          +";
-    public static final String RESULT_HEADER3 = "%n+----+----------------------+------+------+------+----------+----------+";
-    public static final String RESULT_COLUMNS = "%n| #  | Description          | sent | fail | warn | size     | time     |";
-    public static final String RESULT_FOOTER1 = "%n+----+----------------------+------+------+------+----------+----------+";  
-    
+
+    private static final String RESULT_FORMAT = "%n| %-2s | %-20s | %-4d | %-4d | %-4d | %-8s | %-8s |";
+    private static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
+    private static final String RESULT_HEADER2 = "%n+                           Store Tests Suite                          +";
+    private static final String RESULT_HEADER3 = "%n+----+----------------------+------+------+------+----------+----------+";
+    private static final String RESULT_COLUMNS = "%n| #  | Description          | sent | fail | warn | size     | time     |";
+    private static final String RESULT_FOOTER1 = "%n+----+----------------------+------+------+------+----------+----------+";
+
     public static int testNumber;
-    
+
     @BeforeClass
     public static void testConnection() throws IOException {
-        
-        testNumber=0;
-        
-        //test if connection is alive
+
+        testNumber = 0;
+
+        // test if connection is alive
         new ConnectTest().test();
         System.out.printf(RESULT_HEADER1);
         System.out.printf(RESULT_HEADER2);
@@ -82,13 +83,25 @@ public class StoreTestSuite {
         System.out.printf(RESULT_COLUMNS);
         System.out.printf(RESULT_FOOTER1);
     }
-    
+
     @AfterClass
     public static void endTests() throws IOException {
-        
-        testNumber=0;
-        
+
+        testNumber = 0;
+
         System.out.printf(RESULT_FOOTER1);
         System.out.println();
+    }
+
+    public static void printResults(StoreResult result) {
+        
+        System.out.format(StoreTestSuite.RESULT_FORMAT,
+                ++StoreTestSuite.testNumber,
+                StringUtils.truncate(result.getTestDescription(), 20), 
+                result.getFilesSent(),
+                result.getFailures(), 
+                result.getWarnings(),
+                FileUtil.humanreadable(result.getSize(), true), 
+                result.getTime() + " ms");
     }
 }

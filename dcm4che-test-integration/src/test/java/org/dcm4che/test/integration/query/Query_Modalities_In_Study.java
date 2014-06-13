@@ -40,6 +40,7 @@ package org.dcm4che.test.integration.query;
 
 import static org.junit.Assert.*;
 
+import org.dcm4che.test.QueryResult;
 import org.dcm4che.test.QueryTest;
 import org.dcm4che3.data.Tag;
 import org.junit.Test;
@@ -56,7 +57,8 @@ public class Query_Modalities_In_Study {
         QueryTest test = new QueryTest("Modalities In Study:CT");
         test.addTag(Tag.ModalitiesInStudy, "CT");
         test.setExpectedResultsNumeber(5);
-        test.query();
+        QueryResult result = test.query();
+        QueryTestSuite.printResults(result);
     }
     
 }

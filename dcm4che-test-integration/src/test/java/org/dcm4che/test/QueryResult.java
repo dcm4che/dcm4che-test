@@ -1,7 +1,7 @@
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
- * The contents of this file are subjeCR to the Mozilla Public License Version
+ * The contents of this file are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  * http://www.mozilla.org/MPL/
@@ -36,25 +36,45 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test.integration.store;
-
-import java.util.List;
-
-import org.dcm4che.test.StoreResult;
-import org.dcm4che.test.StoreTest;
-import org.junit.Test;
+package org.dcm4che.test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ *
  */
-public class Store_MESA_MG {
+public class QueryResult {
 
-    @Test
-    public void Store_MESA_MG_MG1_MGS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,MG1,S1", "modality/MG/MG1/MG1S1")
-                .store();
-        
-        StoreTestSuite.printResults(results);
+    private String testDescription;
+    private int expectedResult = Integer.MIN_VALUE;
+    private int numMatches;
+    private long time;
+    /**
+     * @param testDescription
+     * @param expectedResult
+     * @param numMatches
+     * @param time
+     */
+    public QueryResult(String testDescription, int expectedResult,
+            int numMatches, long time) {
+        super();
+        this.testDescription = testDescription;
+        this.expectedResult = expectedResult;
+        this.numMatches = numMatches;
+        this.time = time;
     }
+    public String getTestDescription() {
+        return testDescription;
+    }
+    public int getExpectedResult() {
+        return expectedResult;
+    }
+    public int getNumMatches() {
+        return numMatches;
+    }
+    public long getTime() {
+        return time;
+    }
+    
+    
+
 }

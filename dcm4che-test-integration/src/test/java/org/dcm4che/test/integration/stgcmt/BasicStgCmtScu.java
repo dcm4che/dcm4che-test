@@ -36,25 +36,21 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test.integration.store;
+package org.dcm4che.test.integration.stgcmt;
 
-import java.util.List;
-
-import org.dcm4che.test.StoreResult;
+import org.dcm4che.test.StgCmtTest;
 import org.dcm4che.test.StoreTest;
+import org.dcm4che3.tool.stgcmtscu.StgCmtSCU;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  * 
  */
-public class Store_MESA_MG {
+public class BasicStgCmtScu {
 
     @Test
-    public void Store_MESA_MG_MG1_MGS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,MG1,S1", "modality/MG/MG1/MG1S1")
-                .store();
-        
-        StoreTestSuite.printResults(results);
+    public void Store_MESA_MR_MR1_MRS1() throws Exception {
+        StgCmtSCU.main(new String[]{"-b STGCMTSCU:11114", "-c DCM4CHEE@localhost:11112", "/opt/DICOM_EXAMPLES/MESA/modality/MR/MR1/MR1S1/MR1S1IM1.dcm"});
     }
 }

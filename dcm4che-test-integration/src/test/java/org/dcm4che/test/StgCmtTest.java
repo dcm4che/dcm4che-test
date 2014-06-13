@@ -57,6 +57,7 @@ import org.dcm4che.test.tool.ConnectionUtil;
 import org.dcm4che.test.tool.FileUtil;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
+import org.dcm4che3.data.UID;
 import org.dcm4che3.net.ApplicationEntity;
 import org.dcm4che3.net.Association;
 import org.dcm4che3.net.Connection;
@@ -64,7 +65,10 @@ import org.dcm4che3.net.Device;
 import org.dcm4che3.net.DimseRSPHandler;
 import org.dcm4che3.net.IncompatibleConnectionException;
 import org.dcm4che3.net.Status;
+import org.dcm4che3.net.pdu.PresentationContext;
 import org.dcm4che3.tool.common.CLIUtils;
+import org.dcm4che3.tool.common.DicomFiles;
+import org.dcm4che3.tool.stgcmtscu.StgCmtSCU;
 import org.dcm4che3.tool.storescu.StoreSCU;
 import org.dcm4che3.tool.storescu.StoreSCU.RSPHandlerFactory;
 import org.dcm4che3.util.StringUtils;
@@ -76,7 +80,7 @@ import org.junit.Test;
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  * 
  */
-public class StoreTest extends Generic {
+public class StgCmtTest extends Generic {
 
     private String testDescription;
     private String fileName;
@@ -91,17 +95,15 @@ public class StoreTest extends Generic {
      * @param testDescription
      * @param fileName
      */
-    public StoreTest(String testDescription, String fileName) {
+    public StgCmtTest(String testDescription, String fileName) {
         super();
         this.testDescription = testDescription;
         this.fileName = fileName;
     }
     
-    public StoreResult store() throws IOException, InterruptedException,
+    public void stgcmt() throws IOException, InterruptedException,
             IncompatibleConnectionException, GeneralSecurityException {
 
-        List<StoreResult> results = new ArrayList<StoreResult>();
-        
         long t1, t2;
 
         Properties config = loadConfig();
@@ -110,106 +112,77 @@ public class StoreTest extends Generic {
         String aeTitle = config.getProperty("store.aetitle");
         String directory = config.getProperty("store.directory");
 
+        int stgcmtport = new Integer(config.getProperty("stgcmt.port"));
+        
         File file = new File(directory, fileName);
 
         assertTrue(
                 "file or directory does not exists: " + file.getAbsolutePath(),
                 file.exists());
 
-        Device device = new Device("storescu");
+        Device device = new Device("stgcmtscu");
         Connection conn = new Connection();
+        conn.setPort(stgcmtport);
         device.addConnection(conn);
-        ApplicationEntity ae = new ApplicationEntity("STORESCU");
+        ApplicationEntity ae = new ApplicationEntity("STGCMTSCU");
         device.addApplicationEntity(ae);
         ae.addConnection(conn);
 
-        StoreSCU main = new StoreSCU(ae);
-
-        main.setRspHandlerFactory(new StoreSCU.RSPHandlerFactory() {
-
-            @Override
-            public DimseRSPHandler createDimseRSPHandler(final File f) {
-
-                return new DimseRSPHandler(0) {
-
-                    @Override
-                    public void onDimseRSP(Association as, Attributes cmd,
-                            Attributes data) {
-                        super.onDimseRSP(as, cmd, data);
-                        StoreTest.this.onCStoreRSP(cmd, f);
-                    }
-                };
-            }
-
-        });
+        final StgCmtSCU stgcmtscu = new StgCmtSCU(ae);
 
         // configure
-        main.getAAssociateRQ().setCalledAET(aeTitle);
-        main.getRemoteConnection().setHostname(host);
-        main.getRemoteConnection().setPort(port);
-
-        // specify attributes added to the sent object(s). attr can be
-        // specified by keyword or tag value (in hex), e.g. PatientName
-        // or 00100010. Attributes in nested Datasets can be specified
-        // by including the keyword/tag value of the sequence attribute,
-        // e.g. 00400275/00400009 for Scheduled Procedure Step ID in
-        // the Request Attributes Sequence.
-
-        String[] attributes = new String[0];
-        main.setAttributes(new Attributes());
-        CLIUtils.addAttributes(main.getAttributes(), attributes);
-
+        conn.setMaxOpsInvoked(0);
+        conn.setMaxOpsPerformed(0);
+        
+        stgcmtscu.getAAssociateRQ().setCalledAET(aeTitle);
+        stgcmtscu.getRemoteConnection().setHostname(host);
+        stgcmtscu.getRemoteConnection().setPort(port);
+        stgcmtscu.setTransferSyntaxes(new String[]{UID.ImplicitVRLittleEndian, UID.ExplicitVRLittleEndian, UID.ExplicitVRBigEndianRetired});
+        stgcmtscu.setAttributes(new Attributes());
+        stgcmtscu.setStorageDirectory(new File("."));
+        
         // scan
         t1 = System.currentTimeMillis();
-        main.scanFiles(Arrays.asList(file.getAbsolutePath()), false); //do not printout
+        DicomFiles.scan(Arrays.asList(file.getAbsolutePath()), new DicomFiles.Callback() {
+            
+            @Override
+            public boolean dicomFile(File f, Attributes fmi, long dsPos,
+                    Attributes ds) {
+                return stgcmtscu.addInstance(ds);
+            }
+        });
         t2 = System.currentTimeMillis();
 
         // create executor
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        ScheduledExecutorService scheduledExecutorService = Executors
-                .newSingleThreadScheduledExecutor();
+        ExecutorService executorService =
+                Executors.newCachedThreadPool();
+        ScheduledExecutorService scheduledExecutorService =
+                Executors.newSingleThreadScheduledExecutor();
         device.setExecutor(executorService);
         device.setScheduledExecutor(scheduledExecutorService);
+        device.bindConnections();
 
-        // open and send
+        // open, send and wait for response
         try {
-            main.open();
-
-            t1 = System.currentTimeMillis();
-            main.sendFiles();
-            t2 = System.currentTimeMillis();
-        } finally {
-            main.close();
+            stgcmtscu.open();
+            stgcmtscu.sendRequests();
+         } finally {
+            stgcmtscu.close();
+            if (conn.isListening()) {
+                device.waitForNoOpenConnections();
+                device.unbindConnections();
+            }
             executorService.shutdown();
             scheduledExecutorService.shutdown();
         }
-        
-        return new StoreResult(testDescription, directory, totalSize, (t2 - t1), filesSent, warnings, failures);
-    }
-
-    private void onCStoreRSP(Attributes cmd, File f) {
-        int status = cmd.getInt(Tag.Status, -1);
-        switch (status) {
-        case Status.Success:
-            totalSize += f.length();
-            ++filesSent;
-            break;
-        case Status.CoercionOfDataElements:
-        case Status.ElementsDiscarded:
-        case Status.DataSetDoesNotMatchSOPClassWarning:
-            totalSize += f.length();
-            ++filesSent;
-            ++warnings;
-//            System.err.println(MessageFormat.format("warning",
-//                    TagUtils.shortToHexString(status), f));
-//            System.err.println(cmd);
-            break;
-        default:
-            ++failures;
-            System.err.println(MessageFormat.format("error",
-                    TagUtils.shortToHexString(status), f));
-            System.err.println(cmd);
-        }
+//        System.out.format(StoreTestSuite.RESULT_FORMAT,
+//                ++StoreTestSuite.testNumber,
+//                StringUtils.truncate(testDescription, 20), 
+//                filesSent, 
+//                failures,
+//                warnings,
+//                FileUtil.humanreadable(totalSize, true),
+//                (t2 - t1) + " ms");
     }
 
 }

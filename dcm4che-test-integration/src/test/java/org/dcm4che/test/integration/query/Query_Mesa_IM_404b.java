@@ -43,6 +43,7 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.dcm4che.test.QueryResult;
 import org.dcm4che.test.QueryTest;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.VR;
@@ -69,7 +70,9 @@ public class Query_Mesa_IM_404b {
         
         test.addExpectedResult("1.2.392.200036.9125.0.19950720093509");
                 
-        test.query();
+        QueryResult result = test.query();
+        QueryTestSuite.printResults(result);
+
     }
     
     @Test
@@ -87,7 +90,9 @@ public class Query_Mesa_IM_404b {
         
         test.addExpectedResult("1.2.840.10008.5.1.4.1.1.1");
                 
-        test.query();
+        QueryResult result = test.query();
+        QueryTestSuite.printResults(result);
+
     }
 
     @Test
@@ -105,7 +110,9 @@ public class Query_Mesa_IM_404b {
         
         test.addExpectedResult("2010");
                 
-        test.query();
+        QueryResult result = test.query();
+        QueryTestSuite.printResults(result);
+
     }
 
     @Test
@@ -123,7 +130,9 @@ public class Query_Mesa_IM_404b {
         
         test.addExpectedResult("1670");
                 
-        test.query();
+        QueryResult result = test.query();
+        QueryTestSuite.printResults(result);
+
     }
     
     @Test
@@ -141,6 +150,8 @@ public class Query_Mesa_IM_404b {
         
         test.addExpectedResult("16");
                 
-        test.query();
+        QueryResult result = test.query();
+        QueryTestSuite.printResults(result);
+
     }
 }

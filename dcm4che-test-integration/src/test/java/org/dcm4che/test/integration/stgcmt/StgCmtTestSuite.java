@@ -36,67 +36,56 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test.integration.store;
+package org.dcm4che.test.integration.stgcmt;
 
-import java.util.List;
+import java.io.IOException;
 
-import org.dcm4che.test.StoreResult;
-import org.dcm4che.test.StoreTest;
-import org.dcm4che.test.tool.ReflectionUtil;
-import org.junit.Test;
+import org.dcm4che.test.ConnectTest;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ *
  */
-public class Store_MESA_CT {
+@RunWith(Suite.class)
+@SuiteClasses({
+    StgCmt_MESA_MR.class})
 
-    @Test
-    public void Store_MESA_CT_CT1_CTS1() throws Exception {
+public class StgCmtTestSuite {
+   
+    public static final String RESULT_FORMAT = "%n| %-2s | %-20s | %-4d | %-4d | %-4d | %-8s | %-8s |";
+    public static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
+    public static final String RESULT_HEADER2 = "%n+                  Storage Commitment Tests Suite                      +";
+    public static final String RESULT_HEADER3 = "%n+----+----------------------+------+------+------+----------+----------+";
+    public static final String RESULT_COLUMNS = "%n| #  | Description          | sent | fail | warn | size     | time     |";
+    public static final String RESULT_FOOTER1 = "%n+----+----------------------+------+------+------+----------+----------+";  
+    
+    public static int testNumber;
+    
+    @BeforeClass
+    public static void testConnection() throws IOException {
         
-        StoreResult results = new StoreTest("MESA_12_5,CT1,S1", "modality/CT/CT1/CT1S1")
-                .store();
+        testNumber=0;
         
-        StoreTestSuite.printResults(results);
-    }
-
-    @Test
-    public void Store_MESA_CT_CT1_CTS2() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,CT1,S2", "modality/CT/CT1/CT1S2")
-                .store();
-        
-        StoreTestSuite.printResults(results);
-    }
-
-    @Test
-    public void Store_MESA_CT_CT2_CTS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,CT2,S1", "modality/CT/CT2/CT2S1")
-                .store();
-        
-        StoreTestSuite.printResults(results);
-    }
-
-    @Test
-    public void Store_MESA_CT_CT3_CTS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,CT3,S1", "modality/CT/CT3/CT3S1")
-                .store();
-        
-        StoreTestSuite.printResults(results);
+        //test if connection is alive
+        new ConnectTest().test();
+        System.out.printf(RESULT_HEADER1);
+        System.out.printf(RESULT_HEADER2);
+        System.out.printf(RESULT_HEADER3);
+        System.out.printf(RESULT_COLUMNS);
+        System.out.printf(RESULT_FOOTER1);
     }
     
-    @Test
-    public void Store_MESA_CT_CT4_CTS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,CT4,S1", "modality/CT/CT4/CT4S1")
-                .store();
+    @AfterClass
+    public static void endTests() throws IOException {
         
-        StoreTestSuite.printResults(results);
-    }
-    
-    @Test
-    public void Store_MESA_CT_CT5_CTS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,CT5,S1", "modality/CT/CT5/CT5S1")
-                .store();
+        testNumber=0;
         
-        StoreTestSuite.printResults(results);
+        System.out.printf(RESULT_FOOTER1);
+        System.out.println();
     }
 }

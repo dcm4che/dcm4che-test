@@ -1,7 +1,7 @@
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
- * The contents of this file are subjeCR to the Mozilla Public License Version
+ * The contents of this file are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  * http://www.mozilla.org/MPL/
@@ -36,25 +36,63 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test.integration.store;
-
-import java.util.List;
-
-import org.dcm4che.test.StoreResult;
-import org.dcm4che.test.StoreTest;
-import org.junit.Test;
+package org.dcm4che.test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ *
  */
-public class Store_MESA_MG {
+public class StoreResult {
 
-    @Test
-    public void Store_MESA_MG_MG1_MGS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,MG1,S1", "modality/MG/MG1/MG1S1")
-                .store();
-        
-        StoreTestSuite.printResults(results);
+
+    private String testDescription;
+    private String fileName;
+    private long size;
+    private long time;
+    private int filesSent;
+    private int warnings;    
+    private int failures;
+    /**
+     * @param testDescription
+     * @param fileName
+     * @param size
+     * @param time
+     * @param filesSent
+     * @param warnings
+     * @param failures
+     */
+    public StoreResult(String testDescription, String fileName, long size,
+            long time, int filesSent, int warnings, int failures) {
+        super();
+        this.testDescription = testDescription;
+        this.fileName = fileName;
+        this.size = size;
+        this.time = time;
+        this.filesSent = filesSent;
+        this.warnings = warnings;
+        this.failures = failures;
     }
+    
+    public String getTestDescription() {
+        return testDescription;
+    }
+    public String getFileName() {
+        return fileName;
+    }
+    public long getSize() {
+        return size;
+    }
+    public long getTime() {
+        return time;
+    }
+    public int getFilesSent() {
+        return filesSent;
+    }
+    public int getWarnings() {
+        return warnings;
+    }
+    public int getFailures() {
+        return failures;
+    }
+
 }

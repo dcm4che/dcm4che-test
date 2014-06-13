@@ -40,6 +40,7 @@ package org.dcm4che.test.integration.query;
 
 import static org.junit.Assert.*;
 
+import org.dcm4che.test.QueryResult;
 import org.dcm4che.test.QueryTest;
 import org.dcm4che3.data.Tag;
 import org.junit.Test;
@@ -56,7 +57,9 @@ public class Query_PN {
         QueryTest test = new QueryTest("Patient Name:B*");
         test.addTag(Tag.PatientName, "P*");
         test.setExpectedResultsNumeber(2);
-        test.query();
+        QueryResult result = test.query();
+        QueryTestSuite.printResults(result);
+
     }
     
     @Test
@@ -64,6 +67,8 @@ public class Query_PN {
         QueryTest test = new QueryTest("Patient Name:COTTA");
         test.addTag(Tag.PatientName, "COTTA");
         test.setExpectedResultsNumeber(1);
-        test.query();
+        QueryResult result = test.query();
+        QueryTestSuite.printResults(result);
+
     }
 }

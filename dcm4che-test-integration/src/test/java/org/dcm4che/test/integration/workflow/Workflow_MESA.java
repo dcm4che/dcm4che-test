@@ -36,11 +36,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test.integration.store;
+package org.dcm4che.test.integration.workflow;
 
-import java.util.List;
-
-import org.dcm4che.test.StoreResult;
+import org.dcm4che.test.MppsTest;
 import org.dcm4che.test.StoreTest;
 import org.junit.Test;
 
@@ -48,13 +46,18 @@ import org.junit.Test;
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  * 
  */
-public class Store_MESA_MG {
+public class Workflow_MESA {
 
     @Test
-    public void Store_MESA_MG_MG1_MGS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,MG1,S1", "modality/MG/MG1/MG1S1")
-                .store();
+    public void MESA_PIR_Workflow_103() throws Exception {
         
-        StoreTestSuite.printResults(results);
+        //preload
+        //new StoreTest("MESA_PIR Preload: MR/MR4/MR4S1", "modality/MR/MR4/MR4S1").store();
+        
+        //missing: HL7 scheduling ORM
+        
+        //mpps
+        new MppsTest("Send MPPS for Study", "modality/MR/MR4/MR4S1").mppsscu();
+
     }
 }
