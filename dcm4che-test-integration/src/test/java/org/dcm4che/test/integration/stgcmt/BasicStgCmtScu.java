@@ -38,8 +38,7 @@
 
 package org.dcm4che.test.integration.stgcmt;
 
-import org.dcm4che.test.StgCmtTest;
-import org.dcm4che.test.StoreTest;
+import org.dcm4che.test.integration.store.StoreTest;
 import org.dcm4che3.tool.stgcmtscu.StgCmtSCU;
 import org.junit.Test;
 

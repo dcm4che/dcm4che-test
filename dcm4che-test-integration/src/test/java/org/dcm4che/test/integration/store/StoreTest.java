@@ -36,7 +36,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test;
+package org.dcm4che.test.integration.store;
 
 import static org.junit.Assert.*;
 
@@ -52,7 +52,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.dcm4che.test.integration.store.StoreTestSuite;
+import org.dcm4che.test.Generic;
 import org.dcm4che.test.tool.ConnectionUtil;
 import org.dcm4che.test.tool.FileUtil;
 import org.dcm4che3.data.Attributes;

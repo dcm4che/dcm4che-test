@@ -43,9 +43,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.dcm4che.test.ConnectTest;
-import org.dcm4che.test.QueryResult;
-import org.dcm4che.test.StoreResult;
-import org.dcm4che.test.StoreTest;
+import org.dcm4che.test.integration.store.StoreResult;
+import org.dcm4che.test.integration.store.StoreTest;
 import org.dcm4che.test.integration.store.StoreTestSuite;
 import org.dcm4che.test.tool.FileUtil;
 import org.dcm4che3.util.StringUtils;

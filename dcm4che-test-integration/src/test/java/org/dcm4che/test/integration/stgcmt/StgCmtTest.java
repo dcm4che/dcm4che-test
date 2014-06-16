@@ -36,7 +36,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test;
+package org.dcm4che.test.integration.stgcmt;
 
 import static org.junit.Assert.*;
 
@@ -52,6 +52,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+import org.dcm4che.test.Generic;
 import org.dcm4che.test.integration.store.StoreTestSuite;
 import org.dcm4che.test.tool.ConnectionUtil;
 import org.dcm4che.test.tool.FileUtil;
@@ -65,9 +66,10 @@ import org.dcm4che3.net.Device;
 import org.dcm4che3.net.DimseRSPHandler;
 import org.dcm4che3.net.IncompatibleConnectionException;
 import org.dcm4che3.net.Status;
+import org.dcm4che3.net.pdu.PresentationContext;
 import org.dcm4che3.tool.common.CLIUtils;
-import org.dcm4che3.tool.mppsscu.MppsSCU;
-import org.dcm4che3.tool.mppsscu.MppsSCU.MppsWithIUID;
+import org.dcm4che3.tool.common.DicomFiles;
+import org.dcm4che3.tool.stgcmtscu.StgCmtSCU;
 import org.dcm4che3.tool.storescu.StoreSCU;
 import org.dcm4che3.tool.storescu.StoreSCU.RSPHandlerFactory;
 import org.dcm4che3.util.StringUtils;
@@ -79,7 +81,7 @@ import org.junit.Test;
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  * 
  */
-public class MppsTest extends Generic {
+public class StgCmtTest extends Generic {
 
     private String testDescription;
     private String fileName;
@@ -94,13 +96,13 @@ public class MppsTest extends Generic {
      * @param testDescription
      * @param fileName
      */
-    public MppsTest(String testDescription, String fileName) {
+    public StgCmtTest(String testDescription, String fileName) {
         super();
         this.testDescription = testDescription;
         this.fileName = fileName;
     }
     
-    public void mppsscu() throws IOException, InterruptedException,
+    public void stgcmt() throws IOException, InterruptedException,
             IncompatibleConnectionException, GeneralSecurityException {
 
         long t1, t2;
@@ -108,98 +110,72 @@ public class MppsTest extends Generic {
         Properties config = loadConfig();
         String host = config.getProperty("remoteConn.hostname");
         int port = new Integer(config.getProperty("remoteConn.port"));
-        String aeTitle = config.getProperty("mpps.aetitle");
-        String directory = config.getProperty("mpps.directory");
+        String aeTitle = config.getProperty("store.aetitle");
+        String directory = config.getProperty("store.directory");
 
+        int stgcmtport = new Integer(config.getProperty("stgcmt.port"));
+        
         File file = new File(directory, fileName);
 
         assertTrue(
                 "file or directory does not exists: " + file.getAbsolutePath(),
                 file.exists());
 
-        Device device = new Device("mppsscu");
+        Device device = new Device("stgcmtscu");
         Connection conn = new Connection();
+        conn.setPort(stgcmtport);
         device.addConnection(conn);
-        ApplicationEntity ae = new ApplicationEntity("MPPSSCU");
+        ApplicationEntity ae = new ApplicationEntity("STGCMTSCU");
         device.addApplicationEntity(ae);
         ae.addConnection(conn);
 
-        final MppsSCU main = new MppsSCU(ae);
-        
-        main.setRspHandlerFactory(new MppsSCU.RSPHandlerFactory() {
-
-            @Override
-            public DimseRSPHandler createDimseRSPHandlerForNCreate(final MppsSCU.MppsWithIUID mppsWithUID) {
-
-                return new DimseRSPHandler(0) {
-
-                    @Override
-                    public void onDimseRSP(Association as, Attributes cmd,
-                            Attributes data) {
-                        
-                        switch(cmd.getInt(Tag.Status, -1)) {
-                        case Status.Success:
-                        case Status.AttributeListError:
-                        case Status.AttributeValueOutOfRange:
-                            mppsWithUID.iuid = cmd.getString(
-                                    Tag.AffectedSOPInstanceUID, mppsWithUID.iuid);
-                            main.addCreatedMpps(mppsWithUID);
-                        }
-                        
-                        super.onDimseRSP(as, cmd, data);
-                        MppsTest.this.onNCreateRSP(cmd);
-                    }
-                };
-            }
-            
-            @Override
-            public DimseRSPHandler createDimseRSPHandlerForNSet() {
-                
-                return new DimseRSPHandler(0) {
-                    
-                    @Override
-                    public void onDimseRSP(Association as, Attributes cmd, Attributes data) {
-                        super.onDimseRSP(as, cmd, data);
-                        MppsTest.this.onNSetRSP(cmd);
-                    }
-                };
-            }
-
-        });
+        final StgCmtSCU stgcmtscu = new StgCmtSCU(ae);
 
         // configure
-        main.getAAssociateRQ().setCalledAET(aeTitle);
-        main.getRemoteConnection().setHostname(host);
-        main.getRemoteConnection().setPort(port);
-        main.setTransferSyntaxes(new String[]{UID.ImplicitVRLittleEndian, UID.ExplicitVRLittleEndian, UID.ExplicitVRBigEndianRetired});
-        main.setAttributes(new Attributes());
-
+        conn.setMaxOpsInvoked(0);
+        conn.setMaxOpsPerformed(0);
+        
+        stgcmtscu.getAAssociateRQ().setCalledAET(aeTitle);
+        stgcmtscu.getRemoteConnection().setHostname(host);
+        stgcmtscu.getRemoteConnection().setPort(port);
+        stgcmtscu.setTransferSyntaxes(new String[]{UID.ImplicitVRLittleEndian, UID.ExplicitVRLittleEndian, UID.ExplicitVRBigEndianRetired});
+        stgcmtscu.setAttributes(new Attributes());
+        stgcmtscu.setStorageDirectory(new File("."));
+        
         // scan
         t1 = System.currentTimeMillis();
-        main.scanFiles(Arrays.asList(file.getAbsolutePath()), false); //do not printout
+        DicomFiles.scan(Arrays.asList(file.getAbsolutePath()), new DicomFiles.Callback() {
+            
+            @Override
+            public boolean dicomFile(File f, Attributes fmi, long dsPos,
+                    Attributes ds) {
+                return stgcmtscu.addInstance(ds);
+            }
+        });
         t2 = System.currentTimeMillis();
 
         // create executor
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        ScheduledExecutorService scheduledExecutorService = Executors
-                .newSingleThreadScheduledExecutor();
+        ExecutorService executorService =
+                Executors.newCachedThreadPool();
+        ScheduledExecutorService scheduledExecutorService =
+                Executors.newSingleThreadScheduledExecutor();
         device.setExecutor(executorService);
         device.setScheduledExecutor(scheduledExecutorService);
+        device.bindConnections();
 
-        // open and send
+        // open, send and wait for response
         try {
-            main.open();
-
-            t1 = System.currentTimeMillis();
-            main.createMpps();
-            main.updateMpps();
-            t2 = System.currentTimeMillis();
-        } finally {
-            main.close();
+            stgcmtscu.open();
+            stgcmtscu.sendRequests();
+         } finally {
+            stgcmtscu.close();
+            if (conn.isListening()) {
+                device.waitForNoOpenConnections();
+                device.unbindConnections();
+            }
             executorService.shutdown();
             scheduledExecutorService.shutdown();
         }
-
 //        System.out.format(StoreTestSuite.RESULT_FORMAT,
 //                ++StoreTestSuite.testNumber,
 //                StringUtils.truncate(testDescription, 20), 
@@ -210,13 +186,4 @@ public class MppsTest extends Generic {
 //                (t2 - t1) + " ms");
     }
 
-    private void onNCreateRSP(Attributes cmd) {
-        int status = cmd.getInt(Tag.Status, -1);
-        System.out.println("onNCreateRSP:"+status);
-    }
-
-    private void onNSetRSP(Attributes cmd) {
-        int status = cmd.getInt(Tag.Status, -1);
-        System.out.println("onNSetRSP:"+status);
-    }
 }

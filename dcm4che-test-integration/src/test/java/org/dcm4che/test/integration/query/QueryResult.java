@@ -36,63 +36,45 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test;
+package org.dcm4che.test.integration.query;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  *
  */
-public class StoreResult {
-
+public class QueryResult {
 
     private String testDescription;
-    private String fileName;
-    private long size;
+    private int expectedResult = Integer.MIN_VALUE;
+    private int numMatches;
     private long time;
-    private int filesSent;
-    private int warnings;    
-    private int failures;
     /**
      * @param testDescription
-     * @param fileName
-     * @param size
+     * @param expectedResult
+     * @param numMatches
      * @param time
-     * @param filesSent
-     * @param warnings
-     * @param failures
      */
-    public StoreResult(String testDescription, String fileName, long size,
-            long time, int filesSent, int warnings, int failures) {
+    public QueryResult(String testDescription, int expectedResult,
+            int numMatches, long time) {
         super();
         this.testDescription = testDescription;
-        this.fileName = fileName;
-        this.size = size;
+        this.expectedResult = expectedResult;
+        this.numMatches = numMatches;
         this.time = time;
-        this.filesSent = filesSent;
-        this.warnings = warnings;
-        this.failures = failures;
     }
-    
     public String getTestDescription() {
         return testDescription;
     }
-    public String getFileName() {
-        return fileName;
+    public int getExpectedResult() {
+        return expectedResult;
     }
-    public long getSize() {
-        return size;
+    public int getNumMatches() {
+        return numMatches;
     }
     public long getTime() {
         return time;
     }
-    public int getFilesSent() {
-        return filesSent;
-    }
-    public int getWarnings() {
-        return warnings;
-    }
-    public int getFailures() {
-        return failures;
-    }
+    
+    
 
 }

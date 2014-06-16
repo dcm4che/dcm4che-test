@@ -43,8 +43,6 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.dcm4che.test.QueryResult;
-import org.dcm4che.test.QueryTest;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.VR;
 import org.junit.Test;

@@ -55,7 +55,7 @@ import org.junit.Test;
  */
 public class ConnectTest extends Generic {
     
-    public void test() throws IOException {
+    public Connection test() throws IOException {
         
         Properties config = loadConfig();
         
@@ -64,6 +64,8 @@ public class ConnectTest extends Generic {
         Connection conn = new Connection("remoteConn",host,port);
         
         assertTrue("Connection Not Alive:"+host,ConnectionUtil.isAlive(conn));
+        
+        return conn;
     }
 
 }

@@ -40,8 +40,6 @@ package org.dcm4che.test.integration.query;
 
 import static org.junit.Assert.*;
 
-import org.dcm4che.test.QueryResult;
-import org.dcm4che.test.QueryTest;
 import org.dcm4che3.data.Tag;
 import org.junit.Test;
 

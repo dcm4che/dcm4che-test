@@ -40,8 +40,6 @@ package org.dcm4che.test.integration.store;
 
 import java.util.List;
 
-import org.dcm4che.test.StoreResult;
-import org.dcm4che.test.StoreTest;
 import org.junit.Test;
 
 /**
