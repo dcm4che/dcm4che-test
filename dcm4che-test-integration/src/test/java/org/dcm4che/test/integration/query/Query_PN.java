@@ -41,6 +41,8 @@ package org.dcm4che.test.integration.query;
 import static org.junit.Assert.*;
 
 import org.dcm4che3.data.Tag;
+import org.dcm4che3.tool.findscu.test.QueryResult;
+import org.dcm4che3.tool.findscu.test.QueryTest;
 import org.junit.Test;
 
 /**

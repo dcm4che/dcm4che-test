@@ -45,6 +45,8 @@ import java.util.Arrays;
 
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.VR;
+import org.dcm4che3.tool.findscu.test.QueryResult;
+import org.dcm4che3.tool.findscu.test.QueryTest;
 import org.junit.Test;
 
 /**

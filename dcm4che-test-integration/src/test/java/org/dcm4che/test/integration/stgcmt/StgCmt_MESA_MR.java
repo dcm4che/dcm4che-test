@@ -38,7 +38,7 @@
 
 package org.dcm4che.test.integration.stgcmt;
 
-import org.dcm4che.test.integration.store.StoreTest;
+import org.dcm4che3.tool.storescu.test.StoreTest;
 import org.junit.Test;
 
 /**

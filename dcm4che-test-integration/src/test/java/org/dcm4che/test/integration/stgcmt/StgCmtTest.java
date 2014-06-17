@@ -52,7 +52,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.dcm4che.test.Generic;
 import org.dcm4che.test.integration.store.StoreTestSuite;
 import org.dcm4che.test.tool.ConnectionUtil;
 import org.dcm4che.test.tool.FileUtil;
@@ -69,6 +68,7 @@ import org.dcm4che3.net.Status;
 import org.dcm4che3.net.pdu.PresentationContext;
 import org.dcm4che3.tool.common.CLIUtils;
 import org.dcm4che3.tool.common.DicomFiles;
+import org.dcm4che3.tool.common.GenericTest;
 import org.dcm4che3.tool.stgcmtscu.StgCmtSCU;
 import org.dcm4che3.tool.storescu.StoreSCU;
 import org.dcm4che3.tool.storescu.StoreSCU.RSPHandlerFactory;
@@ -81,7 +81,7 @@ import org.junit.Test;
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  * 
  */
-public class StgCmtTest extends Generic {
+public class StgCmtTest extends GenericTest {
 
     private String testDescription;
     private String fileName;

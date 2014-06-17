@@ -43,10 +43,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.dcm4che.test.ConnectTest;
-import org.dcm4che.test.integration.store.StoreResult;
-import org.dcm4che.test.integration.store.StoreTest;
 import org.dcm4che.test.integration.store.StoreTestSuite;
 import org.dcm4che.test.tool.FileUtil;
+import org.dcm4che3.tool.findscu.test.QueryResult;
+import org.dcm4che3.tool.storescu.test.StoreResult;
+import org.dcm4che3.tool.storescu.test.StoreTest;
 import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

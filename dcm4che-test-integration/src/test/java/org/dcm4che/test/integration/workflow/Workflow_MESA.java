@@ -42,15 +42,15 @@ import java.io.File;
 import java.io.IOException;
 
 import org.dcm4che.test.ConnectTest;
-import org.dcm4che.test.integration.mpps.MppsResult;
-import org.dcm4che.test.integration.mpps.MppsTest;
-import org.dcm4che.test.integration.query.QueryResult;
 import org.dcm4che.test.integration.query.QueryTestSuite;
-import org.dcm4che.test.integration.store.StoreResult;
-import org.dcm4che.test.integration.store.StoreTest;
 import org.dcm4che.test.tool.ConnectionUtil;
 import org.dcm4che.test.tool.FileUtil;
 import org.dcm4che3.net.Connection;
+import org.dcm4che3.tool.findscu.test.QueryResult;
+import org.dcm4che3.tool.mppsscu.test.MppsResult;
+import org.dcm4che3.tool.mppsscu.test.MppsTest;
+import org.dcm4che3.tool.storescu.test.StoreResult;
+import org.dcm4che3.tool.storescu.test.StoreTest;
 import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -61,63 +61,68 @@ import org.junit.Test;
  * 
  */
 public class Workflow_MESA {
-    
+
     public static final String RESULT_FORMAT = "%n| %-2s | %-45s | %-4s | %-8s |";
     public static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
     public static final String RESULT_HEADER2 = "%n+                          MESA Workflow Tests                         +";
     public static final String RESULT_HEADER3 = "%n+----+-----------------------------------------------+------+----------+";
     public static final String RESULT_COLUMNS = "%n| #  | Step                                          | res  | time     |";
-    public static final String RESULT_FOOTER1 = "%n+----+-----------------------------------------------+------+----------+";  
-    
-    private int stepNumber=0;
+    public static final String RESULT_FOOTER1 = "%n+----+-----------------------------------------------+------+----------+";
+
+    private int stepNumber = 0;
 
     @Test
     public void MESA_PIR_Workflow_103() throws Exception {
-        
+
         String studyDIR = "modality/MR/MR4/MR4S1";
-        printLine("Testing Study: " + studyDIR, "OK", 0);        
-        
-        //test if connection is alive
+        printLine("Testing Study: " + studyDIR, "OK", 0);
+
+        // test if connection is alive
         Connection conn = new ConnectTest().test();
-        printLine("Test DICOM Connection: " + conn.getHostname() + ":" + conn.getPort(), 
-                ConnectionUtil.isAlive(conn) ? "OK" : "KO", 0);
+        printLine("Test DICOM Connection: " + conn.getHostname() + ":"
+                        + conn.getPort(), ConnectionUtil.isAlive(conn) ? "OK"
+                        : "KO", 0);
 
-        //missing: HL7 scheduling ORM
-        
-        //mpps
-        MppsResult mpps = new MppsTest("Send MPPS for Study", "modality/MR/MR4/MR4S1").mppsscu();
-        printLine("Sent " + mpps.getnCreateSent() + " NCREATE MPPS Message", "OK", mpps.getTime());
-        printLine("Sent " + mpps.getnSetSent() + " NSET MPPS Message", "OK", mpps.getTime());
+        // missing: HL7 scheduling ORM
 
-        //storage
-        StoreResult store = new StoreTest("Send Study: MR/MR4/MR4S1", "modality/MR/MR4/MR4S1").store();
-        printLine("Sent " + store.getFilesSent() + " DICOM Files", "OK", store.getTime());
+        // mpps
+        MppsResult mpps = new MppsTest("Send MPPS for Study",
+                "modality/MR/MR4/MR4S1").mppsscu();
+        printLine("MPPS N-CREATE: Sent " + mpps.getnCreateSent() + " Message",
+                mpps.getnCreateFailures() > 0 ? "KO" : "OK",
+                mpps.getCreatetime());
+        printLine("MPPS N-SET: Sent " + mpps.getnSetSent() + " Message",
+                mpps.getnSetFailures() > 0 ? "KO" : "OK", mpps.getSettime());
+
+        // storage
+        StoreResult store = new StoreTest("Send Study: MR/MR4/MR4S1",
+                "modality/MR/MR4/MR4S1").store();
+        printLine("DICOM STORAGE: Sent " + store.getFilesSent() + " Objects",
+                store.getFailures() > 0 ? "KO" : "OK", store.getTime());
 
     }
 
     @BeforeClass
-    public static void header() throws IOException 
-    {
+    public static void header() throws IOException {
         System.out.printf(RESULT_HEADER1);
         System.out.printf(RESULT_HEADER2);
         System.out.printf(RESULT_HEADER3);
         System.out.printf(RESULT_COLUMNS);
         System.out.printf(RESULT_FOOTER1);
     }
-    
-    @AfterClass 
+
+    @AfterClass
     public static void footer() throws IOException {
         System.out.printf(RESULT_FOOTER1);
         System.out.println();
     }
-    
+
     public void printLine(String stepDescription, String result, long time) {
 
-        //format printout
-        System.out.format(RESULT_FORMAT,
-                ++stepNumber,
-                StringUtils.truncate(stepDescription, 45),  
-                result,
-                time + " ms");
+        // format printout
+        System.out
+                .format(RESULT_FORMAT, ++stepNumber,
+                        StringUtils.truncate(stepDescription, 45), result, time
+                                + " ms");
     }
 }

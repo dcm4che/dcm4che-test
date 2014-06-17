@@ -46,6 +46,7 @@ import java.util.Properties;
 import org.dcm4che.test.tool.ConnectionUtil;
 import org.dcm4che3.net.Connection;
 import org.dcm4che3.net.Device;
+import org.dcm4che3.tool.common.GenericTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -53,7 +54,7 @@ import org.junit.Test;
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  *
  */
-public class ConnectTest extends Generic {
+public class ConnectTest extends GenericTest {
     
     public Connection test() throws IOException {
         

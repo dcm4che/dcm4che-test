@@ -44,6 +44,7 @@ import java.util.List;
 
 import org.dcm4che.test.ConnectTest;
 import org.dcm4che.test.tool.FileUtil;
+import org.dcm4che3.tool.storescu.test.StoreResult;
 import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
