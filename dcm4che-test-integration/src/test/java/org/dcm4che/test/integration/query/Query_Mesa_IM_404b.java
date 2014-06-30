@@ -58,7 +58,7 @@ public class Query_Mesa_IM_404b {
     @Test
     public void step1_query_sop_instances() throws Exception {
         
-        QueryTest test = new QueryTest("SOPInstanceUID:<<1>>");
+        QueryTest test = QueryTestSuite.getQueryTest();
         
         test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
         test.addTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
@@ -70,7 +70,7 @@ public class Query_Mesa_IM_404b {
         
         test.addExpectedResult("1.2.392.200036.9125.0.19950720093509");
                 
-        QueryResult result = test.query();
+        QueryResult result = test.query("SOPInstanceUID:<<1>>");
         QueryTestSuite.printResults(result);
 
     }
@@ -78,7 +78,7 @@ public class Query_Mesa_IM_404b {
     @Test
     public void step2_query_sop_class_uid() throws Exception {
         
-        QueryTest test = new QueryTest("SOPClassUID:1.2.840.10008.5.1.4.1.1.1");
+        QueryTest test = QueryTestSuite.getQueryTest();
         
         test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
         test.addTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
@@ -90,7 +90,7 @@ public class Query_Mesa_IM_404b {
         
         test.addExpectedResult("1.2.840.10008.5.1.4.1.1.1");
                 
-        QueryResult result = test.query();
+        QueryResult result = test.query("SOPClassUID:1.2.840.10008.5.1.4.1.1.1");
         QueryTestSuite.printResults(result);
 
     }
@@ -98,7 +98,7 @@ public class Query_Mesa_IM_404b {
     @Test
     public void step3_query_rows() throws Exception {
         
-        QueryTest test = new QueryTest("Rows:2010");
+        QueryTest test = QueryTestSuite.getQueryTest();
         
         test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
         test.addTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
@@ -110,7 +110,7 @@ public class Query_Mesa_IM_404b {
         
         test.addExpectedResult("2010");
                 
-        QueryResult result = test.query();
+        QueryResult result = test.query("Rows:2010");
         QueryTestSuite.printResults(result);
 
     }
@@ -118,7 +118,7 @@ public class Query_Mesa_IM_404b {
     @Test
     public void step4_query_columns() throws Exception {
         
-        QueryTest test = new QueryTest("Columns:512");
+        QueryTest test = QueryTestSuite.getQueryTest();
         
         test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
         test.addTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
@@ -130,7 +130,7 @@ public class Query_Mesa_IM_404b {
         
         test.addExpectedResult("1670");
                 
-        QueryResult result = test.query();
+        QueryResult result = test.query("Columns:512");
         QueryTestSuite.printResults(result);
 
     }
@@ -138,7 +138,7 @@ public class Query_Mesa_IM_404b {
     @Test
     public void step5_query_bits_allocated() throws Exception {
         
-        QueryTest test = new QueryTest("BitsAllocated:16");
+        QueryTest test = QueryTestSuite.getQueryTest();
         
         test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
         test.addTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
@@ -150,7 +150,7 @@ public class Query_Mesa_IM_404b {
         
         test.addExpectedResult("16");
                 
-        QueryResult result = test.query();
+        QueryResult result = test.query("BitsAllocated:16");
         QueryTestSuite.printResults(result);
 
     }

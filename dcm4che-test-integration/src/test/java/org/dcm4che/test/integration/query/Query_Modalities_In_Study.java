@@ -54,10 +54,10 @@ public class Query_Modalities_In_Study {
     @Test
     public void Query_Modalities_In_Study_1() throws Exception {
         
-        QueryTest test = new QueryTest("Modalities In Study:CT");
+        QueryTest test = QueryTestSuite.getQueryTest();
         test.addTag(Tag.ModalitiesInStudy, "CT");
         test.setExpectedResultsNumeber(5);
-        QueryResult result = test.query();
+        QueryResult result = test.query("Modalities In Study:CT");
         QueryTestSuite.printResults(result);
     }
     

@@ -52,9 +52,9 @@ public class Store_MESA_MG {
 
     @Test
     public void Store_MESA_MG_MG1_MGS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,MG1,S1", "modality/MG/MG1/MG1S1")
-                .store();
-        
+        StoreResult results = StoreTestSuite.getStoreTest().store(
+                "MESA_12_5,MG1,S1", "modality/MG/MG1/MG1S1");
+
         StoreTestSuite.printResults(results);
     }
 }

@@ -40,6 +40,8 @@ package org.dcm4che.test.integration.store;
 
 import java.util.List;
 
+import org.dcm4che.test.tool.LoadProperties;
+import org.dcm4che3.tool.storescu.StoreSCU;
 import org.dcm4che3.tool.storescu.test.StoreResult;
 import org.dcm4che3.tool.storescu.test.StoreTest;
 import org.junit.Test;
@@ -52,33 +54,33 @@ public class Store_MESA_CR {
 
     @Test
     public void Store_MESA_CR_CR1_CRS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,CR1,S1", "modality/CR/CR1/CR1S1")
-                .store();
-        
+        StoreResult results = StoreTestSuite.getStoreTest().store(
+                "MESA_12_5,CR1,S1", "modality/CR/CR1/CR1S1");
+
         StoreTestSuite.printResults(results);
     }
 
     @Test
     public void Store_MESA_CR_CR2_CRS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,CR2,S1", "modality/CR/CR2/CR2S1")
-                .store();
-        
+        StoreResult results = StoreTestSuite.getStoreTest().store(
+                "MESA_12_5,CR2,S1", "modality/CR/CR2/CR2S1");
+
         StoreTestSuite.printResults(results);
     }
 
     @Test
     public void Store_MESA_CR_CR3_CRS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,CR3,S1", "modality/CR/CR3/CR3S1")
-                .store();
-        
+        StoreResult results = StoreTestSuite.getStoreTest().store(
+                "MESA_12_5,CR3,S1", "modality/CR/CR3/CR3S1");
+
         StoreTestSuite.printResults(results);
     }
-    
+
     @Test
     public void Store_MESA_CR_CR4_CRS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,CR4,S1", "modality/CR/CR4/CR4S1")
-                .store();
-        
+        StoreResult results = StoreTestSuite.getStoreTest().store(
+                "MESA_12_5,CR4,S1", "modality/CR/CR4/CR4S1");
+
         StoreTestSuite.printResults(results);
     }
 }

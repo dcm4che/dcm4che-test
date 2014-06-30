@@ -41,11 +41,14 @@ package org.dcm4che.test.integration.query;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.dcm4che.test.ConnectTest;
 import org.dcm4che.test.integration.store.StoreTestSuite;
 import org.dcm4che.test.tool.FileUtil;
+import org.dcm4che.test.tool.LoadProperties;
 import org.dcm4che3.tool.findscu.test.QueryResult;
+import org.dcm4che3.tool.findscu.test.QueryTest;
 import org.dcm4che3.tool.storescu.test.StoreResult;
 import org.dcm4che3.tool.storescu.test.StoreTest;
 import org.dcm4che3.util.StringUtils;
@@ -57,43 +60,41 @@ import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- *
+ * 
  */
 @RunWith(Suite.class)
-@SuiteClasses({
-    Query_PN.class,
-    Query_Modalities_In_Study.class,
-    Query_Mesa_IM_404a.class,
-    Query_Mesa_IM_404b.class})
-
+@SuiteClasses({ Query_PN.class, Query_Modalities_In_Study.class,
+        Query_Mesa_IM_404a.class, Query_Mesa_IM_404b.class })
 public class QueryTestSuite {
-   
+
     private static final String RESULT_FORMAT = "%n| %-2s | %-38s | %-4d | %-4d | %-8s |";
     private static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
     private static final String RESULT_HEADER2 = "%n+                           Query Tests Suite                          +";
     private static final String RESULT_HEADER3 = "%n+----+----------------------------------------+------+------+----------+";
     private static final String RESULT_COLUMNS = "%n| #  | Description                            | exp. | ret. | time     |";
-    private static final String RESULT_FOOTER1 = "%n+----+----------------------------------------+------+------+----------+";  
+    private static final String RESULT_FOOTER1 = "%n+----+----------------------------------------+------+------+----------+";
     private static final String RESULT_HEADERP = "%n+                          Query Tests Preload                         +";
-    
+
     public static int testNumber;
-    
+
     @BeforeClass
     public static void preload() throws Exception {
 
-        //preload images to query
+        // preload images to query
         System.out.printf(RESULT_HEADER1);
         System.out.printf(RESULT_HEADERP);
         System.out.printf(RESULT_HEADER1);
-        StoreTestSuite.printResults(new StoreTest("Query Preload: CT", "modality/CT").store());
-        StoreTestSuite.printResults(new StoreTest("Query Preload: CR", "modality/CR").store());
+        StoreTestSuite.printResults(StoreTestSuite.getStoreTest().store(
+                "Query Preload: CT", "modality/CT"));
+        StoreTestSuite.printResults(StoreTestSuite.getStoreTest().store(
+                "Query Preload: CR", "modality/CR"));
 
-        testNumber=0;
-        
-        //test if connection is alive
+        testNumber = 0;
+
+        // test if connection is alive
         new ConnectTest().test();
-        
-        //printout results header
+
+        // printout results header
         System.out.printf(RESULT_HEADER1);
         System.out.printf(RESULT_HEADER2);
         System.out.printf(RESULT_HEADER3);
@@ -101,26 +102,35 @@ public class QueryTestSuite {
         System.out.printf(RESULT_FOOTER1);
 
     }
-    
+
     @AfterClass
     public static void endTests() throws IOException {
-        
-        testNumber=0;
-        
-        //printout results footer
+
+        testNumber = 0;
+
+        // printout results footer
         System.out.printf(RESULT_FOOTER1);
         System.out.println();
     }
-    
+
     public static void printResults(QueryResult result) {
 
-        //format printout
-        System.out.format(RESULT_FORMAT,
-                ++QueryTestSuite.testNumber,
-                StringUtils.truncate(result.getTestDescription(), 38),  
-                result.getExpectedResult(),
-                result.getNumMatches(),
+        // format printout
+        System.out.format(RESULT_FORMAT, ++QueryTestSuite.testNumber,
+                StringUtils.truncate(result.getTestDescription(), 38),
+                result.getExpectedResult(), result.getNumMatches(),
                 result.getTime() + " ms");
     }
-            
+    
+    public static QueryTest getQueryTest() throws IOException
+    {
+        Properties config = LoadProperties.load(QueryTestSuite.class);
+
+        String host = config.getProperty("remoteConn.hostname");
+        int port = new Integer(config.getProperty("remoteConn.port"));
+        String aeTitle = config.getProperty("query.aetitle");
+        
+        return new QueryTest(host, port, aeTitle);
+    }
+
 }

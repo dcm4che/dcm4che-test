@@ -54,20 +54,20 @@ public class Query_PN {
     @Test
     public void Query_PN_1() throws Exception {
         
-        QueryTest test = new QueryTest("Patient Name:B*");
+        QueryTest test = QueryTestSuite.getQueryTest();
         test.addTag(Tag.PatientName, "P*");
         test.setExpectedResultsNumeber(2);
-        QueryResult result = test.query();
+        QueryResult result = test.query("Patient Name:B*");
         QueryTestSuite.printResults(result);
 
     }
     
     @Test
     public void Query_PN_2() throws Exception {
-        QueryTest test = new QueryTest("Patient Name:COTTA");
+        QueryTest test = QueryTestSuite.getQueryTest();
         test.addTag(Tag.PatientName, "COTTA");
         test.setExpectedResultsNumeber(1);
-        QueryResult result = test.query();
+        QueryResult result = test.query("Patient Name:COTTA");
         QueryTestSuite.printResults(result);
 
     }

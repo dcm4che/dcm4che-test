@@ -41,10 +41,13 @@ package org.dcm4che.test.integration.store;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.dcm4che.test.ConnectTest;
 import org.dcm4che.test.tool.FileUtil;
+import org.dcm4che.test.tool.LoadProperties;
 import org.dcm4che3.tool.storescu.test.StoreResult;
+import org.dcm4che3.tool.storescu.test.StoreTest;
 import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -103,5 +106,17 @@ public class StoreTestSuite {
                 result.getWarnings(),
                 FileUtil.humanreadable(result.getSize(), true), 
                 result.getTime() + " ms");
+    }
+    
+    public static StoreTest getStoreTest() throws IOException
+    {
+        Properties config = LoadProperties.load(StoreTestSuite.class);
+
+        String host = config.getProperty("remoteConn.hostname");
+        int port = new Integer(config.getProperty("remoteConn.port"));
+        String aeTitle = config.getProperty("store.aetitle");
+        String directory = config.getProperty("store.directory");
+        
+        return new StoreTest(host, port, aeTitle, directory);
     }
 }

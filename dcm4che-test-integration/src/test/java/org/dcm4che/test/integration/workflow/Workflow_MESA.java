@@ -38,19 +38,15 @@
 
 package org.dcm4che.test.integration.workflow;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.dcm4che.test.ConnectTest;
-import org.dcm4che.test.integration.query.QueryTestSuite;
+import org.dcm4che.test.integration.mpps.MppsTestSuite;
+import org.dcm4che.test.integration.store.StoreTestSuite;
 import org.dcm4che.test.tool.ConnectionUtil;
-import org.dcm4che.test.tool.FileUtil;
 import org.dcm4che3.net.Connection;
-import org.dcm4che3.tool.findscu.test.QueryResult;
 import org.dcm4che3.tool.mppsscu.test.MppsResult;
-import org.dcm4che3.tool.mppsscu.test.MppsTest;
 import org.dcm4che3.tool.storescu.test.StoreResult;
-import org.dcm4che3.tool.storescu.test.StoreTest;
 import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -86,8 +82,8 @@ public class Workflow_MESA {
         // missing: HL7 scheduling ORM
 
         // mpps
-        MppsResult mpps = new MppsTest("Send MPPS for Study",
-                "modality/MR/MR4/MR4S1").mppsscu();
+        MppsResult mpps = MppsTestSuite.getMppsTest().mppsscu("Send MPPS for Study",
+                "modality/MR/MR4/MR4S1");
         printLine("MPPS N-CREATE: Sent " + mpps.getnCreateSent() + " Message",
                 mpps.getnCreateFailures() > 0 ? "KO" : "OK",
                 mpps.getCreatetime());
@@ -95,8 +91,8 @@ public class Workflow_MESA {
                 mpps.getnSetFailures() > 0 ? "KO" : "OK", mpps.getSettime());
 
         // storage
-        StoreResult store = new StoreTest("Send Study: MR/MR4/MR4S1",
-                "modality/MR/MR4/MR4S1").store();
+        StoreResult store = StoreTestSuite.getStoreTest().store("Send Study: MR/MR4/MR4S1",
+                "modality/MR/MR4/MR4S1");
         printLine("DICOM STORAGE: Sent " + store.getFilesSent() + " Objects",
                 store.getFailures() > 0 ? "KO" : "OK", store.getTime());
 

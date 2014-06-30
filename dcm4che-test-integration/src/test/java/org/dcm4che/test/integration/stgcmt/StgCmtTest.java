@@ -38,50 +38,32 @@
 
 package org.dcm4che.test.integration.stgcmt;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.dcm4che.test.integration.store.StoreTestSuite;
-import org.dcm4che.test.tool.ConnectionUtil;
-import org.dcm4che.test.tool.FileUtil;
+import org.dcm4che.test.tool.LoadProperties;
 import org.dcm4che3.data.Attributes;
-import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.UID;
 import org.dcm4che3.net.ApplicationEntity;
-import org.dcm4che3.net.Association;
 import org.dcm4che3.net.Connection;
 import org.dcm4che3.net.Device;
-import org.dcm4che3.net.DimseRSPHandler;
 import org.dcm4che3.net.IncompatibleConnectionException;
-import org.dcm4che3.net.Status;
-import org.dcm4che3.net.pdu.PresentationContext;
-import org.dcm4che3.tool.common.CLIUtils;
 import org.dcm4che3.tool.common.DicomFiles;
-import org.dcm4che3.tool.common.GenericTest;
 import org.dcm4che3.tool.stgcmtscu.StgCmtSCU;
-import org.dcm4che3.tool.storescu.StoreSCU;
-import org.dcm4che3.tool.storescu.StoreSCU.RSPHandlerFactory;
-import org.dcm4che3.util.StringUtils;
-import org.dcm4che3.util.TagUtils;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  * 
  */
-public class StgCmtTest extends GenericTest {
+public class StgCmtTest {
 
     private String testDescription;
     private String fileName;
@@ -107,7 +89,7 @@ public class StgCmtTest extends GenericTest {
 
         long t1, t2;
 
-        Properties config = loadConfig();
+        Properties config = LoadProperties.load(StgCmtTest.class);
         String host = config.getProperty("remoteConn.hostname");
         int port = new Integer(config.getProperty("remoteConn.port"));
         String aeTitle = config.getProperty("store.aetitle");

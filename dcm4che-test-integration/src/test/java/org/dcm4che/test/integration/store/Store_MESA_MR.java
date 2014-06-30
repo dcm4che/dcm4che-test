@@ -52,34 +52,34 @@ public class Store_MESA_MR {
 
     @Test
     public void Store_MESA_MR_MR1_MRS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,MR1,S1", "modality/MR/MR1/MR1S1")
-                .store();
-        
+        StoreResult results = StoreTestSuite.getStoreTest().store(
+                "MESA_12_5,MR1,S1", "modality/MR/MR1/MR1S1");
+
         StoreTestSuite.printResults(results);
     }
 
     @Test
     public void Store_MESA_MR_MR1_MRS2() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,MR1,S2", "modality/MR/MR1/MR1S2")
-                .store();
-        
+        StoreResult results = StoreTestSuite.getStoreTest().store(
+                "MESA_12_5,MR1,S2", "modality/MR/MR1/MR1S2");
+
         StoreTestSuite.printResults(results);
     }
 
     @Test
     public void Store_MESA_MR_MR2_MRS1() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,MR2,S1", "modality/MR/MR2/MR2S1")
-                .store();
-        
+        StoreResult results = StoreTestSuite.getStoreTest().store(
+                "MESA_12_5,MR2,S1", "modality/MR/MR2/MR2S1");
+
         StoreTestSuite.printResults(results);
     }
-    
+
     @Test
     public void Store_MESA_MR_MR2_MRS2() throws Exception {
-        StoreResult results = new StoreTest("MESA_12_5,MR2,S2", "modality/MR/MR2/MR2S2")
-                .store();
-        
+        StoreResult results = StoreTestSuite.getStoreTest().store(
+                "MESA_12_5,MR2,S2", "modality/MR/MR2/MR2S2");
+
         StoreTestSuite.printResults(results);
     }
-    
+
 }
