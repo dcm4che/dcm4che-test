@@ -109,6 +109,7 @@ public class Workflow_MIMA_1 {
         test.addTag(Tag.PatientID, "140703_0003");
         test.addTag(Tag.IssuerOfPatientID, "DCM4CHEE_SOURCE");
         test.setReturnTag(Tag.OtherPatientIDsSequence);
+        test.setExpectedResultsNumeber(2); //should return 2 patients
         test.addExpectedResult("140703_0004"); // it's the value returned by the
                                                // PIX Query
         QueryResult result = test

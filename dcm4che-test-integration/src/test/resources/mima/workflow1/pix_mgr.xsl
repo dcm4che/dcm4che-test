@@ -6,7 +6,7 @@
   <xsl:param name="AcknowledgementCode">AA</xsl:param>
   <xsl:param name="TextMessage" />
   <xsl:param name="QueryResponseStatus">OK</xsl:param>
-  <xsl:param name="pid">140703_0004^^^DCM4CHE-SOURCE&amp;1.2.40.0.13.1.1.999&amp;ISO</xsl:param>
+  <xsl:param name="pid">140703_0004^^^DCM4CHEE_SOURCE&amp;1.2.40.0.13.1.1.999&amp;ISO</xsl:param>
   <xsl:param name="pid2"/>
 
   <xsl:template match="/hl7">
