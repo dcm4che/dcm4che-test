@@ -38,7 +38,9 @@
 
 package org.dcm4che.test.integration.store;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -97,26 +99,36 @@ public class StoreTestSuite {
     }
 
     public static void printResults(StoreResult result) {
-        
+
         System.out.format(StoreTestSuite.RESULT_FORMAT,
                 ++StoreTestSuite.testNumber,
-                StringUtils.truncate(result.getTestDescription(), 20), 
-                result.getFilesSent(),
-                result.getFailures(), 
+                StringUtils.truncate(result.getTestDescription(), 20),
+                result.getFilesSent(), result.getFailures(),
                 result.getWarnings(),
-                FileUtil.humanreadable(result.getSize(), true), 
+                FileUtil.humanreadable(result.getSize(), true),
                 result.getTime() + " ms");
     }
-    
-    public static StoreTest getStoreTest() throws IOException
-    {
-        Properties config = LoadProperties.load(StoreTestSuite.class);
 
+    public static StoreTest getStoreTest() throws IOException {
+        
+        Properties config = LoadProperties.load(StoreTestSuite.class);
         String host = config.getProperty("remoteConn.hostname");
         int port = new Integer(config.getProperty("remoteConn.port"));
-        String aeTitle = config.getProperty("store.aetitle");
+        String aeTitle = config.getProperty("store.aetitle");        
         String directory = config.getProperty("store.directory");
+
+        return new StoreTest(host, port, aeTitle, new File(directory));
+    }
+    
+    public static StoreTest getStoreTestForMIMA(String directory) throws IOException {
         
-        return new StoreTest(host, port, aeTitle, directory);
+        Properties config = LoadProperties.load(StoreTestSuite.class);
+        String host = config.getProperty("remoteConn.hostname");
+        int port = new Integer(config.getProperty("remoteConn.port"));
+        String aeTitle = config.getProperty("store.aetitle");        
+        
+        URL dicomXMLFilesDir = StoreTestSuite.class.getResource(directory);
+
+        return new StoreTest(host, port, aeTitle, new File(dicomXMLFilesDir.getFile()));
     }
 }
