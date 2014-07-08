@@ -77,16 +77,16 @@ public class Workflow_MIMA_1 {
     private int stepNumber = 0;
 
     @Test
-    public void MESA_PIR_Workflow_103() throws Exception {
+    public void MIMA_Workflow_1() throws Exception {
 
         // storage
-        StoreResult store = StoreTestSuite.getStoreTestForMIMA(
+        StoreResult store = StoreTestSuite.getStoreTest(
                 "/mima/workflow1/").store("Send MIMA Patient 1",
                 "patient_140703_0003.xml");
         printLine("STORE: Sent patient 140703_0003^^^DCM4CHEE_SOURCE",
                 store.getFailures() > 0 ? "KO" : "OK", store.getTime());
 
-        store = StoreTestSuite.getStoreTestForMIMA(
+        store = StoreTestSuite.getStoreTest(
                 "/mima/workflow1/").store("Send MIMA Patient 2",
                 "patient_140703_0004.xml");
         printLine("STORE: Sent patient 140703_0004^^^DCM4CHEE_SOURCE",
@@ -94,8 +94,8 @@ public class Workflow_MIMA_1 {
         
         // start pix manager
         long t1 = System.currentTimeMillis();
-        Properties config = LoadProperties.load(Workflow_MIMA_2.class);
-        File pix_xslt = new File(Workflow_MIMA_2.class.getResource(
+        Properties config = LoadProperties.load(Workflow_MIMA_1.class);
+        File pix_xslt = new File(Workflow_MIMA_1.class.getResource(
                 "/mima/workflow1/pix_mgr.xsl").getFile());
         String host = config.getProperty("pixmgr.host");
         int port = new Integer(config.getProperty("pixmgr.port"));

@@ -133,4 +133,16 @@ public class QueryTestSuite {
         return new QueryTest(host, port, aeTitle);
     }
 
+    public static QueryTest getQueryTestForIOCM() throws IOException
+    {
+        Properties config = LoadProperties.load(QueryTestSuite.class);
+
+        String host = config.getProperty("remoteConn.hostname");
+        int port = new Integer(config.getProperty("remoteConn.port"));
+        String aeTitle = config.getProperty("iocm.aetitle");
+        
+        return new QueryTest(host, port, aeTitle);
+    }
+
+    
 }

@@ -120,7 +120,7 @@ public class StoreTestSuite {
         return new StoreTest(host, port, aeTitle, new File(directory));
     }
     
-    public static StoreTest getStoreTestForMIMA(String directory) throws IOException {
+    public static StoreTest getStoreTest(String directory) throws IOException {
         
         Properties config = LoadProperties.load(StoreTestSuite.class);
         String host = config.getProperty("remoteConn.hostname");

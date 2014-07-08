@@ -36,7 +36,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test.integration.mima;
+package org.dcm4che.test.integration.iocm;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,59 +61,63 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * @author Umberto Cappellini <umberto.cappellini@agfa.com>
+ * Workflow IOCM 1:
  * 
+ * Send 1 DICOM object
+ * Send Rejection Note for Patient Safety Reasons
+ * Query to standard AE and get 0 responses
+ * Query to admin AE and still get 0 response (patient safety)
+ * 
+ * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  */
-public class Workflow_MIMA_2 {
+public class Workflow_IOCM_2 {
 
     public static final String RESULT_FORMAT = "%n| %-2s | %-45s | %-4s | %-8s |";
-    public static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
-    public static final String RESULT_HEADER2 = "%n+                          MIMA Workflow Test 2                        +";
-    public static final String RESULT_HEADER2b = "%n+ Server triggers a PIX Query to resolve returned IDs of a C-FIND      +";
-    public static final String RESULT_HEADER3 = "%n+----+-----------------------------------------------+------+----------+";
-    public static final String RESULT_COLUMNS = "%n| #  | Step                                          | res  | time     |";
-    public static final String RESULT_FOOTER1 = "%n+----+-----------------------------------------------+------+----------+";
+    public static final String RESULT_HEADER1 =  "%n+----------------------------------------------------------------------+";
+    public static final String RESULT_HEADER2 =  "%n+                          MIMA Workflow Test 1                        +";
+    public static final String RESULT_HEADER2b = "%n+ Server triggers a PIX Query to resolve queried ID of a C-FIND        +";
+    public static final String RESULT_HEADER3 =  "%n+----+-----------------------------------------------+------+----------+";
+    public static final String RESULT_COLUMNS =  "%n| #  | Step                                          | res  | time     |";
+    public static final String RESULT_FOOTER1 =  "%n+----+-----------------------------------------------+------+----------+";
 
     private int stepNumber = 0;
 
     @Test
-    public void MIMA_Workflow_2() throws Exception {
+    public void MIMA_Workflow_1() throws Exception {
 
         // storage
-        StoreResult store = StoreTestSuite.getStoreTest("/mima/workflow2/")
-                .store("Send MIMA Patient 1", "patient_140703_0002.xml");
-        printLine("STORE: Sent patient 140703_0002^^^DCM4CHEE_SOURCE",
+        StoreResult store = StoreTestSuite.getStoreTest(
+                "/iocm/workflow2/").store("Send IOCM Patient 1",
+                "patient_140708_0002.xml");
+        printLine("STORE: Sent patient 140708_0002^^^DCM4CHEE_SOURCE",
                 store.getFailures() > 0 ? "KO" : "OK", store.getTime());
 
-        // start pix manager
-        long t1 = System.currentTimeMillis();
-        Properties config = LoadProperties.load(Workflow_MIMA_2.class);
-        File pix_xslt = new File(Workflow_MIMA_2.class.getResource(
-                "/mima/workflow2/pix_mgr.xsl").getFile());
-        String host = config.getProperty("pixmgr.host");
-        int port = new Integer(config.getProperty("pixmgr.port"));
-        HL7RcvTest pixmgr = new HL7RcvTest(host, port, pix_xslt);
-        printLine("Started PIX Manager", "OK",
-                (System.currentTimeMillis() - t1));
-        pixmgr.bind();
+        store = StoreTestSuite.getStoreTest(
+                "/iocm/workflow2/").store("Send Rej.Note For Patient Safety Reasons",
+                "rej_note_safety_140708_r2.xml");
+        printLine("STORE: Sent Rej. Note for pat. 140708_0002",
+                store.getFailures() > 0 ? "KO" : "OK", store.getTime());
 
+        
         // query retrieve
         QueryTest test = QueryTestSuite.getQueryTest();
-        test.addTag(Tag.PatientID, "140703_0002");
+        test.addTag(Tag.PatientID, "140708_0002");
         test.addTag(Tag.IssuerOfPatientID, "DCM4CHEE_SOURCE");
-        test.setReturnTag(Tag.OtherPatientIDsSequence);
-        test.addExpectedResult("140703_1002"); // it's the value returned by the
-                                               // PIX Query
+        test.setExpectedResultsNumeber(0); //should return 0 patients
         QueryResult result = test
-                .query("Patient ID:140703_0002^^^DCM4CHEE_SOURCE");
-        printLine("[C-FIND:PatientID:140703_0002] ret:140703_1002", "OK",
+                .query("Patient ID:140708_0002^^^DCM4CHEE_SOURCE");
+        printLine("[C-FIND:PatientID:140708_0002] ret:0", "OK",
                 result.getTime());
-
-        // stop pix manager
-        t1 = System.currentTimeMillis();
-        pixmgr.unbind();
-        printLine("Stopped PIX Manager", "OK",
-                (System.currentTimeMillis() - t1));
+        
+        // query retrieve (IOCM)
+        QueryTest testIOCM = QueryTestSuite.getQueryTestForIOCM();
+        testIOCM.addTag(Tag.PatientID, "140708_0002");
+        testIOCM.addTag(Tag.IssuerOfPatientID, "DCM4CHEE_SOURCE");
+        testIOCM.setExpectedResultsNumeber(0); //should return 1 patients
+        QueryResult resultIOCM = testIOCM
+                .query("Patient ID:140708_0002^^^DCM4CHEE_SOURCE");
+        printLine("[C-FIND:ADMIN:PatientID:140708_0002] ret:0", "OK",
+                result.getTime());
 
     }
 
