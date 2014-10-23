@@ -36,39 +36,20 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test.integration.query;
+package org.dcm4che.test.integration.retrieve;
 
-import static org.junit.Assert.*;
-
-import org.dcm4che3.data.Tag;
-import org.dcm4che3.tool.findscu.test.QueryResult;
-import org.dcm4che3.tool.findscu.test.QueryTest;
+import org.dcm4che3.tool.stgcmtscu.StgCmtSCU;
+import org.dcm4che3.tool.storescu.test.StoreTest;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  * 
  */
-public class Query_PN {
+public class BasicRetrieveScu {
 
     @Test
-    public void Query_PN_1() throws Exception {
-        
-        QueryTest test = QueryTestSuite.getQueryTest();
-        test.addTag(Tag.PatientName, "P*");
-        test.setExpectedResultsNumeber(2);
-        QueryResult result = test.query("Patient Name:P*");
-        QueryTestSuite.printResults(result);
-
-    }
-    
-    @Test
-    public void Query_PN_2() throws Exception {
-        QueryTest test = QueryTestSuite.getQueryTest();
-        test.addTag(Tag.PatientName, "COTTA");
-        test.setExpectedResultsNumeber(1);
-        QueryResult result = test.query("Patient Name:COTTA");
-        QueryTestSuite.printResults(result);
-
+    public void Store_MESA_MR_MR1_MRS1() throws Exception {
+        StgCmtSCU.main(new String[]{"-b STGCMTSCU:11114", "-c DCM4CHEE@localhost:11112", "/opt/DICOM_EXAMPLES/MESA/modality/MR/MR1/MR1S1/MR1S1IM1.dcm"});
     }
 }

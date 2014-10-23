@@ -36,39 +36,25 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test.integration.query;
-
-import static org.junit.Assert.*;
+package org.dcm4che.test.integration.retrieve;
 
 import org.dcm4che3.data.Tag;
-import org.dcm4che3.tool.findscu.test.QueryResult;
-import org.dcm4che3.tool.findscu.test.QueryTest;
+import org.dcm4che3.tool.storescu.test.StoreTest;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  * 
  */
-public class Query_PN {
+public class Retrieve_MESA_MR {
 
     @Test
-    public void Query_PN_1() throws Exception {
+    public void Retrieve_MESA_MR_MR1_MRS1() throws Exception {
         
-        QueryTest test = QueryTestSuite.getQueryTest();
-        test.addTag(Tag.PatientName, "P*");
-        test.setExpectedResultsNumeber(2);
-        QueryResult result = test.query("Patient Name:P*");
-        QueryTestSuite.printResults(result);
-
-    }
-    
-    @Test
-    public void Query_PN_2() throws Exception {
-        QueryTest test = QueryTestSuite.getQueryTest();
-        test.addTag(Tag.PatientName, "COTTA");
-        test.setExpectedResultsNumeber(1);
-        QueryResult result = test.query("Patient Name:COTTA");
-        QueryTestSuite.printResults(result);
-
+        RetrieveTest test = new RetrieveTest("MESA_12_5,MR1,S1");
+        test.addTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
+        test.setExpectedResultsNumeber(12);
+        RetrieveResult res = test.retrieve();
+        RetrieveTestSuite.printResults(res);
     }
 }

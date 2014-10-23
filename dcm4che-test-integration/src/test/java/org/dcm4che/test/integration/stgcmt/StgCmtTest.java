@@ -107,7 +107,7 @@ public class StgCmtTest {
         Connection conn = new Connection();
         conn.setPort(stgcmtport);
         device.addConnection(conn);
-        ApplicationEntity ae = new ApplicationEntity("STGCMTSCU");
+        ApplicationEntity ae = new ApplicationEntity(config.getProperty("stgcmt.aetitle"));
         device.addApplicationEntity(ae);
         ae.addConnection(conn);
 

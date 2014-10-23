@@ -36,11 +36,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test.integration.query;
+package org.dcm4che.test.integration.query.performance;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.dcm4che3.data.Tag;
+import org.dcm4che3.data.VR;
 import org.dcm4che3.tool.findscu.test.QueryResult;
 import org.dcm4che3.tool.findscu.test.QueryTest;
 import org.junit.Test;
@@ -49,26 +53,16 @@ import org.junit.Test;
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  * 
  */
-public class Query_PN {
+public class Query_Patient_ID {
 
     @Test
-    public void Query_PN_1() throws Exception {
+    public void step1_query_sop_instances() throws Exception {
         
-        QueryTest test = QueryTestSuite.getQueryTest();
-        test.addTag(Tag.PatientName, "P*");
-        test.setExpectedResultsNumeber(2);
-        QueryResult result = test.query("Patient Name:P*");
-        QueryTestSuite.printResults(result);
-
-    }
-    
-    @Test
-    public void Query_PN_2() throws Exception {
-        QueryTest test = QueryTestSuite.getQueryTest();
-        test.addTag(Tag.PatientName, "COTTA");
-        test.setExpectedResultsNumeber(1);
-        QueryResult result = test.query("Patient Name:COTTA");
-        QueryTestSuite.printResults(result);
-
+        String PatientID = "300000024";
+        QueryTest test = QueryPerformanceTestSuite.getQueryTest();
+        test.addTag(Tag.PatientID, "300000016");
+        test.addTag(Tag.IssuerOfPatientID, "PERF");
+        QueryResult result = test.query("Patient ID:"+PatientID);
+        QueryPerformanceTestSuite.printResults(result);
     }
 }
