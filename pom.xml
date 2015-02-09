@@ -50,7 +50,7 @@
   </organization>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <dcm4che.version>3.3.5-SNAPSHOT</dcm4che.version>
+    <dcm4che.version>3.3.6-SNAPSHOT</dcm4che.version>
   </properties>
   <build>
     <extensions>
