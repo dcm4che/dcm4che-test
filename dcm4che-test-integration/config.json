@@ -1,0 +1,7 @@
+{
+  "dicomConfigurationRoot" : {
+    "hl7UniqueApplicationNamesRegistryRoot" : { },
+    "dicomUniqueAETitlesRegistryRoot" : { },
+    "dicomDevicesRoot" : { }
+  }
+}

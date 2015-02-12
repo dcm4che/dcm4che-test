@@ -72,7 +72,6 @@
     </plugins>
   </build>
   <modules>
-    <module>dcm4che-test-tools</module>
     <module>dcm4che-test-integration</module>
   </modules>
   <distributionManagement>
@@ -104,12 +103,6 @@
         <groupId>org.dcm4che</groupId>
         <artifactId>dcm4che-net</artifactId>
         <version>${dcm4che.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.dcm4che</groupId>
-        <artifactId>dcm4che-test-tools</artifactId>
-        <version>${project.version}</version>
         <scope>provided</scope>
       </dependency>
     </dependencies>
