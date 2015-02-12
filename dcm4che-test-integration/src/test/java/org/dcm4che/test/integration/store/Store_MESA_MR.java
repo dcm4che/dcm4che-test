@@ -38,46 +38,63 @@
 
 package org.dcm4che.test.integration.store;
 
-import java.util.List;
-
+import org.dcm4che.test.annotations.RemoteConnectionParameters;
+import org.dcm4che.test.annotations.StoreParameters;
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.dcm4che3.tool.storescu.test.StoreResult;
-import org.dcm4che3.tool.storescu.test.StoreTest;
+import org.dcm4che3.tool.storescu.test.StoreTool;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
-public class Store_MESA_MR {
+public class Store_MESA_MR extends BasicTest{
 
     @Test
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_MR_MR1_MRS1() throws Exception {
-        StoreResult results = StoreTestSuite.getStoreTest().store(
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
                 "MESA_12_5,MR1,S1", "modality/MR/MR1/MR1S1");
-
+        StoreResult results = (StoreResult) storeTool.getResult();
         StoreTestSuite.printResults(results);
     }
 
     @Test
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_MR_MR1_MRS2() throws Exception {
-        StoreResult results = StoreTestSuite.getStoreTest().store(
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
                 "MESA_12_5,MR1,S2", "modality/MR/MR1/MR1S2");
-
+        StoreResult results = (StoreResult) storeTool.getResult();
         StoreTestSuite.printResults(results);
     }
 
     @Test
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_MR_MR2_MRS1() throws Exception {
-        StoreResult results = StoreTestSuite.getStoreTest().store(
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
                 "MESA_12_5,MR2,S1", "modality/MR/MR2/MR2S1");
+        StoreResult results = (StoreResult) storeTool.getResult();
 
         StoreTestSuite.printResults(results);
     }
 
     @Test
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_MR_MR2_MRS2() throws Exception {
-        StoreResult results = StoreTestSuite.getStoreTest().store(
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
                 "MESA_12_5,MR2,S2", "modality/MR/MR2/MR2S2");
+        StoreResult results = (StoreResult) storeTool.getResult();
 
         StoreTestSuite.printResults(results);
     }

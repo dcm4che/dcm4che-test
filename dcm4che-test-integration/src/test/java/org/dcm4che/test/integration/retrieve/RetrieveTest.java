@@ -46,35 +46,24 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
-import java.util.Arrays;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-
-import org.apache.commons.cli.CommandLine;
-import org.dcm4che.test.tool.LoadProperties;
+import org.dcm4che.test.utils.LoadProperties;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.ElementDictionary;
-import org.dcm4che3.data.Sequence;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.UID;
 import org.dcm4che3.data.VR;
-import org.dcm4che3.net.ApplicationEntity;
 import org.dcm4che3.net.Association;
-import org.dcm4che3.net.Connection;
-import org.dcm4che3.net.Device;
 import org.dcm4che3.net.DimseRSPHandler;
 import org.dcm4che3.net.IncompatibleConnectionException;
-import org.dcm4che3.net.Status;
 import org.dcm4che3.tool.common.CLIUtils;
-import org.dcm4che3.tool.common.DicomFiles;
-import org.dcm4che3.tool.findscu.test.QueryResult;
 import org.dcm4che3.tool.getscu.GetSCU;
 import org.dcm4che3.tool.getscu.GetSCU.InformationModel;
-import org.dcm4che3.tool.stgcmtscu.StgCmtSCU;
 import org.dcm4che3.util.StringUtils;
 
 /**
@@ -108,7 +97,6 @@ public class RetrieveTest {
             IncompatibleConnectionException, GeneralSecurityException,
             FileNotFoundException, IOException {
 
-        long t1, t2;
 
         Properties config = LoadProperties.load(RetrieveTest.class);
         String host = config.getProperty("remoteConn.hostname");
@@ -125,7 +113,6 @@ public class RetrieveTest {
 
         // add retrieve attrs
 
-        t2 = System.currentTimeMillis();
 
         // create executor
         ExecutorService executorService = Executors.newCachedThreadPool();

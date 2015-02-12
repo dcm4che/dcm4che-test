@@ -10,10 +10,34 @@
   </parent>
   <artifactId>dcm4che-test-tools</artifactId>
   <dependencies>
+      <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.dcm4che</groupId>
       <artifactId>dcm4che-net</artifactId>
       <scope>provided</scope>
+    </dependency>
+        <dependency>
+        <groupId>org.dcm4che</groupId>
+        <artifactId>dcm4che-conf-api</artifactId>
+        <version>${dcm4che.version}</version>
+    </dependency>
+        <dependency>
+        <groupId>org.dcm4che</groupId>
+        <artifactId>dcm4che-conf-core</artifactId>
+        <version>${dcm4che.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.dcm4che.tool</groupId>
+    	<artifactId>dcm4che-tool-common</artifactId>
+    	<version>${dcm4che.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.dcm4che.tool</groupId>
+    	<artifactId>dcm4che-tool-storescu</artifactId>
+    	<version>${dcm4che.version}</version>
     </dependency>
   </dependencies>
 </project>

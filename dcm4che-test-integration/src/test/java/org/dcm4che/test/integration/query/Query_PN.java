@@ -38,37 +38,40 @@
 
 package org.dcm4che.test.integration.query;
 
-import static org.junit.Assert.*;
-
+import org.dcm4che.test.annotations.QueryParameters;
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.tool.findscu.test.QueryResult;
-import org.dcm4che3.tool.findscu.test.QueryTest;
+import org.dcm4che3.tool.findscu.test.QueryTool;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
-public class Query_PN {
+public class Query_PN  extends BasicTest{
 
     @Test
+    @QueryParameters(aeTitle="DCM4CHEE")
     public void Query_PN_1() throws Exception {
-        
-        QueryTest test = QueryTestSuite.getQueryTest();
-        test.addTag(Tag.PatientName, "P*");
-        test.setExpectedResultsNumeber(2);
-        QueryResult result = test.query("Patient Name:P*");
-        QueryTestSuite.printResults(result);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.PatientName, "P*");
+        queryTool.setExpectedMatches(2);
+        queryTool.query("Patient Name:P*");
+        QueryTestSuite.printResults((QueryResult) queryTool.getResult());
 
     }
     
     @Test
+    @QueryParameters(aeTitle="DCM4CHEE")
     public void Query_PN_2() throws Exception {
-        QueryTest test = QueryTestSuite.getQueryTest();
-        test.addTag(Tag.PatientName, "COTTA");
-        test.setExpectedResultsNumeber(1);
-        QueryResult result = test.query("Patient Name:COTTA");
-        QueryTestSuite.printResults(result);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this); 
+        queryTool.addQueryTag(Tag.PatientName, "COTTA");
+        queryTool.setExpectedMatches(1);
+        queryTool.query("Patient Name:COTTA");
+        QueryTestSuite.printResults((QueryResult) queryTool.getResult());
 
     }
 }

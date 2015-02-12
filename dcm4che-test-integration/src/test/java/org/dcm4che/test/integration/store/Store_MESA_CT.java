@@ -38,65 +38,84 @@
 
 package org.dcm4che.test.integration.store;
 
-import java.util.List;
-
-import org.dcm4che.test.tool.ReflectionUtil;
+import org.dcm4che.test.annotations.RemoteConnectionParameters;
+import org.dcm4che.test.annotations.StoreParameters;
 import org.dcm4che3.tool.storescu.test.StoreResult;
-import org.dcm4che3.tool.storescu.test.StoreTest;
+import org.dcm4che3.tool.storescu.test.StoreTool;
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
-public class Store_MESA_CT {
+public class Store_MESA_CT extends BasicTest{
 
     @Test
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_CT_CT1_CTS1() throws Exception {
-
-        StoreResult results = StoreTestSuite.getStoreTest().store(
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
                 "MESA_12_5,CT1,S1", "modality/CT/CT1/CT1S1");
-
+        StoreResult results = (StoreResult) storeTool.getResult();
         StoreTestSuite.printResults(results);
     }
 
     @Test
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_CT_CT1_CTS2() throws Exception {
-        StoreResult results = StoreTestSuite.getStoreTest().store(
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
                 "MESA_12_5,CT1,S2", "modality/CT/CT1/CT1S2");
-
+        StoreResult results = (StoreResult) storeTool.getResult();
         StoreTestSuite.printResults(results);
     }
 
     @Test
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_CT_CT2_CTS1() throws Exception {
-        StoreResult results = StoreTestSuite.getStoreTest().store(
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
                 "MESA_12_5,CT2,S1", "modality/CT/CT2/CT2S1");
-
+        StoreResult results = (StoreResult) storeTool.getResult();
         StoreTestSuite.printResults(results);
     }
 
     @Test
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_CT_CT3_CTS1() throws Exception {
-        StoreResult results = StoreTestSuite.getStoreTest().store(
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
                 "MESA_12_5,CT3,S1", "modality/CT/CT3/CT3S1");
-
+        StoreResult results = (StoreResult) storeTool.getResult();
         StoreTestSuite.printResults(results);
     }
 
     @Test
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_CT_CT4_CTS1() throws Exception {
-        StoreResult results = StoreTestSuite.getStoreTest().store(
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
                 "MESA_12_5,CT4,S1", "modality/CT/CT4/CT4S1");
-
+        StoreResult results = (StoreResult) storeTool.getResult();
         StoreTestSuite.printResults(results);
     }
 
     @Test
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_CT_CT5_CTS1() throws Exception {
-        StoreResult results = StoreTestSuite.getStoreTest().store(
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
                 "MESA_12_5,CT5,S1", "modality/CT/CT5/CT5S1");
-
+        StoreResult results = (StoreResult) storeTool.getResult();
         StoreTestSuite.printResults(results);
     }
 }

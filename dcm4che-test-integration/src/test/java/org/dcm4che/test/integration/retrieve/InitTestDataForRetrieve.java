@@ -36,19 +36,36 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test.integration.stgcmt;
+package org.dcm4che.test.integration.retrieve;
 
+import org.dcm4che.test.annotations.RemoteConnectionParameters;
+import org.dcm4che.test.annotations.StoreParameters;
+import org.dcm4che.test.integration.store.StoreTestSuite;
+import org.dcm4che3.tool.storescu.test.StoreResult;
+import org.dcm4che3.tool.storescu.test.StoreTool;
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.junit.Test;
 
 /**
- * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
-public class StgCmt_MESA_MR {
-
+public class InitTestDataForRetrieve extends BasicTest{
+    private static final String RESULT_HEADERP = "%n+                          Retrieve Tests Preload                         +";
+    private static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
     @Test
-    public void Store_MESA_MR_MR1_MRS1() throws Exception {
-        new StgCmtTest("MESA_12_5,MR1,S1", "modality/MR/MR1/MR1S1/MR1S1IM1.dcm")
-                .stgcmt();
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
+    public void Store_MESA_MG_MG1_MGS1() throws Exception {
+        System.out.printf(RESULT_HEADER1);
+        System.out.printf(RESULT_HEADERP);
+        System.out.printf(RESULT_HEADER1);
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
+                "Query Preload: CT", "modality/CT");
+        StoreResult results = (StoreResult) storeTool.getResult();
+        StoreTestSuite.logResults(results);
+        
     }
 }

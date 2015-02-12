@@ -41,9 +41,6 @@ package org.dcm4che.test.integration.retrieve;
 import java.io.IOException;
 
 import org.dcm4che.test.ConnectTest;
-import org.dcm4che.test.integration.query.QueryTestSuite;
-import org.dcm4che.test.integration.store.StoreTestSuite;
-import org.dcm4che3.tool.findscu.test.QueryResult;
 import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -53,10 +50,10 @@ import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- *
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
 @RunWith(Suite.class)
-@SuiteClasses({
+@SuiteClasses({InitTestDataForRetrieve.class,
     Retrieve_MESA_MR.class})
 
 public class RetrieveTestSuite {
@@ -67,7 +64,6 @@ public class RetrieveTestSuite {
     private static final String RESULT_HEADER3 = "%n+----+----------------------------------------+------+------+----------+";
     private static final String RESULT_COLUMNS = "%n| #  | Description                            | exp. | ret. | time     |";
     private static final String RESULT_FOOTER1 = "%n+----+----------------------------------------+------+------+----------+";
-    private static final String RESULT_HEADERP = "%n+                          Query Tests Preload                         +";
 
     
     public static int testNumber;
@@ -79,13 +75,6 @@ public class RetrieveTestSuite {
         
         //test if connection is alive
         new ConnectTest().test();
-        System.out.printf(RESULT_HEADER1);
-        System.out.printf(RESULT_HEADERP);
-        System.out.printf(RESULT_HEADER1);
-        
-        StoreTestSuite.printResults(StoreTestSuite.getStoreTest().store(
-                "Query Preload: CT", "modality/CT"));
-        
         // printout results header
         System.out.printf(RESULT_HEADER1);
         System.out.printf(RESULT_HEADER2);
@@ -95,7 +84,7 @@ public class RetrieveTestSuite {
     }
     
     public static void printResults(RetrieveResult result) {
-
+        
         // format printout
         System.out.format(RESULT_FORMAT, ++RetrieveTestSuite.testNumber,
                 StringUtils.truncate(result.getTestDescription(), 38),

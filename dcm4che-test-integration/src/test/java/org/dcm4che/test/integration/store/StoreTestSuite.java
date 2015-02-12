@@ -38,24 +38,18 @@
 
 package org.dcm4che.test.integration.store;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
 
-import org.dcm4che.test.ConnectTest;
-import org.dcm4che.test.tool.FileUtil;
-import org.dcm4che.test.tool.LoadProperties;
+import org.dcm4che.test.utils.FileUtil;
 import org.dcm4che3.tool.storescu.test.StoreResult;
-import org.dcm4che3.tool.storescu.test.StoreTest;
 import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
@@ -65,7 +59,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ Store_MESA_CT.class, Store_MESA_CR.class, Store_MESA_MG.class,
         Store_MESA_MR.class })
 public class StoreTestSuite {
-
+    private static final Logger LOG = LoggerFactory.getLogger(StoreTestSuite.class);
+    
     private static final String RESULT_FORMAT = "%n| %-2s | %-20s | %-4d | %-4d | %-4d | %-8s | %-8s |";
     private static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
     private static final String RESULT_HEADER2 = "%n+                           Store Tests Suite                          +";
@@ -81,7 +76,7 @@ public class StoreTestSuite {
         testNumber = 0;
 
         // test if connection is alive
-        new ConnectTest().test();
+        //new ConnectTest().test();
         System.out.printf(RESULT_HEADER1);
         System.out.printf(RESULT_HEADER2);
         System.out.printf(RESULT_HEADER3);
@@ -108,27 +103,15 @@ public class StoreTestSuite {
                 FileUtil.humanreadable(result.getSize(), true),
                 result.getTime() + " ms");
     }
-
-    public static StoreTest getStoreTest() throws IOException {
-        
-        Properties config = LoadProperties.load(StoreTestSuite.class);
-        String host = config.getProperty("remoteConn.hostname");
-        int port = new Integer(config.getProperty("remoteConn.port"));
-        String aeTitle = config.getProperty("store.aetitle");        
-        String directory = config.getProperty("store.directory");
-
-        return new StoreTest(host, port, aeTitle, new File(directory));
-    }
     
-    public static StoreTest getStoreTest(String directory) throws IOException {
-        
-        Properties config = LoadProperties.load(StoreTestSuite.class);
-        String host = config.getProperty("remoteConn.hostname");
-        int port = new Integer(config.getProperty("remoteConn.port"));
-        String aeTitle = config.getProperty("store.aetitle");        
-        
-        URL dicomXMLFilesDir = StoreTestSuite.class.getResource(directory);
+    public static void logResults(StoreResult result) {
 
-        return new StoreTest(host, port, aeTitle, new File(dicomXMLFilesDir.getFile()));
+        LOG.info(StoreTestSuite.RESULT_FORMAT,
+                ++StoreTestSuite.testNumber,
+                StringUtils.truncate(result.getTestDescription(), 20),
+                result.getFilesSent(), result.getFailures(),
+                result.getWarnings(),
+                FileUtil.humanreadable(result.getSize(), true),
+                result.getTime() + " ms");
     }
 }

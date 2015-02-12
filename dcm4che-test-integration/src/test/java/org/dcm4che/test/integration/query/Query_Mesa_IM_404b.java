@@ -38,120 +38,110 @@
 
 package org.dcm4che.test.integration.query;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
+import org.dcm4che.test.utils.AssertionUtils;
+import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.VR;
 import org.dcm4che3.tool.findscu.test.QueryResult;
-import org.dcm4che3.tool.findscu.test.QueryTest;
+import org.dcm4che3.tool.findscu.test.QueryTool;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
-public class Query_Mesa_IM_404b {
+public class Query_Mesa_IM_404b extends BasicTest{
 
     @Test
     public void step1_query_sop_instances() throws Exception {
         
-        QueryTest test = QueryTestSuite.getQueryTest();
-        
-        test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
-        test.addTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
-        test.addTag(Tag.SeriesInstanceUID, "1.2.392.200036.9125.0.198811291108.7");
-        
-        test.setReturnTag(Tag.SOPInstanceUID);
-        
-        test.setExpectedResultsNumeber(1);
-        
-        test.addExpectedResult("1.2.392.200036.9125.0.19950720093509");
-                
-        QueryResult result = test.query("SOPInstanceUID:<<1>>");
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
+        queryTool.addQueryTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
+        queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.392.200036.9125.0.198811291108.7");
+        queryTool.addReturnTag(Tag.SOPInstanceUID);
+        queryTool.setExpectedMatches(1);
+        queryTool.query("SOPInstanceUID:<<1>>");
+        QueryResult result = (QueryResult) queryTool.getResult();
+        Attributes expectedAttrs = new Attributes();
+        expectedAttrs.setString(Tag.SOPInstanceUID, VR.UI, "1.2.392.200036.9125.0.19950720093509");
+        AssertionUtils.assertContainsAttrs(result.getQueryResponse(), expectedAttrs);
         QueryTestSuite.printResults(result);
-
+        
     }
     
     @Test
     public void step2_query_sop_class_uid() throws Exception {
         
-        QueryTest test = QueryTestSuite.getQueryTest();
-        
-        test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
-        test.addTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
-        test.addTag(Tag.SeriesInstanceUID, "1.2.392.200036.9125.0.198811291108.7");
-        
-        test.setReturnTag(Tag.SOPClassUID);
-        
-        test.setExpectedResultsNumeber(1);
-        
-        test.addExpectedResult("1.2.840.10008.5.1.4.1.1.1");
-                
-        QueryResult result = test.query("SOPClassUID:1.2.840.10008.5.1.4.1.1.1");
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
+        queryTool.addQueryTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
+        queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.392.200036.9125.0.198811291108.7");
+        queryTool.addReturnTag(Tag.SOPClassUID);
+        queryTool.setExpectedMatches(1);
+        queryTool.query("SOPClassUID:1.2.840.10008.5.1.4.1.1.1");
+        QueryResult result = (QueryResult) queryTool.getResult();
+        Attributes expectedAttrs = new Attributes();
+        expectedAttrs.setString(Tag.SOPClassUID, VR.UI, "1.2.840.10008.5.1.4.1.1.1");
+        AssertionUtils.assertContainsAttrs(result.getQueryResponse(), expectedAttrs);
         QueryTestSuite.printResults(result);
-
+        
     }
 
     @Test
     public void step3_query_rows() throws Exception {
         
-        QueryTest test = QueryTestSuite.getQueryTest();
-        
-        test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
-        test.addTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
-        test.addTag(Tag.SeriesInstanceUID, "1.2.392.200036.9125.0.198811291108.7");
-        
-        test.setReturnTag(Tag.Rows);
-        
-        test.setExpectedResultsNumeber(1);
-        
-        test.addExpectedResult("2010");
-                
-        QueryResult result = test.query("Rows:2010");
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
+        queryTool.addQueryTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
+        queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.392.200036.9125.0.198811291108.7");
+        queryTool.addReturnTag(Tag.Rows);
+        queryTool.setExpectedMatches(1);
+        queryTool.query("Rows:2010");
+        QueryResult result = (QueryResult) queryTool.getResult();
+        Attributes expectedAttrs = new Attributes();
+        expectedAttrs.setString(Tag.Rows, VR.US, "2010");
+        AssertionUtils.assertContainsAttrs(result.getQueryResponse(), expectedAttrs);
         QueryTestSuite.printResults(result);
-
+        
     }
 
     @Test
     public void step4_query_columns() throws Exception {
         
-        QueryTest test = QueryTestSuite.getQueryTest();
-        
-        test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
-        test.addTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
-        test.addTag(Tag.SeriesInstanceUID, "1.2.392.200036.9125.0.198811291108.7");
-        
-        test.setReturnTag(Tag.Columns);
-        
-        test.setExpectedResultsNumeber(1);
-        
-        test.addExpectedResult("1670");
-                
-        QueryResult result = test.query("Columns:512");
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
+        queryTool.addQueryTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
+        queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.392.200036.9125.0.198811291108.7");
+        queryTool.addReturnTag(Tag.Columns);
+        queryTool.setExpectedMatches(1);
+        queryTool.query("Columns:1670");
+        QueryResult result = (QueryResult) queryTool.getResult();
+        Attributes expectedAttrs = new Attributes();
+        expectedAttrs.setString(Tag.Columns, VR.US, "1670");
+        AssertionUtils.assertContainsAttrs(result.getQueryResponse(), expectedAttrs);
         QueryTestSuite.printResults(result);
-
+        
     }
     
     @Test
     public void step5_query_bits_allocated() throws Exception {
         
-        QueryTest test = QueryTestSuite.getQueryTest();
-        
-        test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
-        test.addTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
-        test.addTag(Tag.SeriesInstanceUID, "1.2.392.200036.9125.0.198811291108.7");
-        
-        test.setReturnTag(Tag.BitsAllocated);
-        
-        test.setExpectedResultsNumeber(1);
-        
-        test.addExpectedResult("16");
-                
-        QueryResult result = test.query("BitsAllocated:16");
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
+        queryTool.addQueryTag(Tag.StudyInstanceUID,  "1.2.392.200036.9125.0.198811291108.7");
+        queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.392.200036.9125.0.198811291108.7");
+        queryTool.addReturnTag(Tag.BitsAllocated);
+        queryTool.setExpectedMatches(1);
+        queryTool.query("BitsAllocated:16");
+        QueryResult result = (QueryResult) queryTool.getResult();
+        Attributes expectedAttrs = new Attributes();
+        expectedAttrs.setString(Tag.BitsAllocated, VR.US, "16");
+        AssertionUtils.assertContainsAttrs(result.getQueryResponse(), expectedAttrs);
         QueryTestSuite.printResults(result);
-
+        
     }
 }

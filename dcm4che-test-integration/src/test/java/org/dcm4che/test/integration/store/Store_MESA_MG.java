@@ -38,23 +38,29 @@
 
 package org.dcm4che.test.integration.store;
 
-import java.util.List;
-
+import org.dcm4che.test.annotations.RemoteConnectionParameters;
+import org.dcm4che.test.annotations.StoreParameters;
 import org.dcm4che3.tool.storescu.test.StoreResult;
-import org.dcm4che3.tool.storescu.test.StoreTest;
+import org.dcm4che3.tool.storescu.test.StoreTool;
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
-public class Store_MESA_MG {
+public class Store_MESA_MG extends BasicTest{
 
     @Test
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_MG_MG1_MGS1() throws Exception {
-        StoreResult results = StoreTestSuite.getStoreTest().store(
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
                 "MESA_12_5,MG1,S1", "modality/MG/MG1/MG1S1");
-
+        StoreResult results = (StoreResult) storeTool.getResult();
         StoreTestSuite.printResults(results);
     }
 }

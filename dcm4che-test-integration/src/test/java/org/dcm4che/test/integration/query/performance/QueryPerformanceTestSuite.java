@@ -39,18 +39,10 @@
 package org.dcm4che.test.integration.query.performance;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
 
 import org.dcm4che.test.ConnectTest;
-import org.dcm4che.test.integration.store.StoreTestSuite;
-import org.dcm4che.test.tool.FileUtil;
-import org.dcm4che.test.tool.LoadProperties;
+import org.dcm4che.test.common.BasicTest;
 import org.dcm4che3.tool.findscu.test.QueryResult;
-import org.dcm4che3.tool.findscu.test.QueryTest;
-import org.dcm4che3.tool.storescu.test.StoreResult;
-import org.dcm4che3.tool.storescu.test.StoreTest;
 import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -60,11 +52,11 @@ import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
 @RunWith(Suite.class)
 @SuiteClasses({ Query_PN.class, Query_Patient_ID.class })
-public class QueryPerformanceTestSuite {
+public class QueryPerformanceTestSuite extends BasicTest{
 
     private static final String RESULT_FORMAT = "%n| %-2s | %-48s | %-6d | %-10s | %-10s |";
     private static final String RESULT_HEADER1 = "%n+------------------------------------------------------------------------------------------+";
@@ -111,28 +103,5 @@ public class QueryPerformanceTestSuite {
                 result.getTimeFirst() + " ms",
                 result.getTime() + " ms");
     }
-    
-    public static QueryTest getQueryTest() throws IOException
-    {
-        Properties config = LoadProperties.load(QueryPerformanceTestSuite.class);
-
-        String host = config.getProperty("remoteConn.hostname");
-        int port = new Integer(config.getProperty("remoteConn.port"));
-        String aeTitle = config.getProperty("query.aetitle");
-        
-        return new QueryTest(host, port, aeTitle);
-    }
-
-    public static QueryTest getQueryTestForIOCM() throws IOException
-    {
-        Properties config = LoadProperties.load(QueryPerformanceTestSuite.class);
-
-        String host = config.getProperty("remoteConn.hostname");
-        int port = new Integer(config.getProperty("remoteConn.port"));
-        String aeTitle = config.getProperty("iocm.aetitle");
-        
-        return new QueryTest(host, port, aeTitle);
-    }
-
     
 }

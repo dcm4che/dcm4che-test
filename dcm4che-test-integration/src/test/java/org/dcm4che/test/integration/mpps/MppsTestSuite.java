@@ -39,17 +39,13 @@
 package org.dcm4che.test.integration.mpps;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
 
 import org.dcm4che.test.ConnectTest;
-import org.dcm4che.test.tool.FileUtil;
-import org.dcm4che.test.tool.LoadProperties;
-import org.dcm4che3.tool.mppsscu.test.MppsTest;
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.utils.FileUtil;
 import org.dcm4che3.tool.storescu.test.StoreResult;
-import org.dcm4che3.tool.storescu.test.StoreTest;
 import org.dcm4che3.util.StringUtils;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -58,11 +54,11 @@ import org.junit.runners.Suite.SuiteClasses;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @autor Hesham Elbadawi <bsdreko@gmail.com>
  */
 @RunWith(Suite.class)
 @SuiteClasses({})
-public class MppsTestSuite {
+public class MppsTestSuite extends BasicTest{
 
     private static final String RESULT_FORMAT = "%n| %-2s | %-20s | %-4d | %-4d | %-4d | %-8s | %-8s |";
     private static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
@@ -106,17 +102,5 @@ public class MppsTestSuite {
                 result.getWarnings(),
                 FileUtil.humanreadable(result.getSize(), true), 
                 result.getTime() + " ms");
-    }
-    
-    public static MppsTest getMppsTest() throws IOException
-    {
-        Properties config = LoadProperties.load(MppsTestSuite.class);
-
-        String host = config.getProperty("remoteConn.hostname");
-        int port = new Integer(config.getProperty("remoteConn.port"));
-        String aeTitle = config.getProperty("mpps.aetitle");
-        String directory = config.getProperty("mpps.directory");
-            
-        return new MppsTest(host, port, aeTitle, directory);
     }
 }

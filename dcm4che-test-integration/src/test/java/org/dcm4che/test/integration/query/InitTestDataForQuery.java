@@ -36,19 +36,44 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-package org.dcm4che.test.integration.stgcmt;
+package org.dcm4che.test.integration.query;
 
+import org.dcm4che.test.annotations.RemoteConnectionParameters;
+import org.dcm4che.test.annotations.StoreParameters;
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
+import org.dcm4che.test.integration.store.StoreTestSuite;
+import org.dcm4che3.tool.storescu.test.StoreResult;
+import org.dcm4che3.tool.storescu.test.StoreTool;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
-public class StgCmt_MESA_MR {
-
+public class InitTestDataForQuery extends BasicTest{
+    private static final Logger LOG = LoggerFactory.getLogger(InitTestDataForQuery.class);
+    
+    private static final String RESULT_HEADERP = "%n+                          Query Tests Preload                         +";
+    private static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
     @Test
-    public void Store_MESA_MR_MR1_MRS1() throws Exception {
-        new StgCmtTest("MESA_12_5,MR1,S1", "modality/MR/MR1/MR1S1/MR1S1IM1.dcm")
-                .stgcmt();
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
+    public void Store_MESA_MG_MG1_MGS1() throws Exception {
+        LOG.info(RESULT_HEADER1);
+        LOG.info(RESULT_HEADERP);
+        LOG.info(RESULT_HEADER1);
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
+                "Query Preload: CT", "modality/CT");
+        StoreResult results = (StoreResult) storeTool.getResult();
+        StoreTestSuite.logResults(results);
+        storeTool.store(
+                "Query Preload: CR", "modality/CR");
+        results = (StoreResult) storeTool.getResult();
+        StoreTestSuite.logResults(results);
+        
     }
 }

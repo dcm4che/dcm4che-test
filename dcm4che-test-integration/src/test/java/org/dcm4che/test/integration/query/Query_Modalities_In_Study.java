@@ -38,27 +38,27 @@
 
 package org.dcm4che.test.integration.query;
 
-import static org.junit.Assert.*;
-
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.tool.findscu.test.QueryResult;
-import org.dcm4che3.tool.findscu.test.QueryTest;
+import org.dcm4che3.tool.findscu.test.QueryTool;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
-public class Query_Modalities_In_Study {
+public class Query_Modalities_In_Study extends BasicTest{
 
     @Test
     public void Query_Modalities_In_Study_1() throws Exception {
-        
-        QueryTest test = QueryTestSuite.getQueryTest();
-        test.addTag(Tag.ModalitiesInStudy, "CT");
-        test.setExpectedResultsNumeber(5);
-        QueryResult result = test.query("Modalities In Study:CT");
-        QueryTestSuite.printResults(result);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.ModalitiesInStudy, "CT");
+        queryTool.setExpectedMatches(5);
+        queryTool.query("Modalities In Study:CT");
+        QueryTestSuite.printResults((QueryResult) queryTool.getResult());
     }
     
 }

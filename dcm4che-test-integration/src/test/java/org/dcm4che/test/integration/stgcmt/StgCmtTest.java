@@ -49,7 +49,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.dcm4che.test.tool.LoadProperties;
+import org.dcm4che.test.utils.LoadProperties;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.UID;
 import org.dcm4che3.net.ApplicationEntity;
@@ -68,10 +68,10 @@ public class StgCmtTest {
     private String testDescription;
     private String fileName;
 
-    private long totalSize;
-    private int filesSent;
-    private int warnings;    
-    private int failures;
+//    private long totalSize;
+//    private int filesSent;
+//    private int warnings;    
+//    private int failures;
 
     /**
      * @param testName
@@ -80,10 +80,11 @@ public class StgCmtTest {
      */
     public StgCmtTest(String testDescription, String fileName) {
         super();
-        this.testDescription = testDescription;
+        this.setTestDescription(testDescription);
         this.fileName = fileName;
     }
     
+    @SuppressWarnings("unused")
     public void stgcmt() throws IOException, InterruptedException,
             IncompatibleConnectionException, GeneralSecurityException {
 
@@ -166,6 +167,14 @@ public class StgCmtTest {
 //                warnings,
 //                FileUtil.humanreadable(totalSize, true),
 //                (t2 - t1) + " ms");
+    }
+
+    public String getTestDescription() {
+        return testDescription;
+    }
+
+    public void setTestDescription(String testDescription) {
+        this.testDescription = testDescription;
     }
 
 }

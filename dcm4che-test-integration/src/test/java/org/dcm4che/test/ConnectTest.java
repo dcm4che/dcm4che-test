@@ -41,24 +41,24 @@ package org.dcm4che.test;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.util.Properties;
 
-import org.dcm4che.test.tool.ConnectionUtil;
-import org.dcm4che.test.tool.LoadProperties;
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.utils.ConnectionUtil;
+import org.dcm4che.test.utils.LoadProperties;
 import org.dcm4che3.net.Connection;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  *
  */
-public class ConnectTest {
+public class ConnectTest extends BasicTest{
     
     public Connection test() throws IOException {
         
-        Properties config = LoadProperties.load(ConnectTest.class);
+        setDefaultProperties(LoadProperties.load(ConnectTest.class));
         
-        String host = config.getProperty("remoteConn.hostname");
-        int port = new Integer(config.getProperty("remoteConn.port"));
+        String host = getDefaultProperties().getProperty("remoteConn.hostname");
+        int port = new Integer(getDefaultProperties().getProperty("remoteConn.port"));
         Connection conn = new Connection("remoteConn",host,port);
         
         assertTrue("Connection Not Alive:"+host,ConnectionUtil.isAlive(conn));

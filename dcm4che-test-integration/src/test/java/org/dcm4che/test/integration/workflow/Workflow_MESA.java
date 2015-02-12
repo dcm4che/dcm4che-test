@@ -41,12 +41,16 @@ package org.dcm4che.test.integration.workflow;
 import java.io.IOException;
 
 import org.dcm4che.test.ConnectTest;
-import org.dcm4che.test.integration.mpps.MppsTestSuite;
-import org.dcm4che.test.integration.store.StoreTestSuite;
-import org.dcm4che.test.tool.ConnectionUtil;
+import org.dcm4che.test.annotations.RemoteConnectionParameters;
+import org.dcm4che.test.annotations.StoreParameters;
+import org.dcm4che.test.utils.ConnectionUtil;
 import org.dcm4che3.net.Connection;
 import org.dcm4che3.tool.mppsscu.test.MppsResult;
 import org.dcm4che3.tool.storescu.test.StoreResult;
+import org.dcm4che3.tool.storescu.test.StoreTool;
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -56,7 +60,7 @@ import org.junit.Test;
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  * 
  */
-public class Workflow_MESA {
+public class Workflow_MESA extends BasicTest{
 
     public static final String RESULT_FORMAT = "%n| %-2s | %-45s | %-4s | %-8s |";
     public static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
@@ -68,6 +72,8 @@ public class Workflow_MESA {
     private int stepNumber = 0;
 
     @Test
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void MESA_PIR_Workflow_103() throws Exception {
 
         String studyDIR = "modality/MR/MR4/MR4S1";
@@ -82,17 +88,20 @@ public class Workflow_MESA {
         // missing: HL7 scheduling ORM
 
         // mpps
-        MppsResult mpps = MppsTestSuite.getMppsTest().mppsscu("Send MPPS for Study",
+        
+        MppsResult mppsResult = (MppsResult) mpps("Send MPPS for Study",
                 "modality/MR/MR4/MR4S1");
-        printLine("MPPS N-CREATE: Sent " + mpps.getnCreateSent() + " Message",
-                mpps.getnCreateFailures() > 0 ? "KO" : "OK",
-                mpps.getCreatetime());
-        printLine("MPPS N-SET: Sent " + mpps.getnSetSent() + " Message",
-                mpps.getnSetFailures() > 0 ? "KO" : "OK", mpps.getSettime());
+        printLine("MPPS N-CREATE: Sent " + mppsResult.getnCreateSent() + " Message",
+                mppsResult.getnCreateFailures() > 0 ? "KO" : "OK",
+                mppsResult.getCreatetime());
+        printLine("MPPS N-SET: Sent " + mppsResult.getnSetSent() + " Message",
+                mppsResult.getnSetFailures() > 0 ? "KO" : "OK", mppsResult.getSettime());
 
         // storage
-        StoreResult store = StoreTestSuite.getStoreTest().store("Send Study: MR/MR4/MR4S1",
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store("Send Study: MR/MR4/MR4S1",
                 "modality/MR/MR4/MR4S1");
+        StoreResult store = (StoreResult) storeTool.getResult();
         printLine("DICOM STORAGE: Sent " + store.getFilesSent() + " Objects",
                 store.getFailures() > 0 ? "KO" : "OK", store.getTime());
 

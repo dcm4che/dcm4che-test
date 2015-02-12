@@ -42,19 +42,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.dcm4che.test.ConnectTest;
-import org.dcm4che.test.integration.mpps.MppsTestSuite;
-import org.dcm4che.test.integration.query.QueryTestSuite;
-import org.dcm4che.test.integration.store.StoreTestSuite;
-import org.dcm4che.test.tool.ConnectionUtil;
-import org.dcm4che.test.tool.LoadProperties;
+import org.dcm4che.test.annotations.RemoteConnectionParameters;
+import org.dcm4che.test.annotations.StoreParameters;
+import org.dcm4che.test.utils.AssertionUtils;
+import org.dcm4che.test.utils.LoadProperties;
+import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
-import org.dcm4che3.net.Connection;
+import org.dcm4che3.data.VR;
 import org.dcm4che3.tool.findscu.test.QueryResult;
-import org.dcm4che3.tool.findscu.test.QueryTest;
+import org.dcm4che3.tool.findscu.test.QueryTool;
 import org.dcm4che3.tool.hl7rcv.test.HL7RcvTest;
-import org.dcm4che3.tool.mppsscu.test.MppsResult;
 import org.dcm4che3.tool.storescu.test.StoreResult;
+import org.dcm4che3.tool.storescu.test.StoreTool;
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -62,9 +64,9 @@ import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
-public class Workflow_MIMA_2 {
+public class Workflow_MIMA_2 extends BasicTest{
 
     public static final String RESULT_FORMAT = "%n| %-2s | %-45s | %-4s | %-8s |";
     public static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
@@ -77,13 +79,17 @@ public class Workflow_MIMA_2 {
     private int stepNumber = 0;
 
     @Test
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/mima/workflow2/")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void MIMA_Workflow_2() throws Exception {
 
         // storage
-        StoreResult store = StoreTestSuite.getStoreTest("/mima/workflow2/")
-                .store("Send MIMA Patient 1", "patient_140703_0002.xml");
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
+                "Send MIMA Patient 1", "patient_140703_0002.xml");
+        StoreResult storeResults = (StoreResult) storeTool.getResult();
         printLine("STORE: Sent patient 140703_0002^^^DCM4CHEE_SOURCE",
-                store.getFailures() > 0 ? "KO" : "OK", store.getTime());
+                storeResults.getFailures() > 0 ? "KO" : "OK", storeResults.getTime());
 
         // start pix manager
         long t1 = System.currentTimeMillis();
@@ -98,16 +104,19 @@ public class Workflow_MIMA_2 {
         pixmgr.bind();
 
         // query retrieve
-        QueryTest test = QueryTestSuite.getQueryTest();
-        test.addTag(Tag.PatientID, "140703_0002");
-        test.addTag(Tag.IssuerOfPatientID, "DCM4CHEE_SOURCE");
-        test.setReturnTag(Tag.OtherPatientIDsSequence);
-        test.addExpectedResult("140703_1002"); // it's the value returned by the
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.PatientID, "140703_0002");
+        queryTool.addQueryTag(Tag.IssuerOfPatientID, "DCM4CHEE_SOURCE");
+        queryTool.addReturnTag(Tag.OtherPatientIDsSequence);
+        queryTool.query("Patient ID:140703_0002^^^DCM4CHEE_SOURCE");
+        QueryResult queryResult = (QueryResult) queryTool.getResult();
+        Attributes expectedResult = new Attributes();
+        expectedResult.setString(Tag.PatientID, VR.LO, "140703_1002"); // it's the value returned by the
                                                // PIX Query
-        QueryResult result = test
-                .query("Patient ID:140703_0002^^^DCM4CHEE_SOURCE");
+        AssertionUtils.assertContainsAttrsWithinSequence(queryResult.getQueryResponse()
+                , expectedResult, Tag.OtherPatientIDsSequence);
         printLine("[C-FIND:PatientID:140703_0002] ret:140703_1002", "OK",
-                result.getTime());
+                queryResult.getTime());
 
         // stop pix manager
         t1 = System.currentTimeMillis();

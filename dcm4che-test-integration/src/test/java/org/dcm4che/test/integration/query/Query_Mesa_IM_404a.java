@@ -38,59 +38,55 @@
 
 package org.dcm4che.test.integration.query;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
+import org.dcm4che.test.utils.AssertionUtils;
+import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.VR;
 import org.dcm4che3.tool.findscu.test.QueryResult;
-import org.dcm4che3.tool.findscu.test.QueryTest;
+import org.dcm4che3.tool.findscu.test.QueryTool;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  * 
  */
-public class Query_Mesa_IM_404a {
+public class Query_Mesa_IM_404a extends BasicTest{
 
     @Test
     public void step1_query_sop_instances() throws Exception {
-        
-        QueryTest test = QueryTestSuite.getQueryTest();
-        
-        test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
-        test.addTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
-        test.addTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
-        
-        test.setReturnTag(Tag.SOPInstanceUID);
-        
-        test.setExpectedResultsNumeber(2);
-        
-        test.addExpectedResult("1.2.840.113674.950809132354242.100");
-        test.addExpectedResult("1.2.840.113674.950809132355260.100");
-                
-        QueryResult result = test.query("SOPInstanceUID:<<2>>");
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
+        queryTool.addQueryTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
+        queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
+        queryTool.addReturnTag(Tag.SOPInstanceUID);
+        queryTool.setExpectedMatches(2);
+        queryTool.query("SOPInstanceUID:<<2>>");
+        QueryResult result = (QueryResult) queryTool.getResult();
+        Attributes expectedAttributes = new Attributes();
+        expectedAttributes.setString(Tag.SOPInstanceUID, VR.UI, "1.2.840.113674.950809132354242.100");
+        AssertionUtils.assertContainsAttrs(result.getQueryResponse(), expectedAttributes);
+        expectedAttributes.setString(Tag.SOPInstanceUID, VR.UI, "1.2.840.113674.950809132355260.100");
+        AssertionUtils.assertContainsAttrs(result.getQueryResponse(), expectedAttributes);
         QueryTestSuite.printResults(result);
     }
     
     @Test
     public void step2_query_sop_class_uid() throws Exception {
         
-        QueryTest test = QueryTestSuite.getQueryTest();
-        
-        test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
-        test.addTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
-        test.addTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
-        
-        test.setReturnTag(Tag.SOPClassUID);
-        
-        test.setExpectedResultsNumeber(2);
-        
-        test.addExpectedResult("1.2.840.10008.5.1.4.1.1.2");
-                
-        QueryResult result = test.query("SOPClassUID:1.2.840.10008.5.1.4.1.1.2");
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
+        queryTool.addQueryTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
+        queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
+        queryTool.addReturnTag(Tag.SOPClassUID);
+        queryTool.setExpectedMatches(2);
+        queryTool.query("SOPClassUID:1.2.840.10008.5.1.4.1.1.2");
+        QueryResult result = (QueryResult) queryTool.getResult();
+        Attributes expectedAttributes = new Attributes();
+        expectedAttributes.setString(Tag.SOPClassUID, VR.UI, "1.2.840.10008.5.1.4.1.1.2");
+        AssertionUtils.assertContainsAttrs(result.getQueryResponse(), expectedAttributes);
         QueryTestSuite.printResults(result);
 
     }
@@ -98,19 +94,17 @@ public class Query_Mesa_IM_404a {
     @Test
     public void step3_query_rows() throws Exception {
         
-        QueryTest test = QueryTestSuite.getQueryTest();
-        
-        test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
-        test.addTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
-        test.addTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
-        
-        test.setReturnTag(Tag.Rows);
-        
-        test.setExpectedResultsNumeber(2);
-        
-        test.addExpectedResult("691");
-                
-        QueryResult result = test.query("Rows:691");
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
+        queryTool.addQueryTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
+        queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
+        queryTool.addReturnTag(Tag.Rows);
+        queryTool.setExpectedMatches(2);
+        queryTool.query("Rows:691");
+        QueryResult result = (QueryResult) queryTool.getResult();
+        Attributes expectedAttributes = new Attributes();
+        expectedAttributes.setString(Tag.Rows, VR.US, "691");
+        AssertionUtils.assertContainsAttrs(result.getQueryResponse(), expectedAttributes);
         QueryTestSuite.printResults(result);
 
     }
@@ -118,19 +112,17 @@ public class Query_Mesa_IM_404a {
     @Test
     public void step4_query_columns() throws Exception {
         
-        QueryTest test = QueryTestSuite.getQueryTest();
-        
-        test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
-        test.addTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
-        test.addTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
-        
-        test.setReturnTag(Tag.Columns);
-        
-        test.setExpectedResultsNumeber(2);
-        
-        test.addExpectedResult("512");
-                
-        QueryResult result = test.query("Columns:512");
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
+        queryTool.addQueryTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
+        queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
+        queryTool.addReturnTag(Tag.Columns);
+        queryTool.setExpectedMatches(2);
+        queryTool.query("Columns:512");
+        QueryResult result = (QueryResult) queryTool.getResult();
+        Attributes expectedAttributes = new Attributes();
+        expectedAttributes.setString(Tag.Columns, VR.US, "512");
+        AssertionUtils.assertContainsAttrs(result.getQueryResponse(), expectedAttributes);
         QueryTestSuite.printResults(result);
 
     }
@@ -138,19 +130,17 @@ public class Query_Mesa_IM_404a {
     @Test
     public void step5_query_bits_allocated() throws Exception {
         
-        QueryTest test = QueryTestSuite.getQueryTest();
-        
-        test.addTag(Tag.QueryRetrieveLevel, "IMAGE");
-        test.addTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
-        test.addTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
-        
-        test.setReturnTag(Tag.BitsAllocated);
-        
-        test.setExpectedResultsNumeber(2);
-        
-        test.addExpectedResult("16");
-                
-        QueryResult result = test.query("BitsAllocated:16");
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
+        queryTool.addQueryTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
+        queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
+        queryTool.addReturnTag(Tag.BitsAllocated);
+        queryTool.setExpectedMatches(2);
+        queryTool.query("BitsAllocated:16");
+        QueryResult result = (QueryResult) queryTool.getResult();
+        Attributes expectedAttributes = new Attributes();
+        expectedAttributes.setString(Tag.BitsAllocated, VR.US, "16");
+        AssertionUtils.assertContainsAttrs(result.getQueryResponse(), expectedAttributes);
         QueryTestSuite.printResults(result);
 
     }

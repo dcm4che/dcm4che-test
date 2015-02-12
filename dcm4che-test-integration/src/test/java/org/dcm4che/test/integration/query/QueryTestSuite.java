@@ -39,18 +39,8 @@
 package org.dcm4che.test.integration.query;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-
 import org.dcm4che.test.ConnectTest;
-import org.dcm4che.test.integration.store.StoreTestSuite;
-import org.dcm4che.test.tool.FileUtil;
-import org.dcm4che.test.tool.LoadProperties;
 import org.dcm4che3.tool.findscu.test.QueryResult;
-import org.dcm4che3.tool.findscu.test.QueryTest;
-import org.dcm4che3.tool.storescu.test.StoreResult;
-import org.dcm4che3.tool.storescu.test.StoreTest;
 import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -63,7 +53,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * 
  */
 @RunWith(Suite.class)
-@SuiteClasses({ Query_PN.class, Query_Modalities_In_Study.class,
+@SuiteClasses({InitTestDataForQuery.class, Query_PN.class, Query_Modalities_In_Study.class,
         Query_Mesa_IM_404a.class, Query_Mesa_IM_404b.class })
 public class QueryTestSuite {
 
@@ -73,7 +63,6 @@ public class QueryTestSuite {
     private static final String RESULT_HEADER3 = "%n+----+----------------------------------------+------+------+----------+";
     private static final String RESULT_COLUMNS = "%n| #  | Description                            | exp. | ret. | time     |";
     private static final String RESULT_FOOTER1 = "%n+----+----------------------------------------+------+------+----------+";
-    private static final String RESULT_HEADERP = "%n+                          Query Tests Preload                         +";
 
     public static int testNumber;
 
@@ -81,14 +70,6 @@ public class QueryTestSuite {
     public static void preload() throws Exception {
 
         // preload images to query
-        System.out.printf(RESULT_HEADER1);
-        System.out.printf(RESULT_HEADERP);
-        System.out.printf(RESULT_HEADER1);
-        StoreTestSuite.printResults(StoreTestSuite.getStoreTest().store(
-                "Query Preload: CT", "modality/CT"));
-        StoreTestSuite.printResults(StoreTestSuite.getStoreTest().store(
-                "Query Preload: CR", "modality/CR"));
-
         testNumber = 0;
 
         // test if connection is alive
@@ -121,28 +102,5 @@ public class QueryTestSuite {
                 result.getExpectedResult(), result.getNumMatches(),
                 result.getTime() + " ms");
     }
-    
-    public static QueryTest getQueryTest() throws IOException
-    {
-        Properties config = LoadProperties.load(QueryTestSuite.class);
 
-        String host = config.getProperty("remoteConn.hostname");
-        int port = new Integer(config.getProperty("remoteConn.port"));
-        String aeTitle = config.getProperty("query.aetitle");
-        
-        return new QueryTest(host, port, aeTitle);
-    }
-
-    public static QueryTest getQueryTestForIOCM() throws IOException
-    {
-        Properties config = LoadProperties.load(QueryTestSuite.class);
-
-        String host = config.getProperty("remoteConn.hostname");
-        int port = new Integer(config.getProperty("remoteConn.port"));
-        String aeTitle = config.getProperty("iocm.aetitle");
-        
-        return new QueryTest(host, port, aeTitle);
-    }
-
-    
 }

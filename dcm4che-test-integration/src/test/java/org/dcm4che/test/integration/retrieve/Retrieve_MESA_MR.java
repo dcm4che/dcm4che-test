@@ -39,7 +39,6 @@
 package org.dcm4che.test.integration.retrieve;
 
 import org.dcm4che3.data.Tag;
-import org.dcm4che3.tool.storescu.test.StoreTest;
 import org.junit.Test;
 
 /**

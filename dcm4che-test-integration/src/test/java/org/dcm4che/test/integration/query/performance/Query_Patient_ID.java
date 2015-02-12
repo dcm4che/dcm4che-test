@@ -38,31 +38,29 @@
 
 package org.dcm4che.test.integration.query.performance;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import org.dcm4che.test.annotations.QueryParameters;
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.dcm4che3.data.Tag;
-import org.dcm4che3.data.VR;
 import org.dcm4che3.tool.findscu.test.QueryResult;
-import org.dcm4che3.tool.findscu.test.QueryTest;
+import org.dcm4che3.tool.findscu.test.QueryTool;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
-public class Query_Patient_ID {
+public class Query_Patient_ID extends BasicTest{
 
     @Test
+    @QueryParameters(aeTitle="DCM4CHEE")
     public void step1_query_sop_instances() throws Exception {
-        
-        String PatientID = "300000024";
-        QueryTest test = QueryPerformanceTestSuite.getQueryTest();
-        test.addTag(Tag.PatientID, "300000016");
-        test.addTag(Tag.IssuerOfPatientID, "PERF");
-        QueryResult result = test.query("Patient ID:"+PatientID);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.PatientID, "300000016");
+        queryTool.addQueryTag(Tag.IssuerOfPatientID, "PERF");
+        queryTool.query("Patient ID: 300000016");
+        QueryResult result = (QueryResult) queryTool.getResult();
         QueryPerformanceTestSuite.printResults(result);
     }
 }

@@ -38,50 +38,51 @@
 
 package org.dcm4che.test.integration.query.performance;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
+import org.dcm4che.test.annotations.QueryParameters;
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.soundex.ESoundex;
-import org.dcm4che3.soundex.Soundex;
 import org.dcm4che3.tool.findscu.test.QueryResult;
-import org.dcm4che3.tool.findscu.test.QueryTest;
+import org.dcm4che3.tool.findscu.test.QueryTool;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
-public class Query_PN {
+public class Query_PN extends BasicTest{
 
     public static String[] names = null;
 
     @Test
+    @QueryParameters(aeTitle="DCM4CHEE")
     public void Query_PN_2() throws Exception {
 
         String most_common_family = null;
         int most_common_family_count = Integer.MIN_VALUE;
-
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
         for (int i = 0; i < 5; i++) {
             String name = randomFamilyName();
 
-            QueryTest test = QueryPerformanceTestSuite.getQueryTest();
-            test.addTag(Tag.PatientName, name);
-            QueryResult result = test.query("Patient Family Name:" + name);
-            QueryPerformanceTestSuite.printResults(result);
 
-            QueryTest testf = QueryPerformanceTestSuite.getQueryTest();
-            testf.addTag(Tag.PatientName, name);
-            QueryResult resultf = testf.queryfuzzy("Fuzzy Patient Family Name:"
+            queryTool.addQueryTag(Tag.PatientName, name);
+            queryTool.query("Patient Family Name:" + name);
+            QueryResult result = (QueryResult) queryTool.getResult();
+            QueryPerformanceTestSuite.printResults(result);
+            queryTool.queryfuzzy("Fuzzy Patient Family Name:"
                     + name
                     + " ("
                     + new ESoundex().toFuzzy(name.substring(0,
                             name.length() - 1)) + ")");
-            QueryPerformanceTestSuite.printResults(resultf);
+            result = (QueryResult) queryTool.getResult();
+            QueryPerformanceTestSuite.printResults(result);
             
             if (result.getNumMatches() > most_common_family_count) {
                 most_common_family = name;
@@ -90,10 +91,10 @@ public class Query_PN {
         }
         for (int i = 0; i < 5; i++) {
             String name = most_common_family+"^"+randominitial1();
-
-            QueryTest test = QueryPerformanceTestSuite.getQueryTest();
-            test.addTag(Tag.PatientName, name);
-            QueryResult result = test.query("Patient Name:" + name);
+            queryTool.clearQueryKeys();
+            queryTool.addQueryTag(Tag.PatientName, name);
+            queryTool.query("Patient Name:" + name);
+            QueryResult result = (QueryResult) queryTool.getResult();
             QueryPerformanceTestSuite.printResults(result);
             
             if (result.getNumMatches() > most_common_family_count) {
@@ -106,23 +107,23 @@ public class Query_PN {
     }
 
     @Test
+    @QueryParameters(aeTitle="DCM4CHEE")
     public void Query_PN_1() throws Exception {
-
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
         for (int i = 0; i < 5; i++) {
-            QueryTest test = QueryPerformanceTestSuite.getQueryTest();
             String r1 = randominitial1();
-            test.addTag(Tag.PatientName, r1);
-            QueryResult result = test.query("Patient Initial 1 letter:"
-                    + r1);
+            queryTool.addQueryTag(Tag.PatientName, r1);
+            queryTool.query("Patient Initial 1 letter:"+ r1);
+            QueryResult result = (QueryResult) queryTool.getResult(); 
             QueryPerformanceTestSuite.printResults(result);
         }
 
         for (int i = 0; i < 5; i++) {
-            QueryTest test = QueryPerformanceTestSuite.getQueryTest();
             String r2 = randominitial2();
-            test.addTag(Tag.PatientName, r2);
-            QueryResult result = test.query("Patient Initial 2 letters:"
-                    + r2);
+            queryTool.clearQueryKeys();
+            queryTool.addQueryTag(Tag.PatientName, r2);
+            queryTool.query("Patient Initial 2 letters:"+ r2);
+            QueryResult result = (QueryResult) queryTool.getResult();
             QueryPerformanceTestSuite.printResults(result);
         }
     }
@@ -143,22 +144,6 @@ public class Query_PN {
     }
 
     private String randomFamilyName() {
-
-        try {
-            if (names == null) {
-                String n = FileUtils.readFileToString(new File(Query_PN.class
-                        .getResource("/names.txt").getFile()));
-                names = n.split("\\r?\\n");
-            }
-            return names[new Random().nextInt(names.length)];
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private String randomGivenName() {
 
         try {
             if (names == null) {

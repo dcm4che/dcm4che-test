@@ -38,27 +38,25 @@
 
 package org.dcm4che.test.integration.iocm;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
 
-import org.dcm4che.test.ConnectTest;
-import org.dcm4che.test.integration.mpps.MppsTestSuite;
-import org.dcm4che.test.integration.query.QueryTestSuite;
-import org.dcm4che.test.integration.store.StoreTestSuite;
-import org.dcm4che.test.tool.ConnectionUtil;
-import org.dcm4che.test.tool.LoadProperties;
+import java.io.IOException;
+
+import org.dcm4che.test.annotations.RemoteConnectionParameters;
+import org.dcm4che.test.annotations.StoreParameters;
 import org.dcm4che3.data.Tag;
-import org.dcm4che3.net.Connection;
 import org.dcm4che3.tool.findscu.test.QueryResult;
-import org.dcm4che3.tool.findscu.test.QueryTest;
-import org.dcm4che3.tool.hl7rcv.test.HL7RcvTest;
-import org.dcm4che3.tool.mppsscu.test.MppsResult;
+import org.dcm4che3.tool.findscu.test.QueryTool;
 import org.dcm4che3.tool.storescu.test.StoreResult;
+import org.dcm4che3.tool.storescu.test.StoreTool;
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 /**
  * Workflow IOCM 1:
@@ -69,8 +67,10 @@ import org.junit.Test;
  * Query to admin AE and get 1 response
  * 
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
-public class Workflow_IOCM_1 {
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class Workflow_IOCM_1 extends BasicTest{
 
     public static final String RESULT_FORMAT = "%n| %-2s | %-45s | %-4s | %-8s |";
     public static final String RESULT_HEADER1 =  "%n+----------------------------------------------------------------------+";
@@ -83,42 +83,46 @@ public class Workflow_IOCM_1 {
     private int stepNumber = 0;
 
     @Test
-    public void MIMA_Workflow_1() throws Exception {
+    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/iocm/workflow1/")
+    @RemoteConnectionParameters(hostName="localhost", port=11112)
+    public void MIMA_Workflow_1a() throws Exception {
 
         // storage
-        StoreResult store = StoreTestSuite.getStoreTest(
-                "/iocm/workflow1/").store("Send IOCM Patient 1",
-                "patient_140708_0001.xml");
-        printLine("STORE: Sent patient 140708_0001^^^DCM4CHEE_SOURCE",
-                store.getFailures() > 0 ? "KO" : "OK", store.getTime());
+        StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        storeTool.store(
+                "Send IOCM Patient 1","patient_140708_0001.xml");
+        StoreResult results = (StoreResult) storeTool.getResult();
 
-        store = StoreTestSuite.getStoreTest(
-                "/iocm/workflow1/").store("Send Rej.Note For Quality Reasons",
-                "rej_note_quality_140708_r1.xml");
+        printLine("STORE: Sent patient 140708_0001^^^DCM4CHEE_SOURCE",
+                results.getFailures() > 0 ? "KO" : "OK", results.getTime());
+
+        storeTool.store(
+                "Send Rej.Note For Quality Reasons","rej_note_quality_140708_r1.xml");
+        results = (StoreResult) storeTool.getResult();
         printLine("STORE: Sent Rej. Note for pat. 140708_0001",
-                store.getFailures() > 0 ? "KO" : "OK", store.getTime());
+                results.getFailures() > 0 ? "KO" : "OK", results.getTime());
 
         
         // query retrieve
-        QueryTest test = QueryTestSuite.getQueryTest();
-        test.addTag(Tag.PatientID, "140708_0001");
-        test.addTag(Tag.IssuerOfPatientID, "DCM4CHEE_SOURCE");
-        test.setExpectedResultsNumeber(0); //should return 0 patients
-        QueryResult result = test
-                .query("Patient ID:140708_0001^^^DCM4CHEE_SOURCE");
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        queryTool.addQueryTag(Tag.PatientID, "140708_0001");
+        queryTool.addQueryTag(Tag.IssuerOfPatientID, "DCM4CHEE_SOURCE");
+        queryTool.setExpectedMatches(0); //should return 0 patients
+        queryTool.query("Patient ID:140708_0001^^^DCM4CHEE_SOURCE");
+        QueryResult queryResult = (QueryResult) queryTool.getResult();
         printLine("[C-FIND:PatientID:140708_0001] ret:0", "OK",
-                result.getTime());
-        
-        // query retrieve (IOCM)
-        QueryTest testIOCM = QueryTestSuite.getQueryTestForIOCM();
-        testIOCM.addTag(Tag.PatientID, "140708_0001");
-        testIOCM.addTag(Tag.IssuerOfPatientID, "DCM4CHEE_SOURCE");
-        testIOCM.setExpectedResultsNumeber(1); //should return 1 patients
-        QueryResult resultIOCM = testIOCM
-                .query("Patient ID:140708_0001^^^DCM4CHEE_SOURCE");
-        printLine("[C-FIND:ADMIN:PatientID:140708_0001] ret:1", "OK",
-                result.getTime());
+                queryResult.getTime());
 
+        // query retrieve (IOCM)
+        queryTool.setAeTitle("DCM4CHE_ADMIN");
+        queryTool.clearQueryKeys();
+        queryTool.addQueryTag(Tag.PatientID, "140708_0001");
+        queryTool.addQueryTag(Tag.IssuerOfPatientID, "DCM4CHEE_SOURCE");
+        queryTool.setExpectedMatches(1); //should return 1 patients
+        queryTool.query("Patient ID:140708_0001^^^DCM4CHEE_SOURCE");
+        queryResult = (QueryResult) queryTool.getResult();
+        printLine("[C-FIND:ADMIN:PatientID:140708_0001] ret:1", "OK",
+                queryResult.getTime());
     }
 
     @BeforeClass
