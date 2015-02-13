@@ -22,10 +22,6 @@
             <exclude>**/*Retrieve*.java</exclude>
           </excludes>
           <systemProperties>
-            <property>
-              <name>configFileURL</name>
-              <value>${configFileURL}</value>
-            </property>
           </systemProperties>
           <includes>
             <include>**/*.java</include>
