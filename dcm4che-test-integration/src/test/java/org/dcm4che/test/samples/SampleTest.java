@@ -20,10 +20,9 @@ import org.junit.Test;
 public class SampleTest extends BasicTest {
 
     @Test
-    @RemoteConnectionParameters(hostName="localhost",port=11112,url="")
     @StoreParameters(
             aeTitle="DCM4CHEE",
-            baseDirectory= "./target/test-classes/",
+            baseDirectory= "/",
             sourceAETitle="STORESCU",
             sourceDevice="storescu"
     )
@@ -34,7 +33,7 @@ public class SampleTest extends BasicTest {
     @Test
     @StoreParameters(
             aeTitle="DCM4CHEE",
-            baseDirectory= "./target/test-classes/",
+            baseDirectory= "/",
             sourceAETitle="STORESCU",
             sourceDevice="storescu"
     )

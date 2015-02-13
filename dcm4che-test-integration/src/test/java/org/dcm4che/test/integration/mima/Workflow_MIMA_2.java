@@ -79,8 +79,6 @@ public class Workflow_MIMA_2 extends BasicTest{
     private int stepNumber = 0;
 
     @Test
-    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/mima/workflow2/")
-    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void MIMA_Workflow_2() throws Exception {
 
         // storage

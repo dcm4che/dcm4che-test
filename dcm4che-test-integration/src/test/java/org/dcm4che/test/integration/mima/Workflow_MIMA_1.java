@@ -79,8 +79,6 @@ public class Workflow_MIMA_1 extends BasicTest {
     private int stepNumber = 0;
 
     @Test
-    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/mima/workflow1/")
-    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void MIMA_Workflow_1() throws Exception {
         // storage
         StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);

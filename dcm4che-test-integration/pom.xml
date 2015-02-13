@@ -15,16 +15,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-        <excludes>
-            <exclude>**/*MIMA*.java</exclude>
-            <exclude>**/*IOCM*.java</exclude>
-            <exclude>**/*StgCmt*.java</exclude>
-            <exclude>**/*Retrieve*.java</exclude>
-          </excludes>
           <systemProperties>
           </systemProperties>
           <includes>
-            <include>**/*.java</include>
+            <include>**/StoreTestSuite.java</include>
+            <include>**/QueryTestSuite.java</include>
           </includes>
         </configuration>
       </plugin>

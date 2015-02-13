@@ -38,8 +38,6 @@
 
 package org.dcm4che.test.integration.query;
 
-import org.dcm4che.test.annotations.RemoteConnectionParameters;
-import org.dcm4che.test.annotations.StoreParameters;
 import org.dcm4che.test.common.BasicTest;
 import org.dcm4che.test.common.TestToolFactory;
 import org.dcm4che.test.common.TestToolFactory.TestToolType;
@@ -59,8 +57,6 @@ public class InitTestDataForQuery extends BasicTest{
     private static final String RESULT_HEADERP = "%n+                          Query Tests Preload                         +";
     private static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
     @Test
-    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
-    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_MG_MG1_MGS1() throws Exception {
         LOG.info(RESULT_HEADER1);
         LOG.info(RESULT_HEADERP);

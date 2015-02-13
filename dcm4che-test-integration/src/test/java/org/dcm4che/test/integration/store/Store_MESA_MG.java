@@ -54,8 +54,6 @@ import org.junit.Test;
 public class Store_MESA_MG extends BasicTest{
 
     @Test
-    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
-    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_MG_MG1_MGS1() throws Exception {
         StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
         storeTool.store(

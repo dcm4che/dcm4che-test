@@ -72,8 +72,6 @@ public class Workflow_MESA extends BasicTest{
     private int stepNumber = 0;
 
     @Test
-    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
-    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void MESA_PIR_Workflow_103() throws Exception {
 
         String studyDIR = "modality/MR/MR4/MR4S1";

@@ -54,8 +54,6 @@ import org.junit.Test;
 public class Store_MESA_CT extends BasicTest{
 
     @Test
-    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
-    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_CT_CT1_CTS1() throws Exception {
         StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
         storeTool.store(
@@ -65,8 +63,6 @@ public class Store_MESA_CT extends BasicTest{
     }
 
     @Test
-    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
-    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_CT_CT1_CTS2() throws Exception {
         StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
         storeTool.store(
@@ -76,8 +72,6 @@ public class Store_MESA_CT extends BasicTest{
     }
 
     @Test
-    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
-    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_CT_CT2_CTS1() throws Exception {
         StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
         storeTool.store(
@@ -87,8 +81,6 @@ public class Store_MESA_CT extends BasicTest{
     }
 
     @Test
-    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
-    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_CT_CT3_CTS1() throws Exception {
         StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
         storeTool.store(
@@ -98,8 +90,6 @@ public class Store_MESA_CT extends BasicTest{
     }
 
     @Test
-    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
-    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_CT_CT4_CTS1() throws Exception {
         StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
         storeTool.store(
@@ -109,8 +99,6 @@ public class Store_MESA_CT extends BasicTest{
     }
 
     @Test
-    @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="/opt/DICOM_EXAMPLES/MESA")
-    @RemoteConnectionParameters(hostName="localhost", port=11112)
     public void Store_MESA_CT_CT5_CTS1() throws Exception {
         StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
         storeTool.store(
