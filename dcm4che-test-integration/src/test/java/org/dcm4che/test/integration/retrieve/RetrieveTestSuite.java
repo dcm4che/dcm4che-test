@@ -41,6 +41,7 @@ package org.dcm4che.test.integration.retrieve;
 import java.io.IOException;
 
 import org.dcm4che.test.ConnectTest;
+import org.dcm4che3.tool.getscu.test.RetrieveResult;
 import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

@@ -38,22 +38,28 @@
 
 package org.dcm4che.test.integration.retrieve;
 
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.dcm4che3.data.Tag;
+import org.dcm4che3.tool.getscu.test.RetrieveResult;
+import org.dcm4che3.tool.getscu.test.RetrieveTool;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
-public class Retrieve_MESA_MR {
+public class Retrieve_MESA_MR extends BasicTest{
 
     @Test
     public void Retrieve_MESA_MR_MR1_MRS1() throws Exception {
         
-        RetrieveTest test = new RetrieveTest("MESA_12_5,MR1,S1");
-        test.addTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
-        test.setExpectedResultsNumeber(12);
-        RetrieveResult res = test.retrieve();
-        RetrieveTestSuite.printResults(res);
+        RetrieveTool retrieveTool = (RetrieveTool) TestToolFactory.createToolForTest(TestToolType.GetTool, this);
+        retrieveTool.addTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
+        retrieveTool.setExpectedMatches(12);
+        retrieveTool.retrieve("MESA_12_5,MR1,S1");
+        RetrieveResult result = (RetrieveResult) retrieveTool.getResult();
+        RetrieveTestSuite.printResults(result);
     }
 }

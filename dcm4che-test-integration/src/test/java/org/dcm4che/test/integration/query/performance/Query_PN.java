@@ -62,7 +62,6 @@ public class Query_PN extends BasicTest{
     public static String[] names = null;
 
     @Test
-    @QueryParameters(aeTitle="DCM4CHEE")
     public void Query_PN_2() throws Exception {
 
         String most_common_family = null;
@@ -107,7 +106,6 @@ public class Query_PN extends BasicTest{
     }
 
     @Test
-    @QueryParameters(aeTitle="DCM4CHEE")
     public void Query_PN_1() throws Exception {
         QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
         for (int i = 0; i < 5; i++) {

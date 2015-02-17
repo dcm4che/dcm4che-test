@@ -54,7 +54,6 @@ import org.junit.Test;
 public class Query_Patient_ID extends BasicTest{
 
     @Test
-    @QueryParameters(aeTitle="DCM4CHEE")
     public void step1_query_sop_instances() throws Exception {
         QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
         queryTool.addQueryTag(Tag.PatientID, "300000016");

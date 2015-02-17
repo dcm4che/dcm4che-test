@@ -54,7 +54,6 @@ import org.junit.Test;
 public class Query_PN  extends BasicTest{
 
     @Test
-    @QueryParameters(aeTitle="DCM4CHEE")
     public void Query_PN_1() throws Exception {
         QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
         queryTool.addQueryTag(Tag.PatientName, "P*");
@@ -65,7 +64,6 @@ public class Query_PN  extends BasicTest{
     }
     
     @Test
-    @QueryParameters(aeTitle="DCM4CHEE")
     public void Query_PN_2() throws Exception {
         QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this); 
         queryTool.addQueryTag(Tag.PatientName, "COTTA");
