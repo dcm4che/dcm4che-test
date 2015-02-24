@@ -38,8 +38,6 @@
 
 package org.dcm4che.test.integration.store;
 
-import org.dcm4che.test.annotations.RemoteConnectionParameters;
-import org.dcm4che.test.annotations.StoreParameters;
 import org.dcm4che3.tool.storescu.test.StoreResult;
 import org.dcm4che3.tool.storescu.test.StoreTool;
 import org.dcm4che.test.common.BasicTest;
@@ -51,6 +49,7 @@ import org.junit.Test;
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
+
 public class Store_MESA_CR extends BasicTest{
 
     @Test
