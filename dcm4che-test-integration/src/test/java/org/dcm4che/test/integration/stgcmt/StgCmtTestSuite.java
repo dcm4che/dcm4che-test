@@ -41,6 +41,11 @@ package org.dcm4che.test.integration.stgcmt;
 import java.io.IOException;
 
 import org.dcm4che.test.ConnectTest;
+import org.dcm4che.test.integration.store.StoreTestSuite;
+import org.dcm4che.test.utils.FileUtil;
+import org.dcm4che3.tool.stgcmtscu.test.StgCmtResult;
+import org.dcm4che3.tool.storescu.test.StoreResult;
+import org.dcm4che3.util.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -57,12 +62,12 @@ import org.junit.runners.Suite.SuiteClasses;
 
 public class StgCmtTestSuite {
    
-    public static final String RESULT_FORMAT = "%n| %-2s | %-20s | %-4d | %-4d | %-4d | %-8s | %-8s |";
-    public static final String RESULT_HEADER1 = "%n+----------------------------------------------------------------------+";
-    public static final String RESULT_HEADER2 = "%n+                  Storage Commitment Tests Suite                      +";
-    public static final String RESULT_HEADER3 = "%n+----+----------------------+------+------+------+----------+----------+";
-    public static final String RESULT_COLUMNS = "%n| #  | Description          | sent | fail | warn | size     | time     |";
-    public static final String RESULT_FOOTER1 = "%n+----+----------------------+------+------+------+----------+----------+";  
+    public static final String RESULT_FORMAT =  "%n| %-2d | %-20s | %-4d | %-4d | %-8s |";
+    public static final String RESULT_HEADER1 = "%n+----------------------------------------------------------+";
+    public static final String RESULT_HEADER2 = "%n+          Storage Commitment Tests Suite                  +";
+    public static final String RESULT_HEADER3 = "%n+----+----------------+------+--------+ ------+------------+";
+    public static final String RESULT_COLUMNS = "%n| #  | Description          | success | fail  |    time    |";
+    public static final String RESULT_FOOTER1 = "%n+----+----------------------+---------+-------+------------+";  
     
     public static int testNumber;
     
@@ -87,5 +92,14 @@ public class StgCmtTestSuite {
         
         System.out.printf(RESULT_FOOTER1);
         System.out.println();
+    }
+    
+    public static void printResults(StgCmtResult result) {
+
+        System.out.format(StgCmtTestSuite.RESULT_FORMAT,
+                ++StgCmtTestSuite.testNumber,
+                StringUtils.truncate(result.getTestDescription(), 20),
+                result.getSuccessInstances(), result.getFailedInstances(),
+                result.getTimeToPerformStorageCommitment() + " ms");
     }
 }

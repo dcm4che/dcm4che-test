@@ -38,17 +38,22 @@
 
 package org.dcm4che.test.integration.stgcmt;
 
+import org.dcm4che.test.common.BasicTest;
+import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che3.tool.stgcmtscu.test.StgCmtResult;
+import org.dcm4che3.tool.stgcmtscu.test.StgCmtTool;
 import org.junit.Test;
 
 /**
  * @author Umberto Cappellini <umberto.cappellini@agfa.com>
- * 
+ * @author Hesham Elbadawi <bsdreko@gmail.com>
  */
-public class StgCmt_MESA_MR {
+public class StgCmt_MESA_MR extends BasicTest{
 
     @Test
     public void Store_MESA_MR_MR1_MRS1() throws Exception {
-        new StgCmtTest("MESA_12_5,MR1,S1", "modality/MR/MR1/MR1S1/MR1S1IM1.dcm")
-                .stgcmt();
+        StgCmtTool stgCmtTool = (StgCmtTool) TestToolFactory.createToolForTest(TestToolFactory.TestToolType.StorageCommitmentTool, this);
+        stgCmtTool.stgcmt("Storage Commitment MESA_MR_MR1_MRS1","modality/MR/MR1/MR1S1/MR1S1IM1.dcm");
+        StgCmtTestSuite.printResults((StgCmtResult)stgCmtTool.getResult());
     }
 }
