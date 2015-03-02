@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 import org.dcm4che.test.annotations.DcmGenParameters;
+import org.dcm4che.test.annotations.GetParameters;
+import org.dcm4che.test.annotations.MoveParameters;
 import org.dcm4che.test.annotations.MppsParameters;
 import org.dcm4che.test.annotations.QueryParameters;
 import org.dcm4che.test.annotations.RemoteConnectionParameters;
@@ -12,12 +14,17 @@ import org.dcm4che.test.annotations.StoreParameters;
 import org.dcm4che.test.common.BasicTest;
 import org.dcm4che.test.common.TestToolFactory;
 import org.dcm4che.test.common.TestToolFactory.TestToolType;
+import org.dcm4che.test.integration.retrieve.RetrieveTestSuite;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.VR;
 import org.dcm4che3.net.IncompatibleConnectionException;
 import org.dcm4che3.tool.dcmgen.test.DcmGenTool;
 import org.dcm4che3.tool.findscu.test.QueryResult;
+import org.dcm4che3.tool.getscu.test.RetrieveResult;
+import org.dcm4che3.tool.getscu.test.RetrieveTool;
+import org.dcm4che3.tool.movescu.test.MoveResult;
+import org.dcm4che3.tool.movescu.test.MoveTool;
 import org.dcm4che3.tool.mppsscu.test.MppsResult;
 import org.dcm4che3.tool.stgcmtscu.test.StgCmtTool;
 import org.dcm4che3.tool.storescu.test.StoreResult;
@@ -72,5 +79,27 @@ public class SampleTest extends BasicTest {
     public void testDcmGenerateNoOverride() {
         DcmGenTool tool = (DcmGenTool) TestToolFactory.createToolForTest(TestToolType.DcmGenTool, this);
         tool.generateFiles("test", null);
+    }
+    @Test
+    @RemoteConnectionParameters(hostName="localhost", port=2762)
+    @GetParameters(aeTitle="DCM4CHEE",connection="dicom-tls",retrieveDir="/tmp",retrieveLevel="IMAGE")
+    public void testRetrieve() throws Exception {
+        
+        RetrieveTool retrieveTool = (RetrieveTool) TestToolFactory.createToolForTest(TestToolType.GetTool, this);
+        retrieveTool.addTag(Tag.SOPInstanceUID, "1.2.392.200036.9125.0.19950720093509");
+        retrieveTool.setExpectedMatches(1);
+        retrieveTool.retrieve("MESA_12_5,MR1,S1");
+        RetrieveResult result = (RetrieveResult) retrieveTool.getResult();
+        RetrieveTestSuite.printResults(result);
+    }
+
+    @Test
+    public void testMoveTool() throws Exception {
+        MoveTool moveTool = (MoveTool) TestToolFactory.createToolForTest(TestToolType.MoveTool, this);
+        moveTool.addTag(Tag.StudyInstanceUID, "1.2.392.200036.9125.0.198811291108.7");
+        moveTool.setExpectedMatches(1);
+        moveTool.move("MESA_12_5,MR1,S1");
+        MoveResult result = (MoveResult) moveTool.getResult();
+        
     }
 }

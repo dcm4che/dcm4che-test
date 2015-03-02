@@ -57,7 +57,7 @@ public class Retrieve_MESA_MR extends BasicTest{
         
         RetrieveTool retrieveTool = (RetrieveTool) TestToolFactory.createToolForTest(TestToolType.GetTool, this);
         retrieveTool.addTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
-        retrieveTool.setExpectedMatches(12);
+        retrieveTool.setExpectedMatches(11);
         retrieveTool.retrieve("MESA_12_5,MR1,S1");
         RetrieveResult result = (RetrieveResult) retrieveTool.getResult();
         RetrieveTestSuite.printResults(result);

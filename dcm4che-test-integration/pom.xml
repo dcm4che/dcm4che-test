@@ -88,6 +88,12 @@
     </dependency>
     <dependency>
       <groupId>org.dcm4che.tool</groupId>
+      <artifactId>dcm4che-tool-movescu</artifactId>
+      <version>${dcm4che.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.dcm4che.tool</groupId>
       <artifactId>dcm4che-tool-hl7rcv</artifactId>
       <version>${dcm4che.version}</version>
       <scope>provided</scope>
