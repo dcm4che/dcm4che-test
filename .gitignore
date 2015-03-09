@@ -1,4 +1,7 @@
-/.settings
-/.project
-.idea/
+.classpath
+.project
+.settings/
 *.iml
+test.war
+.idea/
+target/
