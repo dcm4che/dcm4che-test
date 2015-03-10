@@ -3,6 +3,8 @@ package org.dcm4che.test.samples;
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Date;
+import java.util.List;
 
 import javax.ws.rs.core.Response;
 
@@ -11,11 +13,13 @@ import org.dcm4che.test.annotations.DcmGenParameters;
 import org.dcm4che.test.annotations.GetParameters;
 import org.dcm4che.test.annotations.MoveParameters;
 import org.dcm4che.test.annotations.MppsParameters;
+import org.dcm4che.test.annotations.QidoRSParameters;
 import org.dcm4che.test.annotations.QueryParameters;
 import org.dcm4che.test.annotations.RemoteConnectionParameters;
 import org.dcm4che.test.annotations.StgCmtParameters;
 import org.dcm4che.test.annotations.StoreParameters;
 import org.dcm4che.test.annotations.StowRSParameters;
+import org.dcm4che.test.annotations.WadoURIParameters;
 import org.dcm4che.test.common.BasicTest;
 import org.dcm4che.test.common.TestToolFactory;
 import org.dcm4che.test.common.TestToolFactory.TestToolType;
@@ -31,12 +35,16 @@ import org.dcm4che3.tool.getscu.test.RetrieveTool;
 import org.dcm4che3.tool.movescu.test.MoveResult;
 import org.dcm4che3.tool.movescu.test.MoveTool;
 import org.dcm4che3.tool.mppsscu.test.MppsResult;
+import org.dcm4che3.tool.qidors.test.QidoRSResult;
+import org.dcm4che3.tool.qidors.test.QidoRSTool;
 import org.dcm4che3.tool.stgcmtscu.test.StgCmtTool;
 import org.dcm4che3.tool.storescu.test.StoreResult;
 import org.dcm4che3.tool.stowrs.test.StowRSResponse;
 import org.dcm4che3.tool.stowrs.test.StowRSResult;
 import org.dcm4che3.tool.stowrs.test.StowRSTool;
 import org.dcm4che3.tool.stowrs.test.StowRSTool.StowMetaDataType;
+import org.dcm4che3.tool.wadouri.test.WadoURIResult;
+import org.dcm4che3.tool.wadouri.test.WadoURITool;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -146,5 +154,38 @@ public class SampleTest extends BasicTest {
       QueryResult result = (QueryResult) query("Query sop instance uid", queryKeys, false);
       Assert.assertEquals(1, result.getNumMatches());
       System.out.println(result.getQueryResponse().toString());
+  }
+  @Test
+  @QidoRSParameters(fuzzyMatching=true, limit="100", offset="0", returnAll=true, timezoneAdjustment=false,url="qido/DCM4CHEE/studies")
+  public void testQidoSimpleQuery() throws Exception {
+      QidoRSTool tool = (QidoRSTool) TestToolFactory.createToolForTest(TestToolType.QidoTool, this);
+      tool.addQueryTag(Tag.StudyInstanceUID, "1.1");
+      tool.addReturnTag(Tag.StudyInstanceUID);
+      tool.setExpectedMatches(1);
+      tool.queryJSON("Qido test json");
+      QidoRSResult result = (QidoRSResult) tool.getResult();
+      List<Attributes> attrs = result.getQueryResponse();
+      System.out.println("The following results were obtained from the qido query:");
+      System.out.println("Time taken to get first response : " + result.getTimeFirst() + "ms");
+      System.out.println("Number of reponses (Matches): " + result.getNumMatches());
+      System.out.println("Time taken to get all responses : " + result.getTime() + "ms");
+      System.out.println("Responses : " );
+      for(Attributes attr : attrs)
+      System.out.println(attr.toString());
+  }
+  @Test
+  @WadoURIParameters(studyUID="1.11.111111.105768226864276439868532330426913662349"
+  ,seriesUID="1.11.111111.122914101808394730868803286082090132783"
+  ,objectUID="1.2.3.4",contentType="application/dicom", url = "wado/DCM4CHEE", transferSyntax="1.2.840.10008.1.2.4.70",retrieveDir="/tmp/")
+  public void testWadoJPEG () throws Exception {
+      WadoURITool tool = (WadoURITool) TestToolFactory.createToolForTest(TestToolType.WadoURITool, this);
+      tool.wadoURI("test wado uri with instance 1.1.1.1 as jpeg");
+      WadoURIResult result = (WadoURIResult) tool.getResult();
+      System.out.println("WadoURI performed, resulting in the following:");
+      System.out.println("Time taken to get response:"+ result.getTime());
+      System.out.println("Response status : "+result.getResponse().getStatus());
+      System.out.println("Response message : "+result.getResponse().getMessage());
+      System.out.println("Response retrieved instance : "+result.getResponse().getRetrievedInstance().toString());
+      
   }
 }
