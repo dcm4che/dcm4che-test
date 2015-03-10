@@ -21,6 +21,7 @@
             <include>**/StoreTestSuite.java</include>
             <include>**/QueryTestSuite.java</include>
             <include>**/InitTestDataForQuery.java</include>
+            <include>**/SampleTestWithReconfigure.java</include>
 <!--             <include>**/*.java</include> -->
           </includes>
         </configuration>

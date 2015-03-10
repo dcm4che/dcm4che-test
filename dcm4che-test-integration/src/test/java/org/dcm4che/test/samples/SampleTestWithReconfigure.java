@@ -17,12 +17,14 @@ import org.dcm4che3.tool.findscu.test.QueryResult;
 import org.dcm4che3.tool.findscu.test.QueryTool;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.IOException;
 
 /**
  * @author Roman K
  */
+@RunWith(JUnit4.class)
 public class SampleTestWithReconfigure extends BasicTest{
 
 
