@@ -19,6 +19,7 @@ import org.dcm4che.test.annotations.RemoteConnectionParameters;
 import org.dcm4che.test.annotations.StgCmtParameters;
 import org.dcm4che.test.annotations.StoreParameters;
 import org.dcm4che.test.annotations.StowRSParameters;
+import org.dcm4che.test.annotations.WadoRSParameters;
 import org.dcm4che.test.annotations.WadoURIParameters;
 import org.dcm4che.test.common.BasicTest;
 import org.dcm4che.test.common.TestToolFactory;
@@ -43,6 +44,8 @@ import org.dcm4che3.tool.stowrs.test.StowRSResponse;
 import org.dcm4che3.tool.stowrs.test.StowRSResult;
 import org.dcm4che3.tool.stowrs.test.StowRSTool;
 import org.dcm4che3.tool.stowrs.test.StowRSTool.StowMetaDataType;
+import org.dcm4che3.tool.wadors.test.WadoRSResult;
+import org.dcm4che3.tool.wadors.test.WadoRSTool;
 import org.dcm4che3.tool.wadouri.test.WadoURIResult;
 import org.dcm4che3.tool.wadouri.test.WadoURITool;
 import org.junit.Assert;
@@ -120,72 +123,90 @@ public class SampleTest extends BasicTest {
 //        
 //    }
 //    
-    @Test
-    @StowRSParameters(url="stow/DCM4CHEE/studies")
-    public void testStow() {
-        StowRSTool stowTool = null;
-        try {
-            stowTool = (StowRSTool) TestToolFactory.createToolForTest(TestToolType.StowTool, this);
-        } catch (MissingArgumentException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-        try {
-            stowTool.send("send dicom via stowrs", StowMetaDataType.NO_METADATA_DICOM, new File("/pacsworld_Share_SlaveVM/DICOM-IHE-Server-Platform/Mesa_12_5_0/modality/MR/MR1/MR1S1/MR1S1IM1.dcm"));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        StowRSResult result = (StowRSResult) stowTool.getResult();
-        System.out.println("Stow performed with the following responses for each file");
-        for(StowRSResponse rsp : result.getResponses())
-        System.out.println("Status : " + rsp.getStatus() + "\t" + rsp.getMessage() + "\t" + rsp.getResponseAttributes().toString());
-    }
+//    @Test
+//    @StowRSParameters(url="stow/DCM4CHEE/studies")
+//    public void testStow() {
+//        StowRSTool stowTool = null;
+//        try {
+//            stowTool = (StowRSTool) TestToolFactory.createToolForTest(TestToolType.StowTool, this);
+//        } catch (MissingArgumentException e1) {
+//            // TODO Auto-generated catch block
+//            e1.printStackTrace();
+//        }
+//        try {
+//            stowTool.send("send dicom via stowrs", StowMetaDataType.NO_METADATA_DICOM, new File("/pacsworld_Share_SlaveVM/DICOM-IHE-Server-Platform/Mesa_12_5_0/modality/MR/MR1/MR1S1/MR1S1IM1.dcm"));
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//        StowRSResult result = (StowRSResult) stowTool.getResult();
+//        System.out.println("Stow performed with the following responses for each file");
+//        for(StowRSResponse rsp : result.getResponses())
+//        System.out.println("Status : " + rsp.getStatus() + "\t" + rsp.getMessage() + "\t" + rsp.getResponseAttributes().toString());
+//    }
+//  @Test
+//  @RemoteConnectionParameters(hostName="localhost",port=11112)
+//  @QueryParameters(aeTitle="DCM4CHEE", queryLevel = "IMAGE", connection="dicom", sourceAETitle="FINDSCU", sourceDevice="findscu")
+//  public void testbQueryIMAGELevel() throws Exception {
+//      Attributes queryKeys = new Attributes();
+//
+//      queryKeys.setString(Tag.SOPInstanceUID, VR.UI, "1.2.840.113674.950809133358028.100");
+//      QueryResult result = (QueryResult) query("Query sop instance uid", queryKeys, false);
+//      Assert.assertEquals(1, result.getNumMatches());
+//      System.out.println(result.getQueryResponse().toString());
+//  }
+//  @Test
+//  @QidoRSParameters(fuzzyMatching=true, limit="100", offset="0", returnAll=true, timezoneAdjustment=false,url="qido/DCM4CHEE/studies")
+//  public void testQidoSimpleQuery() throws Exception {
+//      QidoRSTool tool = (QidoRSTool) TestToolFactory.createToolForTest(TestToolType.QidoTool, this);
+//      tool.addQueryTag(Tag.StudyInstanceUID, "1.1");
+//      tool.addReturnTag(Tag.StudyInstanceUID);
+//      tool.setExpectedMatches(1);
+//      tool.queryJSON("Qido test json");
+//      QidoRSResult result = (QidoRSResult) tool.getResult();
+//      List<Attributes> attrs = result.getQueryResponse();
+//      System.out.println("The following results were obtained from the qido query:");
+//      System.out.println("Time taken to get first response : " + result.getTimeFirst() + "ms");
+//      System.out.println("Number of reponses (Matches): " + result.getNumMatches());
+//      System.out.println("Time taken to get all responses : " + result.getTime() + "ms");
+//      System.out.println("Responses : " );
+//      for(Attributes attr : attrs)
+//      System.out.println(attr.toString());
+//  }
+//  @Test
+//  @WadoURIParameters(studyUID="1.11.111111.105768226864276439868532330426913662349"
+//  ,seriesUID="1.11.111111.122914101808394730868803286082090132783"
+//  ,objectUID="1.2.3.4",contentType="application/dicom", url = "wado/DCM4CHEE", transferSyntax="1.2.840.10008.1.2.4.70",retrieveDir="/tmp/")
+//  public void testWadoJPEG () throws Exception {
+//      WadoURITool tool = (WadoURITool) TestToolFactory.createToolForTest(TestToolType.WadoURITool, this);
+//      tool.wadoURI("test wado uri with instance 1.1.1.1 as jpeg");
+//      WadoURIResult result = (WadoURIResult) tool.getResult();
+//      System.out.println("WadoURI performed, resulting in the following:");
+//      System.out.println("Time taken to get response:"+ result.getTime());
+//      System.out.println("Response status : "+result.getResponse().getStatus());
+//      System.out.println("Response message : "+result.getResponse().getMessage());
+//      System.out.println("Response retrieved instance : "+result.getResponse().getRetrievedInstance());
+//      
+//  }
+//  
   @Test
-  @RemoteConnectionParameters(hostName="localhost",port=11112)
-  @QueryParameters(aeTitle="DCM4CHEE", queryLevel = "IMAGE", connection="dicom", sourceAETitle="FINDSCU", sourceDevice="findscu")
-  public void testbQueryIMAGELevel() throws Exception {
-      Attributes queryKeys = new Attributes();
-
-      queryKeys.setString(Tag.SOPInstanceUID, VR.UI, "1.2.840.113674.950809133358028.100");
-      QueryResult result = (QueryResult) query("Query sop instance uid", queryKeys, false);
-      Assert.assertEquals(1, result.getNumMatches());
-      System.out.println(result.getQueryResponse().toString());
-  }
-  @Test
-  @QidoRSParameters(fuzzyMatching=true, limit="100", offset="0", returnAll=true, timezoneAdjustment=false,url="qido/DCM4CHEE/studies")
-  public void testQidoSimpleQuery() throws Exception {
-      QidoRSTool tool = (QidoRSTool) TestToolFactory.createToolForTest(TestToolType.QidoTool, this);
-      tool.addQueryTag(Tag.StudyInstanceUID, "1.1");
-      tool.addReturnTag(Tag.StudyInstanceUID);
-      tool.setExpectedMatches(1);
-      tool.queryJSON("Qido test json");
-      QidoRSResult result = (QidoRSResult) tool.getResult();
-      List<Attributes> attrs = result.getQueryResponse();
-      System.out.println("The following results were obtained from the qido query:");
-      System.out.println("Time taken to get first response : " + result.getTimeFirst() + "ms");
-      System.out.println("Number of reponses (Matches): " + result.getNumMatches());
-      System.out.println("Time taken to get all responses : " + result.getTime() + "ms");
-      System.out.println("Responses : " );
-      for(Attributes attr : attrs)
-      System.out.println(attr.toString());
-  }
-  @Test
-  @WadoURIParameters(studyUID="1.11.111111.105768226864276439868532330426913662349"
-  ,seriesUID="1.11.111111.122914101808394730868803286082090132783"
-  ,objectUID="1.2.3.4",contentType="application/dicom", url = "wado/DCM4CHEE", transferSyntax="1.2.840.10008.1.2.4.70",retrieveDir="/tmp/")
-  public void testWadoJPEG () throws Exception {
-      WadoURITool tool = (WadoURITool) TestToolFactory.createToolForTest(TestToolType.WadoURITool, this);
-      tool.wadoURI("test wado uri with instance 1.1.1.1 as jpeg");
-      WadoURIResult result = (WadoURIResult) tool.getResult();
-      System.out.println("WadoURI performed, resulting in the following:");
-      System.out.println("Time taken to get response:"+ result.getTime());
-      System.out.println("Response status : "+result.getResponse().getStatus());
-      System.out.println("Response message : "+result.getResponse().getMessage());
-      System.out.println("Response retrieved instance : "+result.getResponse().getRetrievedInstance().toString());
-      
+  @WadoRSParameters(url="wado/DCM4CHEE/studies/1.2.840.113674.514.212.200/metadata", retrieveDir="/tmp/")
+  public void testWadoRSXML() throws MissingArgumentException, IOException {
+      WadoRSTool tool = (WadoRSTool) TestToolFactory.createToolForTest(TestToolType.WadoRSTool, this);
+      tool.addAcceptType("application/dicom+xml", null);
+      tool.wadoRS("test desc wado rs metadata xml");
+      WadoRSResult result = (WadoRSResult) tool.getResult();
+      System.out.println("WADO RS response as follows: ");
+      System.out.println("Status : "+result.getResponse().getStatus());
+      System.out.println("Message : "+result.getResponse().getMessage());
+      System.out.println("Time : "+result.getTime());
+      System.out.println("Responses are as follows: ");
+      for(String key : result.getResponse().getRetrievedInstance().keySet()){
+      System.out.println("Head: "+key);
+      System.out.println("Part : "+result.getResponse().getRetrievedInstance().get(key));
+      }
   }
 }
