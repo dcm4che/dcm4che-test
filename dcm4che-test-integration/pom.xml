@@ -21,7 +21,7 @@
             <include>**/StoreTestSuite.java</include>
             <include>**/QueryTestSuite.java</include>
             <include>**/InitTestDataForQuery.java</include>
-            <include>**/SampleTestWithReconfigure.java</include>
+<!--             <include>**/SampleTestWithReconfigure.java</include> -->
 <!--             <include>**/*.java</include> -->
           </includes>
         </configuration>
@@ -87,6 +87,24 @@
     <dependency>
       <groupId>org.dcm4che.tool</groupId>
       <artifactId>dcm4che-tool-findscu</artifactId>
+      <version>${dcm4che.version}</version>
+      <scope>provided</scope>
+    </dependency>
+        <dependency>
+      <groupId>org.dcm4che.tool</groupId>
+      <artifactId>dcm4che-tool-stowrs</artifactId>
+      <version>${dcm4che.version}</version>
+      <scope>provided</scope>
+    </dependency>
+        <dependency>
+      <groupId>org.dcm4che.tool</groupId>
+      <artifactId>dcm4che-tool-wadouri</artifactId>
+      <version>${dcm4che.version}</version>
+      <scope>provided</scope>
+    </dependency>
+            <dependency>
+      <groupId>org.dcm4che.tool</groupId>
+      <artifactId>dcm4che-tool-qidors</artifactId>
       <version>${dcm4che.version}</version>
       <scope>provided</scope>
     </dependency>
