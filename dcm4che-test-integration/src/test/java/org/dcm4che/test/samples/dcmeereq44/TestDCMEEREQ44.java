@@ -1,7 +1,7 @@
 /* ***** BEGIN LICENSE BLOCK *****
  * Version: MPL 1.1/GPL 2.0/LGPL 2.1
  *
- * The contents of this file are subjeCR to the Mozilla Public License Version
+ * The contents of this file are subject to the Mozilla Public License Version
  * 1.1 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
  * http://www.mozilla.org/MPL/
@@ -16,7 +16,7 @@
  *
  * The Initial Developer of the Original Code is
  * Agfa Healthcare.
- * Portions created by the Initial Developer are Copyright (C) 2011
+ * Portions created by the Initial Developer are Copyright (C) 2012
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -35,31 +35,28 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
+package org.dcm4che.test.samples.dcmeereq44;
 
-package org.dcm4che.test.integration.query.performance;
-
-import org.dcm4che.test.annotations.QueryParameters;
-import org.dcm4che.test.common.BasicTest;
-import org.dcm4che.test.common.TestToolFactory;
-import org.dcm4che.test.common.TestToolFactory.TestToolType;
-import org.dcm4che3.data.Tag;
-import org.dcm4che3.tool.findscu.test.QueryResult;
-import org.dcm4che3.tool.findscu.test.QueryTool;
-import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
 /**
- * @author Umberto Cappellini <umberto.cappellini@agfa.com>
  * @author Hesham Elbadawi <bsdreko@gmail.com>
+ *
+ * This is a sample test with the purpose to demonstrate how a requirement 
+ * involving the use of a particular tool can be written with the framework.
+ * 
+ * This test verifies requirement 44 in the requirements thread DCMEEREQ
+ * This test uses the tools Store, Query and Move
  */
-public class Query_Patient_ID extends BasicTest{
-
-    @Test
-    public void step1_query_sop_instances() throws Exception {
-        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
-        queryTool.addQueryTag(Tag.PatientID, "300000016");
-        queryTool.addQueryTag(Tag.IssuerOfPatientID, "PERF");
-        queryTool.query("Patient ID: 300000016");
-        QueryResult result = (QueryResult) queryTool.getResult();
-        QueryPerformanceTestSuite.printResults(result);
-    }
+@RunWith(Suite.class)
+@SuiteClasses({ TestRAD43.class , TestRAD44.class})
+public class TestDCMEEREQ44 {
+    
+    /*
+     * Test Evidence Document Stored [RAD-43]
+     * A SR document is sent to the archive
+     */
+    
 }

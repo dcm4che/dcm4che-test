@@ -106,7 +106,7 @@ public class Workflow_MIMA_1 extends BasicTest {
         pixmgr.bind();
 
         // query retrieve
-        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
         queryTool.addQueryTag(Tag.PatientID, "140703_0003");
         queryTool.addQueryTag(Tag.IssuerOfPatientID, "DCM4CHEE_SOURCE");
         queryTool.addReturnTag(Tag.OtherPatientIDsSequence);

@@ -57,7 +57,7 @@ public class Query_Mesa_IM_404a extends BasicTest{
 
     @Test
     public void step1_query_sop_instances() throws Exception {
-        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
         queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
         queryTool.addQueryTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
         queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
@@ -76,7 +76,7 @@ public class Query_Mesa_IM_404a extends BasicTest{
     @Test
     public void step2_query_sop_class_uid() throws Exception {
         
-        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
         queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
         queryTool.addQueryTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
         queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
@@ -94,7 +94,7 @@ public class Query_Mesa_IM_404a extends BasicTest{
     @Test
     public void step3_query_rows() throws Exception {
         
-        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
         queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
         queryTool.addQueryTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
         queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
@@ -112,7 +112,7 @@ public class Query_Mesa_IM_404a extends BasicTest{
     @Test
     public void step4_query_columns() throws Exception {
         
-        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
         queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
         queryTool.addQueryTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
         queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
@@ -130,7 +130,7 @@ public class Query_Mesa_IM_404a extends BasicTest{
     @Test
     public void step5_query_bits_allocated() throws Exception {
         
-        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
         queryTool.addQueryTag(Tag.QueryRetrieveLevel, "IMAGE");
         queryTool.addQueryTag(Tag.StudyInstanceUID, "1.2.840.113674.514.212.200");
         queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");

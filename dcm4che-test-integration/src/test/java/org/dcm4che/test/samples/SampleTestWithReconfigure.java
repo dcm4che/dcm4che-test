@@ -33,7 +33,7 @@ public class SampleTestWithReconfigure extends BasicTest{
     public void testAERenaming() throws Exception {
 
         // try to query existing AE - everything should be fine
-        query("", new Attributes(), false);
+        query("", new Attributes(), false, 0);
 
         // rename the AE on the server
         Device device = getRemoteConfig().findDevice("dcm4chee-arc");
@@ -42,7 +42,7 @@ public class SampleTestWithReconfigure extends BasicTest{
 
         // try to query the non-existing AE
         try {
-            query("", new Attributes(), false);
+            query("", new Attributes(), false, 0);
             throw new AssertionFailedError("Query should have failed because of non existing AE title");
         } catch (TestToolException e) {
             Assert.assertTrue(e.getCause() instanceof IOException);

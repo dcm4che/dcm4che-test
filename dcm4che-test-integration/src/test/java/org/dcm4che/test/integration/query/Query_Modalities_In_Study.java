@@ -54,7 +54,7 @@ public class Query_Modalities_In_Study extends BasicTest{
 
     @Test
     public void Query_Modalities_In_Study_1() throws Exception {
-        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
         queryTool.addQueryTag(Tag.ModalitiesInStudy, "CT");
         queryTool.setExpectedMatches(5);
         queryTool.query("Modalities In Study:CT");

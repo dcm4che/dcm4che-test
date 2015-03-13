@@ -55,7 +55,7 @@ public class Query_PN  extends BasicTest{
 
     @Test
     public void Query_PN_1() throws Exception {
-        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
         queryTool.addQueryTag(Tag.PatientName, "P*");
         queryTool.setExpectedMatches(2);
         queryTool.query("Patient Name:P*");
@@ -65,7 +65,7 @@ public class Query_PN  extends BasicTest{
     
     @Test
     public void Query_PN_2() throws Exception {
-        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this); 
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this); 
         queryTool.addQueryTag(Tag.PatientName, "COTTA");
         queryTool.setExpectedMatches(1);
         queryTool.query("Patient Name:COTTA");

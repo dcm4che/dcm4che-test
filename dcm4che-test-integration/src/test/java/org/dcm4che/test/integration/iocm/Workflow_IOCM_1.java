@@ -104,7 +104,7 @@ public class Workflow_IOCM_1 extends BasicTest{
 
         
         // query retrieve
-        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
         queryTool.addQueryTag(Tag.PatientID, "140708_0001");
         queryTool.addQueryTag(Tag.IssuerOfPatientID, "DCM4CHEE_SOURCE");
         queryTool.setExpectedMatches(0); //should return 0 patients

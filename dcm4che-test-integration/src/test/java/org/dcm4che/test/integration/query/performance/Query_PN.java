@@ -66,7 +66,7 @@ public class Query_PN extends BasicTest{
 
         String most_common_family = null;
         int most_common_family_count = Integer.MIN_VALUE;
-        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
         for (int i = 0; i < 5; i++) {
             String name = randomFamilyName();
 
@@ -107,7 +107,7 @@ public class Query_PN extends BasicTest{
 
     @Test
     public void Query_PN_1() throws Exception {
-        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.FindTool, this);
+        QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
         for (int i = 0; i < 5; i++) {
             String r1 = randominitial1();
             queryTool.addQueryTag(Tag.PatientName, r1);

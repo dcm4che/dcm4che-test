@@ -18,6 +18,7 @@ import org.dcm4che.test.annotations.QueryParameters;
 import org.dcm4che.test.annotations.RemoteConnectionParameters;
 import org.dcm4che.test.annotations.StgCmtParameters;
 import org.dcm4che.test.annotations.StoreParameters;
+import org.dcm4che.test.annotations.StoreSCPParameters;
 import org.dcm4che.test.annotations.StowRSParameters;
 import org.dcm4che.test.annotations.WadoRSParameters;
 import org.dcm4che.test.annotations.WadoURIParameters;
@@ -28,6 +29,9 @@ import org.dcm4che.test.integration.retrieve.RetrieveTestSuite;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.VR;
+import org.dcm4che3.net.ApplicationEntity;
+import org.dcm4che3.net.Connection;
+import org.dcm4che3.net.Device;
 import org.dcm4che3.net.IncompatibleConnectionException;
 import org.dcm4che3.tool.dcmgen.test.DcmGenTool;
 import org.dcm4che3.tool.findscu.test.QueryResult;
@@ -39,7 +43,10 @@ import org.dcm4che3.tool.mppsscu.test.MppsResult;
 import org.dcm4che3.tool.qidors.test.QidoRSResult;
 import org.dcm4che3.tool.qidors.test.QidoRSTool;
 import org.dcm4che3.tool.stgcmtscu.test.StgCmtTool;
+import org.dcm4che3.tool.storescp.test.StoreSCPResult;
+import org.dcm4che3.tool.storescp.test.StoreSCPTool;
 import org.dcm4che3.tool.storescu.test.StoreResult;
+import org.dcm4che3.tool.storescu.test.StoreTool;
 import org.dcm4che3.tool.stowrs.test.StowRSResponse;
 import org.dcm4che3.tool.stowrs.test.StowRSResult;
 import org.dcm4che3.tool.stowrs.test.StowRSTool;
@@ -192,21 +199,33 @@ public class SampleTest extends BasicTest {
 //      
 //  }
 //  
-  @Test
-  @WadoRSParameters(url="wado/DCM4CHEE/studies/1.2.840.113674.514.212.200/metadata", retrieveDir="/tmp/")
-  public void testWadoRSXML() throws MissingArgumentException, IOException {
-      WadoRSTool tool = (WadoRSTool) TestToolFactory.createToolForTest(TestToolType.WadoRSTool, this);
-      tool.addAcceptType("application/dicom+xml", null);
-      tool.wadoRS("test desc wado rs metadata xml");
-      WadoRSResult result = (WadoRSResult) tool.getResult();
-      System.out.println("WADO RS response as follows: ");
-      System.out.println("Status : "+result.getResponse().getStatus());
-      System.out.println("Message : "+result.getResponse().getMessage());
-      System.out.println("Time : "+result.getTime());
-      System.out.println("Responses are as follows: ");
-      for(String key : result.getResponse().getRetrievedInstance().keySet()){
-      System.out.println("Head: "+key);
-      System.out.println("Part : "+result.getResponse().getRetrievedInstance().get(key));
-      }
-  }
+//  @Test
+//  @WadoRSParameters(url="wado/DCM4CHEE/studies/1.2.840.113674.514.212.200/metadata", retrieveDir="/tmp/")
+//  public void testWadoRSXML() throws MissingArgumentException, IOException {
+//      WadoRSTool tool = (WadoRSTool) TestToolFactory.createToolForTest(TestToolType.WadoRSTool, this);
+//      tool.addAcceptType("application/dicom+xml", null);
+//      tool.wadoRS("test desc wado rs metadata xml");
+//      WadoRSResult result = (WadoRSResult) tool.getResult();
+//      System.out.println("WADO RS response as follows: ");
+//      System.out.println("Status : "+result.getResponse().getStatus());
+//      System.out.println("Message : "+result.getResponse().getMessage());
+//      System.out.println("Time : "+result.getTime());
+//      System.out.println("Responses are as follows: ");
+//      for(String key : result.getResponse().getRetrievedInstance().keySet()){
+//      System.out.println("Head: "+key);
+//      System.out.println("Part : "+result.getResponse().getRetrievedInstance().get(key));
+//      }
+//  }
+    @Test
+    @StoreSCPParameters(connection="dicom", noStore=false, storageDirectory = "/tmp/bucky")
+    @StoreParameters(aeTitle="STORESCP", baseDirectory="/tmp",connection="dicom",sourceAETitle="STORESCU",sourceDevice="storescu")
+    @DcmGenParameters(instanceCount=1000,outputDir="/tmp/ducky",seedFile="E:\\test.dcm",seriesCount=10)
+    @RemoteConnectionParameters(hostName="0.0.0.0",port=11115)
+    public void testSTORESCP() throws InterruptedException, MissingArgumentException {
+        StoreSCPTool tool = (StoreSCPTool) TestToolFactory.createToolForTest(TestToolType.StoreSCPTool, this);
+        tool.start("StoreSCP test");
+        StoreTool storescu = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
+        StoreResult result =  (StoreResult) generateAndSend("test", new Attributes());
+        StoreSCPResult resultSCP = (StoreSCPResult) tool.getResult();
+    }
 }

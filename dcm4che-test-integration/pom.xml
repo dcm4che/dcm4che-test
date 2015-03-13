@@ -16,6 +16,8 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <systemProperties>
+          <defaultParams>src/test/resources/test-prop-local.properties</defaultParams>
+          <defaultLocalConfig>src/test/resources/defaultConfig.json</defaultLocalConfig>
           </systemProperties>
           <includes>
             <include>**/StoreTestSuite.java</include>
