@@ -41,14 +41,19 @@ public class TestRAD43 extends BasicTest{
     @Test
     @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="./",connection="dicom"
     ,sourceAETitle="STORESCU",sourceDevice="storescu")
-    public void testStoreSR_CustomParams() throws MissingArgumentException, IOException, InterruptedException, IncompatibleConnectionException, GeneralSecurityException, ConfigurationException {
+    public void testStoreSR_CustomParams() throws MissingArgumentException, IOException, InterruptedException, IncompatibleConnectionException, GeneralSecurityException, ConfigurationException, ClassNotFoundException {
         //get archive configuration
         DicomConfiguration remoteConfig = getRemoteConfig();
         //add a new attribute to be used for querying
-        TestUtils.addDBCustomAttribute(Entity.Instance, remoteConfig, Tag.CodeMeaning, VR.LO);
+        //backup remote config
+        TestUtils.backUpRemoteConfig("dcm4chee-arc",remoteConfig);
+        TestUtils.addDBCustomAttribute("dcm4chee-arc", Entity.Instance, remoteConfig, Tag.CodeMeaning, VR.LO);
         //reload the archive configuration for changes to take effect
         System.out.println("Reloaded remote Server - Response = "
-        +TestUtils.reloadServerConfig(getDefaultProperties(),""));
+                //here in the empty url a base url and webcontext should be passed
+                //i.e. TestUtils.reloadServerConfig(null,"http://localhost:8080/dcm4chee-arc"));
+                //otherwise use default config as follows
+        +TestUtils.reloadServerConfig(this));
         //create a store tool
         StoreTool storeTool = (StoreTool) TestToolFactory
                 .createToolForTest(TestToolType.StoreTool, this);
@@ -62,6 +67,12 @@ public class TestRAD43 extends BasicTest{
         Attributes status = new Attributes();
         status.setString(Tag.Status, VR.US, "0");
         AssertionUtils.assertContainsAttrs(result.getcStoreRSPAttributes(), status);
+        TestUtils.rollBackRemoteConfig(remoteConfig);
+        System.out.println("Reloaded remote Server - Response = "
+                //here in the empty url a base url and webcontext should be passed
+                //i.e. TestUtils.reloadServerConfig(null,"http://localhost:8080/dcm4chee-arc"));
+                //otherwise use default config as follows
+        +TestUtils.reloadServerConfig(this));
     }
 
 }
