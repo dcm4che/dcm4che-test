@@ -8,9 +8,11 @@ import org.dcm4che.test.annotations.StoreParameters;
 import org.dcm4che.test.common.BasicTest;
 import org.dcm4che.test.common.TestToolFactory;
 import org.dcm4che.test.common.TestToolFactory.TestToolType;
+import org.dcm4che.test.utils.AssertionUtils;
 import org.dcm4che.test.utils.TestUtils;
 import org.dcm4che3.conf.api.ConfigurationException;
 import org.dcm4che3.conf.api.DicomConfiguration;
+import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.VR;
 import org.dcm4che3.net.IncompatibleConnectionException;
@@ -25,7 +27,7 @@ import org.junit.Test;
  */
 public class TestRAD43 extends BasicTest{
     
-    @Test
+    //@Test
     public void testStoreSR_DefaultParams_Resource() throws MissingArgumentException {
         StoreTool storeTool = (StoreTool) TestToolFactory
                 .createToolForTest(TestToolType.StoreTool, this);
@@ -36,18 +38,30 @@ public class TestRAD43 extends BasicTest{
     }
 
     //included for demonstrating purposes
-    //@Test
+    @Test
     @StoreParameters(aeTitle="DCM4CHEE", baseDirectory="./",connection="dicom"
     ,sourceAETitle="STORESCU",sourceDevice="storescu")
     public void testStoreSR_CustomParams() throws MissingArgumentException, IOException, InterruptedException, IncompatibleConnectionException, GeneralSecurityException, ConfigurationException {
+        //get archive configuration
         DicomConfiguration remoteConfig = getRemoteConfig();
-        TestUtils.addTagToAttributesFilter(Entity.Instance, remoteConfig, Tag.CodeMeaning, VR.LO);
+        //add a new attribute to be used for querying
+        TestUtils.addDBCustomAttribute(Entity.Instance, remoteConfig, Tag.CodeMeaning, VR.LO);
+        //reload the archive configuration for changes to take effect
+        System.out.println("Reloaded remote Server - Response = "
+        +TestUtils.reloadServerConfig(getDefaultProperties(),""));
+        //create a store tool
         StoreTool storeTool = (StoreTool) TestToolFactory
                 .createToolForTest(TestToolType.StoreTool, this);
+        //do C-Store to the archive ( the archive will also create the new query attribute in the database)
         storeTool.store
                 ("Test Store SR - REQUIREMENT[DCMEEREQ-44] - "
                         + "IHE - TRANSACTION[RAD-43]", "./target/test-classes/req44_sr.dcm");
+        //get the store result
         StoreResult result = (StoreResult) storeTool.getResult();
+        //check the status returned was 0
+        Attributes status = new Attributes();
+        status.setString(Tag.Status, VR.US, "0");
+        AssertionUtils.assertContainsAttrs(result.getcStoreRSPAttributes(), status);
     }
 
 }

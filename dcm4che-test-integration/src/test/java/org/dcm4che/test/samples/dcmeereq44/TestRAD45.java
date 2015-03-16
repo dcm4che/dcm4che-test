@@ -39,7 +39,6 @@ package org.dcm4che.test.samples.dcmeereq44;
 
 import org.apache.commons.cli.MissingArgumentException;
 import org.dcm4che.test.annotations.MoveParameters;
-import org.dcm4che.test.annotations.QueryParameters;
 import org.dcm4che.test.annotations.StoreSCPParameters;
 import org.dcm4che.test.common.BasicTest;
 import org.dcm4che.test.common.TestToolException;
@@ -47,10 +46,8 @@ import org.dcm4che.test.common.TestToolFactory;
 import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.dcm4che.test.utils.AssertionUtils;
 import org.dcm4che3.data.Attributes;
-import org.dcm4che3.data.Sequence;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.VR;
-import org.dcm4che3.tool.findscu.test.QueryResult;
 import org.dcm4che3.tool.movescu.test.MoveResult;
 import org.dcm4che3.tool.movescu.test.MoveTool;
 import org.dcm4che3.tool.storescp.test.StoreSCPResult;
@@ -59,8 +56,7 @@ import org.junit.Test;
 /**
  * @author Hesham Elbadawi <bsdreko@gmail.com>
  *
- * Tests querying a structured report from the image manager
- *  using one of the structured report attributes on IMAGE level
+ * Tests retrieving a structured report from the image manager
  */
 public class TestRAD45 extends BasicTest{
     
@@ -75,35 +71,47 @@ public class TestRAD45 extends BasicTest{
     }
     
     @Test
-    @MoveParameters(retrieveLevel="IMAGE",aeTitle="DCM4CHEE"
+    @MoveParameters(retrieveLevel="STUDY",aeTitle="DCM4CHEE"
             ,connection="dicom",sourceAETitle="MOVESCU",sourceDevice="movescu",destAEtitle="STORESCP")
-    @StoreSCPParameters(connection="dicom",noStore=true,sourceAETitle="STORESCP",sourceDevice="storescp")
-    public void testQuerySR_CustomParams() throws MissingArgumentException, InterruptedException {
+    @StoreSCPParameters(connection="dicom",noStore=false,sourceAETitle="STORESCP",sourceDevice="storescp")
+    public void testMoveSR_CustomParams() throws MissingArgumentException, InterruptedException {
+
         //create a test SCP to listen for the incoming C-Store
-        //scp closes after the association closes
-        
         StoreSCPTool scpTool = (StoreSCPTool) TestToolFactory.createToolForTest(TestToolType.StoreSCPTool, this);
+
+        //start listening for inbound dicom C-Store
         scpTool.start(testDescription);
-        
-        //move now 
+
+        //Create a move tool and trigger a move to the archive with the destination set to the storescp
         Attributes moveAttrs = new Attributes();
         moveAttrs.setString(Tag.StudyInstanceUID, VR.UI, "1.2.40.0.13.0.11.2118.1.2008045825.176015.20081021134411");
         MoveTool tool = (MoveTool) TestToolFactory.createToolForTest(TestToolType.MoveTool, this);
         tool.setExpectedMatches(1);
         tool.addAll(moveAttrs);
-        
+
         try {
             tool.move(testDescription);
         } catch (Exception e) {
             throw new TestToolException(e);
         }
-        
+        //collect move results
         MoveResult result = (MoveResult) tool.getResult();
-        
+
+        //stop listening on storescp
+        scpTool.stop();
+
+        //collect scp results
         StoreSCPResult scpResult  = (StoreSCPResult) scpTool.getResult();
+
+        //do assertions on results
         AssertionUtils.assertEquals(scpResult.getSopUIDs().size(), 1);
+        //check sopUID
         AssertionUtils.assertTrue(scpResult.getSopUIDs().get(0)
-                .equalsIgnoreCase("1.11.111111.100073424111037649484053784200726879018"));
+                .equalsIgnoreCase("1.2.40.0.13.1.140770037748338254566402565075105987494"));
+        //check sopUID (using attributes)
+        Attributes sopUID = new Attributes();
+        sopUID.setString(Tag.AffectedSOPInstanceUID, VR.UI, "1.2.40.0.13.1.140770037748338254566402565075105987494");
+        AssertionUtils.assertContainsAttrs(scpResult.getcStoreRQAttributes(), sopUID);
     }
 
     

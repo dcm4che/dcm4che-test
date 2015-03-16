@@ -226,6 +226,7 @@ public class SampleTest extends BasicTest {
         tool.start("StoreSCP test");
         StoreTool storescu = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
         StoreResult result =  (StoreResult) generateAndSend("test", new Attributes());
+        tool.stop();
         StoreSCPResult resultSCP = (StoreSCPResult) tool.getResult();
     }
 }

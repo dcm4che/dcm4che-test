@@ -57,13 +57,13 @@ public class TestRAD44 extends BasicTest{
     @Test
     @QueryParameters(queryLevel="IMAGE")
     public void testQuerySR_Defaults_SetLevel() throws MissingArgumentException {
+        //create attributes to be used for query
         Attributes attrs = new Attributes();
         Sequence seq = attrs.newSequence(Tag.ConceptNameCodeSequence, 1);
         Attributes itemAttrs = new Attributes();
-        itemAttrs.setString(Tag.CodeMeaning, VR.LO, "LN");
-        itemAttrs.setString(Tag.CodeValue, VR.SH, "18000-3");
-        itemAttrs.setString(Tag.CodingSchemeDesignator, VR.SH, "SOME MAMMO PREPROCESSING RESULTS");
+        itemAttrs.setString(Tag.CodeMeaning, VR.LO, "SOME MAMMO PREPROCESSING RESULTS");
         seq.add(itemAttrs);
+        //call a direct query method instead of creating a query tool yourself
         QueryResult result = (QueryResult) query("Test Query SR - REQUIREMENT[DCMEEREQ-44] - "
                 + "IHE - TRANSACTION[RAD-44]", attrs, false, 1);
     }
@@ -75,9 +75,7 @@ public class TestRAD44 extends BasicTest{
         Attributes attrs = new Attributes();
         Sequence seq = attrs.newSequence(Tag.ConceptNameCodeSequence, 1);
         Attributes itemAttrs = new Attributes();
-        itemAttrs.setString(Tag.CodeMeaning, VR.LO, "srtitle");
-        itemAttrs.setString(Tag.CodeValue, VR.SH, "someval");
-        itemAttrs.setString(Tag.CodingSchemeDesignator, VR.SH, "TST");
+        itemAttrs.setString(Tag.CodeMeaning, VR.LO, "SOME MAMMO PREPROCESSING RESULTS");
         seq.add(itemAttrs);
         QueryResult result = (QueryResult) query("Test Query SR - REQUIREMENT[DCMEEREQ-44] - "
                 + "IHE - TRANSACTION[RAD-44]", attrs, false, 1);

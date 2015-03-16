@@ -51,12 +51,13 @@ import org.junit.runners.Suite.SuiteClasses;
  * This test uses the tools Store, Query and Move
  */
 @RunWith(Suite.class)
-@SuiteClasses({ TestRAD43.class , TestRAD44.class})
+@SuiteClasses({ TestRAD43.class , TestRAD44.class, TestRAD45.class})
 public class TestDCMEEREQ44 {
     
     /*
      * Test Evidence Document Stored [RAD-43]
      * A SR document is sent to the archive
+     * This is an example on how to order tests using test suites
      */
     
 }
