@@ -45,6 +45,8 @@ import org.dcm4che.test.common.TestToolException;
 import org.dcm4che.test.common.TestToolFactory;
 import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.dcm4che.test.utils.AssertionUtils;
+import org.dcm4che.test.utils.TestUtils;
+import org.dcm4che3.conf.api.DicomConfiguration;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.VR;
@@ -76,9 +78,12 @@ public class TestRAD45 extends BasicTest{
     @StoreSCPParameters(connection="dicom",noStore=false,sourceAETitle="STORESCP",sourceDevice="storescp")
     public void testMoveSR_CustomParams() throws MissingArgumentException, InterruptedException {
 
+        //make the archive only see the used connection for the scp
+        TestUtils.adjustRemoteConfigurationForDestinationSCP("storescp",this, "dicom");
         //create a test SCP to listen for the incoming C-Store
         StoreSCPTool scpTool = (StoreSCPTool) TestToolFactory.createToolForTest(TestToolType.StoreSCPTool, this);
 
+        
         //start listening for inbound dicom C-Store
         scpTool.start(testDescription);
 

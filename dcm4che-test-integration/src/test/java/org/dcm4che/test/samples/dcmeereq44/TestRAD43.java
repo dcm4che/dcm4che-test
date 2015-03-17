@@ -47,7 +47,7 @@ public class TestRAD43 extends BasicTest{
         //add a new attribute to be used for querying
         //backup remote config
         TestUtils.backUpRemoteConfig("dcm4chee-arc",remoteConfig);
-        TestUtils.addDBCustomAttribute("dcm4chee-arc", Entity.Instance, remoteConfig, Tag.CodeMeaning, VR.LO);
+        TestUtils.addDBCustomAttribute("dcm4chee-arc", Entity.Instance, remoteConfig, Tag.CodeMeaning, VR.LO, Tag.ConceptNameCodeSequence);
         //reload the archive configuration for changes to take effect
         System.out.println("Reloaded remote Server - Response = "
                 //here in the empty url a base url and webcontext should be passed
