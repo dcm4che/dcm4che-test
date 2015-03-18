@@ -51,8 +51,7 @@ import org.junit.runners.Suite.SuiteClasses;
  * This test uses the tools w
  */
 @RunWith(Suite.class)
-@SuiteClasses({ TestARCH116.class})
+@SuiteClasses({ TestARCH116.class, TestARCH145.class})
 public class TestDCMEEREQ93 {
-    
     
 }
