@@ -104,7 +104,7 @@ public class TestRAD45 extends BasicTest{
 
         //stop listening on storescp
         scpTool.stop();
-
+        
         //collect scp results
         StoreSCPResult scpResult  = (StoreSCPResult) scpTool.getResult();
 

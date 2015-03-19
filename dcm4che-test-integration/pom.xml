@@ -19,13 +19,14 @@
           <defaultParams>src/test/resources/test-prop-local.properties</defaultParams>
           <defaultLocalConfig>src/test/resources/defaultConfig.json</defaultLocalConfig>
           </systemProperties>
-          <includes>
-            <include>**/StoreTestSuite.java</include>
+           <includes>
+<!--            <include>**/StoreTestSuite.java</include>
             <include>**/QueryTestSuite.java</include>
             <include>**/InitTestDataForQuery.java</include>
-<!--             <include>**/SampleTestWithReconfigure.java</include> -->
-<!--             <include>**/*.java</include> -->
-          </includes>
+            <include>**/SampleTestWithReconfigure.java</include>
+            <include>**/*.java</include> -->
+            <include>**/*.java</include>
+          </includes> 
         </configuration>
       </plugin>
             <plugin>

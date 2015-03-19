@@ -65,7 +65,7 @@ public class TestRAD44 extends BasicTest{
         seq.add(itemAttrs);
         //call a direct query method instead of creating a query tool yourself
         QueryResult result = (QueryResult) query("Test Query SR - REQUIREMENT[DCMEEREQ-44] - "
-                + "IHE - TRANSACTION[RAD-44]", attrs, false, 1);
+                + "IHE - TRANSACTION[RAD-44]", attrs, false, -1);
     }
     
     //@Test

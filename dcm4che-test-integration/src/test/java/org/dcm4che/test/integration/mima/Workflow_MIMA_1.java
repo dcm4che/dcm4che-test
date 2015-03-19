@@ -44,9 +44,13 @@ import java.util.Properties;
 
 import org.dcm4che.test.utils.AssertionUtils;
 import org.dcm4che.test.utils.LoadProperties;
+import org.dcm4che.test.utils.TestUtils;
+import org.dcm4che3.conf.api.DicomConfiguration;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
 import org.dcm4che3.data.VR;
+import org.dcm4che3.net.ApplicationEntity;
+import org.dcm4che3.net.Device;
 import org.dcm4che3.tool.findscu.test.QueryResult;
 import org.dcm4che3.tool.findscu.test.QueryTool;
 import org.dcm4che3.tool.hl7rcv.test.HL7RcvTest;
@@ -58,6 +62,7 @@ import org.dcm4che.test.common.BasicTest;
 import org.dcm4che.test.common.TestToolFactory;
 import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.dcm4che3.util.StringUtils;
+import org.dcm4chee.archive.conf.ArchiveAEExtension;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -79,7 +84,20 @@ public class Workflow_MIMA_1 extends BasicTest {
     private int stepNumber = 0;
 
     @Test
+    @StoreParameters(baseDirectory="./target/test-classes/mima/workflow1/")
     public void MIMA_Workflow_1() throws Exception {
+        //remoteconfig change
+        DicomConfiguration remoteConfig = getRemoteConfig();
+        TestUtils.backUpRemoteConfig(remoteConfig);
+        if(remoteConfig.findDevice("hl7rcv") == null) {
+            remoteConfig.persist(TestUtils.createPixConsumer("hl7rcv", "HL7RCV^DCM4CHEE", "localhost", "2575", "dicom"));
+        }
+        Device arcDev = remoteConfig.findDevice("dcm4chee-arc");
+        ApplicationEntity ae = arcDev.getApplicationEntity("DCM4CHEE");
+        ArchiveAEExtension aeExt = ae.getAEExtension(ArchiveAEExtension.class);
+        aeExt.setLocalPIXConsumerApplication("HL7RCV^DCM4CHEE");
+        aeExt.setRemotePIXManagerApplication("HL7RCV^DCM4CHEE");
+        remoteConfig.merge(arcDev);
         // storage
         StoreTool storeTool = (StoreTool) TestToolFactory.createToolForTest(TestToolType.StoreTool, this);
         storeTool.store(
@@ -126,6 +144,7 @@ public class Workflow_MIMA_1 extends BasicTest {
         pixmgr.unbind();
         printLine("Stopped PIX Manager", "OK",
                 (System.currentTimeMillis() - t1));
+        TestUtils.rollBackRemoteConfig(remoteConfig);
 
     }
 

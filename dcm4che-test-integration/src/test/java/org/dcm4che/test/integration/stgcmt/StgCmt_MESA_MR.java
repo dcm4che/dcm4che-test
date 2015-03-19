@@ -40,6 +40,8 @@ package org.dcm4che.test.integration.stgcmt;
 
 import org.dcm4che.test.common.BasicTest;
 import org.dcm4che.test.common.TestToolFactory;
+import org.dcm4che.test.utils.TestUtils;
+import org.dcm4che3.conf.api.DicomConfiguration;
 import org.dcm4che3.tool.stgcmtscu.test.StgCmtResult;
 import org.dcm4che3.tool.stgcmtscu.test.StgCmtTool;
 import org.junit.Test;
@@ -52,8 +54,15 @@ public class StgCmt_MESA_MR extends BasicTest{
 
     @Test
     public void Store_MESA_MR_MR1_MRS1() throws Exception {
+        DicomConfiguration remoteConfig = getRemoteConfig();
+        TestUtils.backUpRemoteConfig(remoteConfig);
+        TestUtils.adjustRemoteConfigurationForDestinationSCP("stgcmtscu", this, "dicom");
         StgCmtTool stgCmtTool = (StgCmtTool) TestToolFactory.createToolForTest(TestToolFactory.TestToolType.StorageCommitmentTool, this);
+        
         stgCmtTool.stgcmt("Storage Commitment MESA_MR_MR1_MRS1","modality/MR/MR1/MR1S1/MR1S1IM1.dcm");
         StgCmtTestSuite.printResults((StgCmtResult)stgCmtTool.getResult());
+        //catching rollbackexception here is temporary till device remove is fixed in the config framework
+        TestUtils.rollBackRemoteConfig(remoteConfig);
+
     }
 }
