@@ -48,6 +48,8 @@ import javax.transaction.SystemException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 
 /**
@@ -65,11 +67,11 @@ public class CleanArchiveRest {
 
     @GET
     @Path("clean")
-    public String clean() throws SecurityException
+    public Response clean() throws SecurityException
     , IllegalStateException, NotSupportedException
     , SystemException, RollbackException
     , HeuristicMixedException, HeuristicRollbackException {
-        return cleaner.clearDB();
+        return Response.status(Status.OK).entity(cleaner.clearDB()).build();
     }
 
 

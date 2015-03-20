@@ -46,6 +46,7 @@ import org.dcm4che.test.common.TestToolFactory;
 import org.dcm4che.test.common.TestToolFactory.TestToolType;
 import org.dcm4che.test.utils.AssertionUtils;
 import org.dcm4che.test.utils.TestUtils;
+import org.dcm4che3.conf.api.ConfigurationException;
 import org.dcm4che3.conf.api.DicomConfiguration;
 import org.dcm4che3.data.Attributes;
 import org.dcm4che3.data.Tag;
@@ -76,8 +77,9 @@ public class TestRAD45 extends BasicTest{
     @MoveParameters(retrieveLevel="STUDY",aeTitle="DCM4CHEE"
             ,connection="dicom",sourceAETitle="MOVESCU",sourceDevice="movescu",destAEtitle="STORESCP")
     @StoreSCPParameters(connection="dicom",noStore=false,sourceAETitle="STORESCP",sourceDevice="storescp")
-    public void testMoveSR_CustomParams() throws MissingArgumentException, InterruptedException {
-
+    public void testMoveSR_CustomParams() throws MissingArgumentException, InterruptedException, ConfigurationException {
+        //make sure no supression criteria is on
+        TestUtils.removeArchiveSuppressionCriteria("dcm4chee-arc", "DCM4CHEE", getRemoteConfig());
         //make the archive only see the used connection for the scp
         TestUtils.adjustRemoteConfigurationForDestinationSCP("storescp",this, "dicom");
         //create a test SCP to listen for the incoming C-Store
