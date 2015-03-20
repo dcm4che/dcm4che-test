@@ -43,6 +43,8 @@ import org.dcm4che3.tool.storescu.test.StoreTool;
 import org.dcm4che.test.common.BasicTest;
 import org.dcm4che.test.common.TestToolFactory;
 import org.dcm4che.test.common.TestToolFactory.TestToolType;
+import org.dcm4che.test.utils.AssertionUtils;
+import org.dcm4che.test.utils.DBUtils;
 import org.junit.Test;
 
 /**
@@ -59,6 +61,7 @@ public class Store_MESA_CR extends BasicTest{
                 "MESA_12_5,CR1,S1", "modality/CR/CR1/CR1S1");
         StoreResult results = (StoreResult) storeTool.getResult();
         StoreTestSuite.printResults(results);
+        AssertionUtils.assertTrue(DBUtils.cleanDB(this));
     }
 
     @Test
@@ -68,6 +71,7 @@ public class Store_MESA_CR extends BasicTest{
                 "MESA_12_5,CR2,S1", "modality/CR/CR2/CR2S1");
         StoreResult results = (StoreResult) storeTool.getResult();
         StoreTestSuite.printResults(results);
+        AssertionUtils.assertTrue(DBUtils.cleanDB(this));
     }
 
     @Test
@@ -77,6 +81,7 @@ public class Store_MESA_CR extends BasicTest{
                 "MESA_12_5,CR3,S1", "modality/CR/CR3/CR3S1");
         StoreResult results = (StoreResult) storeTool.getResult();
         StoreTestSuite.printResults(results);
+        AssertionUtils.assertTrue(DBUtils.cleanDB(this));
     }
 
     @Test
@@ -86,5 +91,6 @@ public class Store_MESA_CR extends BasicTest{
                 "MESA_12_5,CR4,S1", "modality/CR/CR4/CR4S1");
         StoreResult results = (StoreResult) storeTool.getResult();
         StoreTestSuite.printResults(results);
+        AssertionUtils.assertTrue(DBUtils.cleanDB(this));
     }
 }
