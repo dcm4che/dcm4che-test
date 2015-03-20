@@ -32,30 +32,17 @@
     <groupId>org.dcm4che</groupId>
     <artifactId>dcm4che-test-parent</artifactId>
     <packaging>pom</packaging>
-    <name>dcm4che Integration Tests</name>
-    <version>4.3.0-SNAPSHOT</version>
-    <description>dcm4che Integration Tests and utilities</description>
-    <issueManagement>
-        <system>JIRA</system>
-        <url>http://dcm4che.org/jira</url>
-    </issueManagement>
-    <scm>
-        <connection>scm:git:git://github.com/dcm4che/dcm4che-test.git</connection>
-        <developerConnection>scm:git:git@github.com:dcm4che/dcm4che-test.git</developerConnection>
-        <url>http://github.com/dcm4che/dcm4che-test</url>
-    </scm>
-    <organization>
-        <name>dcm4che.org</name>
-        <url>http://dcm4che.org</url>
-    </organization>
+    <name>dcm4che Automated Tests</name>
+    <version>4.4.0-SNAPSHOT</version>
     <properties>
+        <dcm4che.version>3.3.6-SNAPSHOT</dcm4che.version>
+        <db>mysql</db>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <dcm4che.version>3.3.6-SNAPSHOT</dcm4che.version>
-
         <dcm4chee-arc-conf.version>4.4.0-SNAPSHOT</dcm4chee-arc-conf.version>
         <dcm4chee-storage-conf.version>2.0.0-SNAPSHOT</dcm4chee-storage-conf.version>
-
-    </properties>
+        </properties>
+    <description>dcm4che automated tests and database Clean up deployment</description>
     <build>
         <extensions>
             <extension>
@@ -77,7 +64,23 @@
     </build>
     <modules>
         <module>dcm4che-test-integration</module>
+        <module>dcm4che-test-clean</module>
+        <module>dcm4che-test-clean-war</module>
     </modules>
+    <issueManagement>
+        <system>JIRA</system>
+        <url>http://dcm4che.org/jira</url>
+    </issueManagement>
+    <scm>
+        <connection>scm:git:git://github.com/dcm4che/dcm4che-test.git</connection>
+        <developerConnection>scm:git:git@github.com:dcm4che/dcm4che-test.git</developerConnection>
+        <url>http://github.com/dcm4che/dcm4che-test</url>
+    </scm>
+    <organization>
+        <name>dcm4che.org</name>
+        <url>http://dcm4che.org</url>
+    </organization>
+
     <distributionManagement>
         <repository>
             <id>www.dcm4che.org</id>
