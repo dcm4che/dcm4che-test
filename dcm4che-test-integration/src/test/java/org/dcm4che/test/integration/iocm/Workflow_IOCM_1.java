@@ -104,7 +104,7 @@ public class Workflow_IOCM_1 extends BasicTest{
         queryTool.addQueryTag(Tag.PatientID, "140708_0002");
         
         queryTool.setExpectedMatches(0); //should return 0 patients
-        queryTool.query("Patient ID:140708_0002^^^DCM4CHEE_SOURCE");
+        queryTool.query("Patient ID:140708_0002^^^DCM4CHEE_SOURCE",false,false);
         QueryResult queryResult = (QueryResult) queryTool.getResult();
         printLine("[C-FIND:PatientID:140708_0002] ret:0", "OK",
                 queryResult.getTime());
@@ -115,7 +115,7 @@ public class Workflow_IOCM_1 extends BasicTest{
         queryTool.addQueryTag(Tag.PatientID, "140708_0002");
         
         queryTool.setExpectedMatches(0); //should return 0 patients
-        queryTool.query("Patient ID:140708_0002^^^DCM4CHEE_SOURCE");
+        queryTool.query("Patient ID:140708_0002^^^DCM4CHEE_SOURCE",false,false);
         queryResult = (QueryResult) queryTool.getResult();
         printLine("[C-FIND:ADMIN:PatientID:140708_0002] ret:0", "OK",
                 queryResult.getTime());

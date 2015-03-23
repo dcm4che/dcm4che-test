@@ -57,7 +57,7 @@ public class Query_Modalities_In_Study extends BasicTest{
         QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
         queryTool.addQueryTag(Tag.ModalitiesInStudy, "CT");
         queryTool.setExpectedMatches(5);
-        queryTool.query("Modalities In Study:CT");
+        queryTool.query("Modalities In Study:CT",false,false);
         QueryTestSuite.printResults((QueryResult) queryTool.getResult());
     }
     

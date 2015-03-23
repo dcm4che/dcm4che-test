@@ -72,14 +72,14 @@ public class Query_PN extends BasicTest{
 
 
             queryTool.addQueryTag(Tag.PatientName, name);
-            queryTool.query("Patient Family Name:" + name);
+            queryTool.query("Patient Family Name:" + name, false, false);
             QueryResult result = (QueryResult) queryTool.getResult();
             QueryPerformanceTestSuite.printResults(result);
-            queryTool.queryfuzzy("Fuzzy Patient Family Name:"
+            queryTool.query("Fuzzy Patient Family Name:"
                     + name
                     + " ("
                     + new ESoundex().toFuzzy(name.substring(0,
-                            name.length() - 1)) + ")");
+                            name.length() - 1)) + ")", true, false);
             result = (QueryResult) queryTool.getResult();
             QueryPerformanceTestSuite.printResults(result);
             
@@ -92,7 +92,7 @@ public class Query_PN extends BasicTest{
             String name = most_common_family+"^"+randominitial1();
             queryTool.clearQueryKeys();
             queryTool.addQueryTag(Tag.PatientName, name);
-            queryTool.query("Patient Name:" + name);
+            queryTool.query("Patient Name:" + name, false, false);
             QueryResult result = (QueryResult) queryTool.getResult();
             QueryPerformanceTestSuite.printResults(result);
             
@@ -111,7 +111,7 @@ public class Query_PN extends BasicTest{
         for (int i = 0; i < 5; i++) {
             String r1 = randominitial1();
             queryTool.addQueryTag(Tag.PatientName, r1);
-            queryTool.query("Patient Initial 1 letter:"+ r1);
+            queryTool.query("Patient Initial 1 letter:"+ r1,false,false);
             QueryResult result = (QueryResult) queryTool.getResult(); 
             QueryPerformanceTestSuite.printResults(result);
         }
@@ -120,7 +120,7 @@ public class Query_PN extends BasicTest{
             String r2 = randominitial2();
             queryTool.clearQueryKeys();
             queryTool.addQueryTag(Tag.PatientName, r2);
-            queryTool.query("Patient Initial 2 letters:"+ r2);
+            queryTool.query("Patient Initial 2 letters:"+ r2,false,false);
             QueryResult result = (QueryResult) queryTool.getResult();
             QueryPerformanceTestSuite.printResults(result);
         }

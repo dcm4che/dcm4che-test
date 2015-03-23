@@ -123,7 +123,7 @@ public class Workflow_MIMA_2 extends BasicTest{
         queryTool.addQueryTag(Tag.PatientID, "140703_0002");
         queryTool.addQueryTag(Tag.IssuerOfPatientID, "DCM4CHEE_SOURCE");
         queryTool.addReturnTag(Tag.OtherPatientIDsSequence);
-        queryTool.query("Patient ID:140703_0002^^^DCM4CHEE_SOURCE");
+        queryTool.query("Patient ID:140703_0002^^^DCM4CHEE_SOURCE",false,false);
         QueryResult queryResult = (QueryResult) queryTool.getResult();
         Attributes expectedResult = new Attributes();
         expectedResult.setString(Tag.PatientID, VR.LO, "140703_1002"); // it's the value returned by the

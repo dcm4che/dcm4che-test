@@ -63,7 +63,7 @@ public class Query_Mesa_IM_404a extends BasicTest{
         queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
         queryTool.addReturnTag(Tag.SOPInstanceUID);
         queryTool.setExpectedMatches(2);
-        queryTool.query("SOPInstanceUID:<<2>>");
+        queryTool.query("SOPInstanceUID:<<2>>",false,false);
         QueryResult result = (QueryResult) queryTool.getResult();
         Attributes expectedAttributes = new Attributes();
         expectedAttributes.setString(Tag.SOPInstanceUID, VR.UI, "1.2.840.113674.950809132354242.100");
@@ -82,7 +82,7 @@ public class Query_Mesa_IM_404a extends BasicTest{
         queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
         queryTool.addReturnTag(Tag.SOPClassUID);
         queryTool.setExpectedMatches(2);
-        queryTool.query("SOPClassUID:1.2.840.10008.5.1.4.1.1.2");
+        queryTool.query("SOPClassUID:1.2.840.10008.5.1.4.1.1.2",false,false);
         QueryResult result = (QueryResult) queryTool.getResult();
         Attributes expectedAttributes = new Attributes();
         expectedAttributes.setString(Tag.SOPClassUID, VR.UI, "1.2.840.10008.5.1.4.1.1.2");
@@ -100,7 +100,7 @@ public class Query_Mesa_IM_404a extends BasicTest{
         queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
         queryTool.addReturnTag(Tag.Rows);
         queryTool.setExpectedMatches(2);
-        queryTool.query("Rows:691");
+        queryTool.query("Rows:691",false,false);
         QueryResult result = (QueryResult) queryTool.getResult();
         Attributes expectedAttributes = new Attributes();
         expectedAttributes.setString(Tag.Rows, VR.US, "691");
@@ -118,7 +118,7 @@ public class Query_Mesa_IM_404a extends BasicTest{
         queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
         queryTool.addReturnTag(Tag.Columns);
         queryTool.setExpectedMatches(2);
-        queryTool.query("Columns:512");
+        queryTool.query("Columns:512",false,false);
         QueryResult result = (QueryResult) queryTool.getResult();
         Attributes expectedAttributes = new Attributes();
         expectedAttributes.setString(Tag.Columns, VR.US, "512");
@@ -136,7 +136,7 @@ public class Query_Mesa_IM_404a extends BasicTest{
         queryTool.addQueryTag(Tag.SeriesInstanceUID, "1.2.840.113674.514.212.81.300");
         queryTool.addReturnTag(Tag.BitsAllocated);
         queryTool.setExpectedMatches(2);
-        queryTool.query("BitsAllocated:16");
+        queryTool.query("BitsAllocated:16",false,false);
         QueryResult result = (QueryResult) queryTool.getResult();
         Attributes expectedAttributes = new Attributes();
         expectedAttributes.setString(Tag.BitsAllocated, VR.US, "16");

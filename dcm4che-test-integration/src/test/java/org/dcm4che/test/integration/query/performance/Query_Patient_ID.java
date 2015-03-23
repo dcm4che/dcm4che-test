@@ -58,7 +58,7 @@ public class Query_Patient_ID extends BasicTest{
         QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
         queryTool.addQueryTag(Tag.PatientID, "300000016");
         queryTool.addQueryTag(Tag.IssuerOfPatientID, "PERF");
-        queryTool.query("Patient ID: 300000016");
+        queryTool.query("Patient ID: 300000016", false, false);
         QueryResult result = (QueryResult) queryTool.getResult();
         QueryPerformanceTestSuite.printResults(result);
     }

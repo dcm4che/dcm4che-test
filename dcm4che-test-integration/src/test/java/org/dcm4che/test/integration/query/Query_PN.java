@@ -58,7 +58,7 @@ public class Query_PN  extends BasicTest{
         QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this);
         queryTool.addQueryTag(Tag.PatientName, "P*");
         queryTool.setExpectedMatches(2);
-        queryTool.query("Patient Name:P*");
+        queryTool.query("Patient Name:P*",false,false);
         QueryTestSuite.printResults((QueryResult) queryTool.getResult());
 
     }
@@ -68,7 +68,7 @@ public class Query_PN  extends BasicTest{
         QueryTool queryTool = (QueryTool) TestToolFactory.createToolForTest(TestToolType.QueryTool, this); 
         queryTool.addQueryTag(Tag.PatientName, "COTTA");
         queryTool.setExpectedMatches(1);
-        queryTool.query("Patient Name:COTTA");
+        queryTool.query("Patient Name:COTTA",false,false);
         QueryTestSuite.printResults((QueryResult) queryTool.getResult());
 
     }
