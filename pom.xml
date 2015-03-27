@@ -35,12 +35,11 @@
     <name>dcm4che Automated Tests</name>
     <version>4.4.0-SNAPSHOT</version>
     <properties>
-        <dcm4che.version>3.3.6-SNAPSHOT</dcm4che.version>
         <db>mysql</db>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <dcm4che.version>3.3.6-SNAPSHOT</dcm4che.version>
-        <dcm4chee-arc-conf.version>4.4.0-SNAPSHOT</dcm4chee-arc-conf.version>
-        <dcm4chee-storage-conf.version>2.0.0-SNAPSHOT</dcm4chee-storage-conf.version>
+        <dcm4che.version>3.3.7-SNAPSHOT</dcm4che.version>
+        <dcm4chee-arc.version>4.4.0-SNAPSHOT</dcm4chee-arc.version>
+        <dcm4chee-storage.version>2.0.0-SNAPSHOT</dcm4chee-storage.version>
         </properties>
     <description>dcm4che automated tests and database Clean up deployment</description>
     <build>
@@ -64,8 +63,6 @@
     </build>
     <modules>
         <module>dcm4che-test-integration</module>
-        <module>dcm4che-test-clean</module>
-        <module>dcm4che-test-clean-war</module>
     </modules>
     <issueManagement>
         <system>JIRA</system>
@@ -125,13 +122,19 @@
             <dependency>
                 <groupId>org.dcm4che.dcm4chee-arc</groupId>
                 <artifactId>dcm4chee-arc-conf</artifactId>
-                <version>${dcm4chee-arc-conf.version}</version>
+                <version>${dcm4chee-arc.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.dcm4che.dcm4chee-storage</groupId>
                 <artifactId>dcm4chee-storage-conf</artifactId>
-                <version>${dcm4chee-storage-conf.version}</version>
+                <version>${dcm4chee-storage.version}</version>
             </dependency>
+            <dependency>
+            <groupId>org.jboss.spec</groupId>
+            <artifactId>jboss-javaee-6.0</artifactId>
+            <version>3.0.2.Final</version>
+            <type>pom</type>
+        </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

@@ -60,7 +60,7 @@ import org.dcm4che3.tool.storescu.test.StoreTool;
 import org.dcm4che3.tool.wadors.test.WadoRSResult;
 import org.dcm4che3.tool.wadors.test.WadoRSTool;
 import org.dcm4chee.archive.conf.ArchiveAEExtension;
-import org.dcm4chee.archive.conf.ArchiveDeviceExtension;
+import org.dcm4chee.archive.conf.ArchiveDeviceExtension; 
 import org.dcm4chee.archive.conf.RetrieveSuppressionCriteria;
 import org.junit.Test;
 /**

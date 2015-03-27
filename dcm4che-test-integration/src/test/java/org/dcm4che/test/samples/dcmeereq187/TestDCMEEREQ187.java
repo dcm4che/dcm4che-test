@@ -139,7 +139,7 @@ public class TestDCMEEREQ187 extends BasicTest {
         StowRSTool stowRSTool = (StowRSTool) TestToolFactory.createToolForTest(TestToolType.StowTool, this);
         File fileToSend = new File("target/test-classes/test.dcm");
         stowRSTool.send("Test Stow and anonymize - REQUIREMENT[DCMEEREQ-93] - "
-                + " [ARCH-116]", StowMetaDataType.NO_METADATA_DICOM, fileToSend);
+                + " [ARCH-116]", StowMetaDataType.NO_METADATA_DICOM, fileToSend, "1.2.840.10008.1.2.4.70");
 
         StowRSResult result = (StowRSResult) stowRSTool.getResult();
         
